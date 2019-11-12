@@ -48,10 +48,10 @@ void controls()
             Controller1.rumble("..");
         }
 
-        // -----------------------------Avoids Lift - Tilter conflict
+        // -----------------------------Avoids Lift-Tilter conflict
         if(Lift.position(rotationUnits::rev) > 0 && Tilt.position(rotationUnits::rev) < .7)
         {
-            Tilt.spinFor(directionType::fwd, .7 - Tilt.position(rotationUnits::rev), rotationUnits::rev, 100, velocityUnits::pct);
+            Tilt.spinFor(directionType::fwd, .7 - Tilt.position(rotationUnits::rev), rotationUnits::rev, 100, velocityUnits::pct, false);
         }
         else if(Lift.position(rotationUnits::rev) < 0)
         {
@@ -120,15 +120,6 @@ void controls()
     }
     else if(mode == 1)
     {     
-        // -----------------------------Rest Position
-        if(Controller1.ButtonDown.pressing())
-        {
-            Lift.setBrake(coast);
-            Lift.rotateTo(.4, rotationUnits::rev, 90, velocityUnits::pct);
-            Lift.setBrake(brake);
-            Tilt.rotateTo(0, rotationUnits::rev, 40, velocityUnits::pct);
-        }
-
         // -----------------------------Toggle Intake In
         if(Controller1.ButtonR1.pressing())
         {

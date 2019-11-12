@@ -32,14 +32,13 @@ vex::drivetrain dt(l, r);
 vex::controller Controller1;
 vex::competition Competition;
 
-int mode = 1;
+int mode = 0;
 bool rojo;
 bool azul;
 bool slow;
 bool test;
 bool skills;
 bool manual;
-//bool tank = true;;
 double driveSpeedFactor = 1;
 
 #endif

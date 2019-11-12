@@ -203,30 +203,6 @@ void record(void)
     Controller1.Screen.print("Complete!");  
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void newRecord()
 {
     std::ofstream outFile;
