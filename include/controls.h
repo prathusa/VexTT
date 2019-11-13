@@ -49,11 +49,11 @@ void controls()
         }
 
         // -----------------------------Avoids Lift-Tilter conflict
-        if(Lift.position(rotationUnits::rev) > 0.5 && Tilt.position(rotationUnits::rev) < .7)
+        if(Lift.position(rotationUnits::rev) > 0 && Tilt.position(rotationUnits::rev) < .7)
         {
             Tilt.spinFor(directionType::fwd, .7 - Tilt.position(rotationUnits::rev), rotationUnits::rev, 100, velocityUnits::pct);
         }
-        else if(Lift.position(rotationUnits::rev) < 0.5)
+        else if(Lift.position(rotationUnits::rev) < 0)
         {
             Tilt.spinTo(0, rotationUnits::rev, 70, velocityUnits::pct);
         }
