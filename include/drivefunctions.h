@@ -78,8 +78,10 @@ void drive(double rev, int maxVel)
 void flipOut()
 {
     Lift.spinFor(.3, rev, 75, velocityUnits::pct, false);
-    d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 80, velocityUnits::pct, true);
-    d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 80, velocityUnits::pct, true);
+    drive(.5, 100);
+    drive(-.5, 100);
+    //d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 80, velocityUnits::pct, true);
+    //d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 80, velocityUnits::pct, true);
     Lift.spinFor(-.5, rev, 75, velocityUnits::pct, false);
     intake.spin(vex::forward);
     Tilt.spinFor(2, rev, 127, velocityUnits::pct);

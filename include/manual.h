@@ -39,7 +39,7 @@ void BM()
     intake.stop();
     intake.spin(vex::reverse, 20, velocityUnits::pct);
     //make sure that this uses gyro to calculate rotated degrees if not use turn while not command
-    sdt.turnFor(-40, rotationUnits::deg, 40, velocityUnits::pct);
+    ///////////dt.turnFor(-40, rotationUnits::deg, 40, velocityUnits::pct);
     //need to figure out a way to reduce/remove gyro drift
     drive(3.1, 80);
     intake.stop();
