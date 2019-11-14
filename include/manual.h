@@ -35,38 +35,36 @@ void RM()
 //drivetrain/gyro test
 void BM()
 {
-    //flipOut();
+    /*
+    flipOut();
     intake.spin(vex::reverse, 127, velocityUnits::pct);
-    drive(3.4, 80);
+    drive(3.4, 50);
     intake.stop();
     intake.spin(vex::reverse, 20, velocityUnits::pct);
     //make sure that this uses gyro to calculate rotated degrees if not use turn while not command
     ///////////dt.turnFor(-40, rotationUnits::deg, 40, velocityUnits::pct);
     //need to figure out a way to reduce/remove gyro drift
-    r.rotateFor(directionType::fwd, -1.3, rotationUnits::rev, 50, velocityUnits::pct, false);
-    l.rotateFor(directionType::fwd, 1.5, rotationUnits::rev, 50, velocityUnits::pct);
-    drive(2.9, 80);
+    r.rotateFor(directionType::fwd, 1.4, rotationUnits::rev, 50, velocityUnits::pct, false);
+    l.rotateFor(directionType::fwd, -1.6, rotationUnits::rev, 50, velocityUnits::pct);
+    drive(3, 80);
     intake.stop();
     stack();
     drive(-1, 40);
-    /*
+    */
+    
     flipOut();
-    intake.spin(fwd, 127, velocityUnits::pct);
-    d.spinFor(directionType::fwd, 3.5, rotationUnits::rev, 40, velocityUnits::pct);
+    intake.spin(directionType::rev, 127, velocityUnits::pct);
+    drive(3.5, 40, false);
     intake.stop();
-    intake.spin(fwd, 30, velocityUnits::pct);
-    d.spinFor(directionType::fwd, -3.5, rotationUnits::rev, 40, velocityUnits::pct);
-    d.spinFor(directionType::fwd, .7, rotationUnits::rev, 40, velocityUnits::pct);
+    intake.spin(directionType::rev, 30, velocityUnits::pct);
+    drive(-3.5, 40, false);
+    drive(.7, 40);
     LeftFrontMotor.startRotateFor(directionType::fwd, -1, rotationUnits::rev, 40, velocityUnits::pct);
     LeftRearMotor.startRotateFor(directionType::fwd, -1, rotationUnits::rev, 40, velocityUnits::pct);
     r.rotateFor(directionType::fwd, 1.5, rotationUnits::rev, 40, velocityUnits::pct);
-    d.spinFor(directionType::fwd,.625, rotationUnits::rev, 35, velocityUnits::pct);
+    drive(.65, 40);
     intake.stop();
-    intake.spin(directionType::rev, 15, velocityUnits::pct);
-    Tilt.rotateFor(1.5, rev, 40, velocityUnits::pct);
-    vex::task::sleep(300);
-    d.spinFor(directionType::fwd, -.5, rotationUnits::rev, 40, velocityUnits::pct);
-    */
+    stack();
 }
 
 #endif /* AUTONBM_H */

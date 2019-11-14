@@ -68,12 +68,12 @@ void controls()
     if(mode == 0)
     {
         // -----------------------------Intake Control
-        if(Controller1.ButtonR1.pressing())
+        if(Controller1.ButtonL1.pressing())
         {
             LeftIntake.spin(directionType::fwd, 40, velocityUnits::pct);
             RightIntake.spin(directionType::fwd, 40, velocityUnits::pct);
         }
-        else if(Controller1.ButtonR2.pressing() && Lift.position(rev) < 0)
+        else if(Controller1.ButtonL2.pressing() && Lift.position(rev) < 0)
         {
             LeftIntake.spin(directionType::rev, 127, velocityUnits::pct);
             RightIntake.spin(directionType::rev, 127, velocityUnits::pct);
@@ -102,11 +102,11 @@ void controls()
         }
 
         // -----------------------------Tilt Control
-        if(Controller1.ButtonL2.pressing())
+        if(Controller1.ButtonR2.pressing())
         {
           Tilt.spin(directionType::fwd, 60/driveSpeedFactor, percentUnits::pct);
         }
-        else if(Controller1.ButtonL1.pressing())
+        else if(Controller1.ButtonR1.pressing())
         {
           Tilt.spin(directionType::rev, 60/driveSpeedFactor, percentUnits::pct);
         }
