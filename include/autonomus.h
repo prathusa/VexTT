@@ -4,7 +4,7 @@
 #include "record.h"
 #include "play.h"
 #include "manual.h"
-//#include "GUI.h"
+#include "drivefunctions.h"
 #include "vex.h"
 
 void autonomous(void) 
@@ -59,8 +59,8 @@ void autonomous(void)
         Controller1.Screen.print("Ambi mode on");
         Controller1.Screen.setCursor(2, 1);
         Controller1.Screen.print("By: Pratham");
-        d.spinFor(vex::reverse, 2, rev, 100);
-        d.spinFor(vex::forward, 2, rev, 100);
+        drive(-2, 100);
+        drive(2, 100);
         flipOut();
     }
 }

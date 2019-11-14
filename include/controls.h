@@ -35,27 +35,17 @@ void controls()
         //------------------------------DriveSpeed Control
         if(Controller1.ButtonB.pressing())
         {
-            driveSpeedFactor = 2.5; //Makes robot slower
+            driveSpeedFactor = 2; //Makes robot slower
             Controller1.Screen.clearLine(1);
             Controller1.Screen.setCursor(1,1);
             Controller1.Screen.print("Speed Reduced");
-            Controller1.rumble(".-");
+            Controller1.rumble("--..");
         }
         else if(Controller1.ButtonA.pressing())
         {
-            driveSpeedFactor = 1; //Resets the drive speed to normal
+            driveSpeedFactor = .5; //Resets the drive speed to normal
             Controller1.Screen.clearLine(1);
-            Controller1.rumble("..");
-        }
-
-        // -----------------------------Avoids Lift-Tilter conflict
-        if(Lift.position(rotationUnits::rev) > 0 && Tilt.position(rotationUnits::rev) < .7)
-        {
-            Tilt.spinFor(directionType::fwd, .7 - Tilt.position(rotationUnits::rev), rotationUnits::rev, 100, velocityUnits::pct);
-        }
-        else if(Lift.position(rotationUnits::rev) < 0)
-        {
-            Tilt.spinTo(0, rotationUnits::rev, 70, velocityUnits::pct);
+            Controller1.rumble("..--");
         }
 
         // -----------------------------Toggle Stacker Command
@@ -64,10 +54,7 @@ void controls()
           while(!Controller1.ButtonDown.pressing())
           {
             //d.rotateFor(directionType::fwd, .5, rev, 40, velocityUnits::pct, false);
-            intake.spin(directionType::fwd, 10, velocityUnits::pct);
-            Tilt.spinFor(1.6, rev, 60, velocityUnits::pct, true);
-            drive(-.5, 40);
-            Tilt.spinFor(-1.3, rev, 60, velocityUnits::pct, false);
+            stack();
             goto close1;
           }
           close1:
@@ -81,12 +68,12 @@ void controls()
     if(mode == 0)
     {
         // -----------------------------Intake Control
-        if(Controller1.ButtonL2.pressing())
+        if(Controller1.ButtonR1.pressing())
         {
             LeftIntake.spin(directionType::fwd, 40, velocityUnits::pct);
             RightIntake.spin(directionType::fwd, 40, velocityUnits::pct);
         }
-        else if(Controller1.ButtonL1.pressing() && Lift.position(rev) < .2)
+        else if(Controller1.ButtonR2.pressing() && Lift.position(rev) < 0)
         {
             LeftIntake.spin(directionType::rev, 127, velocityUnits::pct);
             RightIntake.spin(directionType::rev, 127, velocityUnits::pct);
@@ -101,10 +88,12 @@ void controls()
         if(Controller1.ButtonUp.pressing())
         {
             Lift.spin(directionType::fwd, 70, velocityUnits::pct);
+            liftTiltCheck();
         }
         else if(Controller1.ButtonDown.pressing())
         {
             Lift.spin(directionType::rev, 70, velocityUnits::pct);
+            liftTiltCheck();
         }
         else
         {
@@ -113,13 +102,13 @@ void controls()
         }
 
         // -----------------------------Tilt Control
-        if(Controller1.ButtonR2.pressing())
+        if(Controller1.ButtonL2.pressing())
         {
-          Tilt.spin(directionType::fwd, 30, percentUnits::pct);
+          Tilt.spin(directionType::fwd, 60/driveSpeedFactor, percentUnits::pct);
         }
-        else if(Controller1.ButtonR1.pressing())
+        else if(Controller1.ButtonL1.pressing())
         {
-          Tilt.spin(directionType::rev, 30, percentUnits::pct);
+          Tilt.spin(directionType::rev, 60/driveSpeedFactor, percentUnits::pct);
         }
         else
         {
@@ -136,22 +125,23 @@ void controls()
     }
     else if(mode == 1)
     {     
-        // -----------------------------Toggle Intake In
-        if(Controller1.ButtonL1.pressing())
+        // -----------------------------Intake Control
+        if(Controller1.ButtonR1.pressing())
         {
-            LeftIntake.spin(directionType::rev, 100/driveSpeedFactor, velocityUnits::pct);
-            RightIntake.spin(directionType::rev, 100/driveSpeedFactor, velocityUnits::pct);
+            LeftIntake.spin(directionType::fwd, 40, velocityUnits::pct);
+            RightIntake.spin(directionType::fwd, 40, velocityUnits::pct);
         }
-        else if(Controller1.ButtonL2.pressing())
+        else if(Controller1.ButtonR2.pressing() && Lift.position(rev) < 0)
         {
-            LeftIntake.spin(directionType::fwd, 100/driveSpeedFactor, velocityUnits::pct);
-            RightIntake.spin(directionType::fwd, 100/driveSpeedFactor, velocityUnits::pct);
+            LeftIntake.spin(directionType::rev, 127, velocityUnits::pct);
+            RightIntake.spin(directionType::rev, 127, velocityUnits::pct);
         }
         else if(Controller1.ButtonDown.pressing())
         {
-            LeftIntake.stop(brakeType::brake);
-            RightIntake.stop(brakeType::brake);
+          LeftIntake.stop(brakeType::brake);
+          RightIntake.stop(brakeType::brake);
         }
+        
         
         // -----------------------------Toggle Stacker Command
         if(Controller1.ButtonY.pressing())
@@ -174,13 +164,15 @@ void controls()
         }
 
         // -----------------------------Toggle Lift Positions
-        if(Controller1.ButtonR2.pressing())
+        if(Controller1.ButtonL2.pressing())
         {
-            Lift.rotateTo(.4, rotationUnits::rev, 90, velocityUnits::pct);
+            Lift.rotateTo(.4, rotationUnits::rev, 70, velocityUnits::pct);
+            liftTiltCheck();
         }
-        else if(Controller1.ButtonR1.pressing())
+        else if(Controller1.ButtonL1.pressing())
         {
-            Lift.rotateTo(.8, rotationUnits::rev, 90, velocityUnits::pct);
+            Lift.rotateTo(.8, rotationUnits::rev, 70, velocityUnits::pct);
+            liftTiltCheck();
         }
         else if(Lift.position(rotationUnits::rev) < -.25)
         {

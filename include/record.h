@@ -59,7 +59,7 @@ void record(void)
       {
         outFile.open("rt.txt");
       }
-      else
+      else if(azul)
       {
         outFile.open("bt.txt");
       }
@@ -81,7 +81,7 @@ void record(void)
       {
         outFile.open("rt.txt");
       }
-      else if (azul)
+      else if(azul)
       {
         outFile.open("bt.txt");
       }

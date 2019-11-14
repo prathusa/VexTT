@@ -11,7 +11,6 @@
 #include <iostream>
 #include <fstream>
 
-using namespace std;
 using namespace vex;
 vex::brain Brain;
 vex::motor Lift (vex::PORT6, vex::gearSetting::ratio36_1,true);
@@ -33,12 +32,12 @@ vex::controller Controller1;
 vex::competition Competition;
 
 int mode = 0;
-bool rojo;
-bool azul;
-bool slow;
-bool test;
-bool skills;
-bool manual;
+bool rojo = false;
+bool azul = false;
+bool slow = false;
+bool test = false;
+bool skills = false;
+bool manual = false;
 double driveSpeedFactor = 1;
 
 #endif
