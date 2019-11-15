@@ -32,12 +32,12 @@ vex::controller Controller1;
 vex::competition Competition;
 
 int mode = 0;
-bool rojo = false;
-bool azul = false;
-bool slow = false;
-bool test = false;
-bool skills = false;
-bool manual = false;
+bool rojo;
+bool azul;
+bool slow;
+bool test;
+bool skills;
+bool manual;
 double driveSpeedFactor = 1;
 
 #endif
