@@ -4,16 +4,19 @@
 #include "vex.h"
 using namespace vex;
 
-void drive(double rotations, double speed, bool waitForCompletion)
-{
-    d.spinFor(directionType::fwd, rotations, rotationUnits::rev, speed, velocityUnits::pct, waitForCompletion);
-}
-
 //Makes the bot accelerate smoothly, leading to less jerk and more accurate movements.
 //Possibly make the drive command use the gyro to make sure that the robot is not turning or not going in a straight line
-void drive(double rev, bool correct = true)
+void drive(double rev, int maxVel = 80, bool pidOn = true, bool correct = true, bool waitForCompletion = false)
 {   
-    double maxVel = 80;
+    if(waitForCompletion)
+    {
+      pidOn = false;
+    }
+    if(!pidOn)
+    {
+      d.spinFor(directionType::fwd, rev, rotationUnits::rev, maxVel, velocityUnits::pct, waitForCompletion);
+      goto end;
+    }
     if(rev > 0)
     {
       double vInitial = maxVel*.3;
@@ -50,78 +53,6 @@ void drive(double rev, bool correct = true)
     else if(rev < 0)
     {
       double vInitial = maxVel*.3;
-      maxVel -= vInitial;
-      d.resetPosition();
-      double error = rev - d.rotation(rotationUnits::rev);
-      while(error < 0)
-      {
-        error = rev - d.rotation(rotationUnits::rev);
-        double x = (error)/rev;
-        double vel = (sin(M_PI*x)*maxVel)+vInitial;
-        dt.drive(directionType::rev, vel, velocityUnits::pct);
-        vex::task::sleep(20);
-      }
-      if(!correct)
-      {
-        goto end;
-      }
-      if(error == 0)
-      {
-        goto end;
-      }
-      //Corrects overshoot
-      while(error > 0)
-      {
-        error = rev - d.rotation(rotationUnits::rev);
-        double x = (error)/rev;
-        double vel = vInitial;
-        dt.drive(directionType::fwd, vel, velocityUnits::pct);
-        vex::task::sleep(20);
-      }
-      dt.stop();
-    }
-    end:
-    vex::task::sleep(10);
-}
-
-void drive(double rev, int maxVel, bool correct = true)
-{   
-    if(rev > 0)
-    {
-      double vInitial = maxVel*.2;
-      maxVel -= vInitial;
-      d.resetPosition();
-      double error = rev - d.rotation(rotationUnits::rev);
-      while(error > 0)
-      {
-        error = rev - d.rotation(rotationUnits::rev);
-        double x = (error)/rev;
-        double vel = (sin(M_PI*x)*maxVel)+vInitial;
-        dt.drive(directionType::fwd, vel, velocityUnits::pct);
-        vex::task::sleep(20);
-      }
-      if(!correct)
-      {
-        goto end;
-      }
-      if(error == 0)
-      {
-        goto end;
-      }
-      //Corrects overshoot
-      while(error < 0)
-      {
-        error = rev - d.rotation(rotationUnits::rev);
-        double x = (error)/rev;
-        double vel = vInitial;
-        dt.drive(directionType::rev, vel, velocityUnits::pct);
-        vex::task::sleep(20);
-      }
-      dt.stop();
-    }
-    else if(rev < 0)
-    {
-      double vInitial = maxVel*.2;
       maxVel -= vInitial;
       d.resetPosition();
       double error = rev - d.rotation(rotationUnits::rev);
@@ -196,9 +127,11 @@ void beginAccelerateDrive(double rev, int maxVel)
 
 void flipOut()
 {
-    Lift.spinFor(.3, rev, 75, velocityUnits::pct, false);
-    drive(.5, 100);
-    drive(-.5, 100);
+    Lift.spinFor(.3, rev, 75, velocityUnits::pct);
+    drive(-.1, 40, false, false, false);
+    vex::task::sleep(200);
+    drive(.5, 40);
+    drive(-.5, 40);
     Lift.spinFor(-.5, rev, 75, velocityUnits::pct, false);
     intake.spin(vex::forward);
     Tilt.spinFor(2, rev, 127, velocityUnits::pct);
@@ -261,8 +194,8 @@ void stack(void)
 {
   intake.spin(directionType::fwd, 10, velocityUnits::pct);
   Tilt.spinFor(1.5, rev, 60, velocityUnits::pct, true);
+  Tilt.spinFor(-1.5, rev, 60, velocityUnits::pct, false); //Used to be after the drive -.5 command
   drive(-.5, 40);
-  Tilt.spinFor(-1.5, rev, 60, velocityUnits::pct, false);
 }
 
 #endif

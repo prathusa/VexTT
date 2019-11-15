@@ -41,7 +41,6 @@ void autonomous(void)
       Controller1.Screen.print(test);
       Controller1.Screen.setCursor(2, 1);
       Controller1.Screen.print("By: Pratham");
-      flipOut();
       if(!skills)
       {
         play();

@@ -8,6 +8,21 @@ int speed = 80;
 //drive command test
 void RM()
 {
+    flipOut();
+    intake.spin(directionType::rev, 127, velocityUnits::pct);
+    drive(3.5, 40, false);
+    intake.stop();
+    intake.spin(directionType::rev, 30, velocityUnits::pct);
+    drive(-3.5, 40, false);
+    drive(.7, 40);
+    //LeftFrontMotor.startRotateFor(directionType::fwd, -1, rotationUnits::rev, 40, velocityUnits::pct);
+    //LeftRearMotor.startRotateFor(directionType::fwd, -1, rotationUnits::rev, 40, velocityUnits::pct);
+    l.rotateFor(directionType::fwd, -1, rotationUnits::rev, 40, velocityUnits::pct);
+    r.rotateFor(directionType::fwd, 1.5, rotationUnits::rev, 40, velocityUnits::pct);
+    drive(.65, 40);
+    intake.stop();
+    stack();
+    /*
     //flipOut();
     //correction();
     intake.spin(directionType::rev, 127, velocityUnits::pct);
@@ -30,6 +45,7 @@ void RM()
     vex::task::sleep(200);
     //Alternatively, to stack you can use stack();
     drive(-.5, speed);
+    */
 }
 
 //drivetrain/gyro test
@@ -58,9 +74,10 @@ void BM()
     intake.stop();
     intake.spin(directionType::rev, 30, velocityUnits::pct);
     drive(-3.5, 40, false);
-    drive(.7, 40);
-    LeftFrontMotor.startRotateFor(directionType::fwd, -1, rotationUnits::rev, 40, velocityUnits::pct);
-    LeftRearMotor.startRotateFor(directionType::fwd, -1, rotationUnits::rev, 40, velocityUnits::pct);
+    drive(.65, 40);
+    //LeftFrontMotor.startRotateFor(directionType::fwd, -1, rotationUnits::rev, 40, velocityUnits::pct);
+    //LeftRearMotor.startRotateFor(directionType::fwd, -1, rotationUnits::rev, 40, velocityUnits::pct);
+    l.rotateFor(directionType::fwd, -1, rotationUnits::rev, 40, velocityUnits::pct, false);
     r.rotateFor(directionType::fwd, 1.5, rotationUnits::rev, 40, velocityUnits::pct);
     drive(.65, 40);
     intake.stop();
