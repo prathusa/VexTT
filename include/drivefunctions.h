@@ -198,4 +198,18 @@ void stack(void)
   drive(-.5, 40);
 }
 
+void getAutonInfo()
+{
+      Controller1.Screen.clearScreen();
+      Controller1.Screen.setCursor(1, 1);
+      Controller1.Screen.print("red");
+      Controller1.Screen.print(rojo);
+      Controller1.Screen.print(" sk");
+      Controller1.Screen.print(skills);
+      Controller1.Screen.print(" sl");
+      Controller1.Screen.print(slow);
+      Controller1.Screen.print(" test");
+      Controller1.Screen.print(test);
+}
+
 #endif

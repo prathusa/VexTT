@@ -101,7 +101,35 @@ void record(void)
     Controller1.Screen.print("Complete!");  
 }
 
-
+void getData(void)
+{
+    std::ofstream outFile;
+    Controller1.Screen.clearScreen();
+    for(int count = 5; count > 0; count--)
+    {
+      Controller1.Screen.clearLine(1);
+      Controller1.Screen.setCursor(1, 1);
+      Controller1.Screen.print(count);
+      vex::task::sleep(1000);
+    }
+    Controller1.Screen.clearScreen();
+    Controller1.Screen.setCursor(1, 1);
+    Controller1.Screen.print("Recording");
+    outFile.open("data.txt");
+    for (int i = 0; i < 4000; i+= 1) 
+    {
+      controls();
+      outFile << l.velocity(vex::velocityUnits::pct) << "\n";
+      outFile << l.position(rotationUnits::rev) << "\n";
+      outFile << r.velocity(vex::velocityUnits::pct) << "\n";
+      outFile << r.position(rotationUnits::rev) << "\n";
+      vex::task::sleep(1);
+    }
+    outFile.close();      
+    Controller1.Screen.clearScreen();
+    Controller1.Screen.setCursor(1, 1);
+    Controller1.Screen.print("Complete!");  
+}
 
 
 /*

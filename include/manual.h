@@ -14,6 +14,21 @@ void RM()
     intake.stop();
     intake.spin(directionType::rev, 30, velocityUnits::pct);
     drive(-3.5, 40, false);
+    drive(.65, 40);
+    //LeftFrontMotor.startRotateFor(directionType::fwd, -1, rotationUnits::rev, 40, velocityUnits::pct);
+    //LeftRearMotor.startRotateFor(directionType::fwd, -1, rotationUnits::rev, 40, velocityUnits::pct);
+    r.rotateFor(directionType::fwd, -1, rotationUnits::rev, 40, velocityUnits::pct, false);
+    l.rotateFor(directionType::fwd, 1.5, rotationUnits::rev, 40, velocityUnits::pct);
+    drive(.65, 40);
+    intake.stop();
+    stack();
+    /*
+    flipOut();
+    intake.spin(directionType::rev, 127, velocityUnits::pct);
+    drive(3.5, 40, false);
+    intake.stop();
+    intake.spin(directionType::rev, 30, velocityUnits::pct);
+    drive(-3.5, 40, false);
     drive(.7, 40);
     //LeftFrontMotor.startRotateFor(directionType::fwd, -1, rotationUnits::rev, 40, velocityUnits::pct);
     //LeftRearMotor.startRotateFor(directionType::fwd, -1, rotationUnits::rev, 40, velocityUnits::pct);
@@ -22,6 +37,9 @@ void RM()
     drive(.65, 40);
     intake.stop();
     stack();
+
+
+
     /*
     //flipOut();
     //correction();

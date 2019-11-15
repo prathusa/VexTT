@@ -61,9 +61,7 @@ void pre_auton(void)
           Brain.Screen.clearScreen();
           Brain.Screen.setCursor(1, 0);
           Brain.Screen.print("RP Selected");
-          Controller1.Screen.clearScreen();
-          Controller1.Screen.setCursor(1, 1);
-          Controller1.Screen.print("RP Selected");
+          getAutonInfo();
           Controller1.Screen.setCursor(2, 1);
           Controller1.Screen.print("By: PB & AB");
           goto end;
@@ -79,9 +77,7 @@ void pre_auton(void)
           Brain.Screen.clearScreen();
           Brain.Screen.setCursor(1, 0);
           Brain.Screen.print("BP Selected");
-          Controller1.Screen.clearScreen();
-          Controller1.Screen.setCursor(1, 1);
-          Controller1.Screen.print("BP Selected");
+          getAutonInfo();
           Controller1.Screen.setCursor(2, 1);
           Controller1.Screen.print("By: PB & AB");
           goto end;
@@ -223,12 +219,14 @@ void pre_auton(void)
       else if( x < 240)
         {
           Brain.Screen.clearScreen();
+          getAutonInfo();
           manual = true;
           goto end;
         }
         else if( x > 240)
         {
           Brain.Screen.clearScreen();
+          getAutonInfo();
           test = false;
           skills = true;
           goto end;
@@ -297,6 +295,13 @@ void pre_auton(void)
     {
       int x = Brain.Screen.xPosition();
       int y = Brain.Screen.yPosition();
+      if(x > 410 && y < 70)
+        {
+          Brain.Screen.clearScreen();
+          Brain.Screen.setCursor(1, 0);
+          Brain.Screen.print("Recording data");
+          getData();
+        }
       if(x < 60 && y < 40)
       {
           Brain.Screen.clearScreen();
@@ -326,6 +331,7 @@ void pre_auton(void)
           Brain.Screen.clearScreen();
           if(!rec)
           {
+            getAutonInfo();
             skills = true;
             test = true;
           }
@@ -341,6 +347,7 @@ void pre_auton(void)
         Brain.Screen.clearScreen();
         if(!rec)
         {
+          getAutonInfo();
           skills = false;
           test = true;
         }
