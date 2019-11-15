@@ -29,7 +29,7 @@ void record(void)
         for (int i = 0; i < 6000; i+= 1) 
         {
           controls();
-          outFile << (l.velocity(vex::velocityUnits::pct)) << "\n";
+          outFile << l.velocity(vex::velocityUnits::pct) << "\n";
           outFile << r.velocity(vex::velocityUnits::pct) << "\n";
           outFile << Lift.velocity(vex::velocityUnits::pct) << "\n";
           outFile << Tilt.velocity(vex::velocityUnits::pct) << "\n";
@@ -43,7 +43,7 @@ void record(void)
         for (int i = 0; i < 7200; i+= 1) 
         {
           controls();
-          outFile << (l.velocity(vex::velocityUnits::pct)) << "\n";
+          outFile << l.velocity(vex::velocityUnits::pct) << "\n";
           outFile << r.velocity(vex::velocityUnits::pct) << "\n";
           outFile << Lift.velocity(vex::velocityUnits::pct) << "\n";
           outFile << Tilt.velocity(vex::velocityUnits::pct) << "\n";
@@ -66,7 +66,7 @@ void record(void)
       for (int i = 0; i < 2250; i+= 1) 
       {
           controls();
-          outFile << (l.velocity(vex::velocityUnits::pct)) << "\n";
+          outFile << l.velocity(vex::velocityUnits::pct) << "\n";
           outFile << r.velocity(vex::velocityUnits::pct) << "\n";
           outFile << Lift.velocity(vex::velocityUnits::pct) << "\n";
           outFile << Tilt.velocity(vex::velocityUnits::pct) << "\n";
@@ -88,7 +88,7 @@ void record(void)
       for (int i = 0; i < 1500; i+= 1) 
       {
           controls();
-          outFile << (l.velocity(vex::velocityUnits::pct)) << "\n";
+          outFile << l.velocity(vex::velocityUnits::pct) << "\n";
           outFile << r.velocity(vex::velocityUnits::pct) << "\n";
           outFile << Lift.velocity(vex::velocityUnits::pct) << "\n";
           outFile << Tilt.velocity(vex::velocityUnits::pct) << "\n";
