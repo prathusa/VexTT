@@ -116,12 +116,16 @@ void getData(void)
     Controller1.Screen.setCursor(1, 1);
     Controller1.Screen.print("Recording");
     outFile.open("data.txt");
-    for (int i = 0; i < 4000; i+= 1) 
+    for (int i = 0; i < 10000; i+= 1) 
     {
       controls();
       outFile << l.velocity(vex::velocityUnits::pct) << "\n";
+      outFile << l.current() << "\n";
+      outFile << l.efficiency() << "\n";
       outFile << l.position(rotationUnits::rev) << "\n";
       outFile << r.velocity(vex::velocityUnits::pct) << "\n";
+      outFile << r.current() << "\n";
+      outFile << r.efficiency() << "\n";
       outFile << r.position(rotationUnits::rev) << "\n";
       vex::task::sleep(1);
     }
