@@ -8,20 +8,26 @@ int speed = 80;
 //drive command test
 void RM()
 {
+    drive(.3, 60);
+    drive(-.3, 60);
     flipOut();
     intake.spin(directionType::rev, 127, velocityUnits::pct);
-    drive(3.5, 40, false);
+    drive(3.5, 60, true, true, false);
     intake.stop();
     intake.spin(directionType::rev, 30, velocityUnits::pct);
-    drive(-3.5, 40, false);
-    drive(.65, 40);
+    drive(-3.5, 60, false, false, true);
+    drive(-.1, 40, false, false, false);
+    vex::task::sleep(200);
+    drive(1.8, 60);
     //LeftFrontMotor.startRotateFor(directionType::fwd, -1, rotationUnits::rev, 40, velocityUnits::pct);
     //LeftRearMotor.startRotateFor(directionType::fwd, -1, rotationUnits::rev, 40, velocityUnits::pct);
-    r.rotateFor(directionType::fwd, -1, rotationUnits::rev, 40, velocityUnits::pct, false);
-    l.rotateFor(directionType::fwd, 1.5, rotationUnits::rev, 40, velocityUnits::pct);
-    drive(.65, 40);
+    r.rotateFor(directionType::fwd, -1.4, rotationUnits::rev, 40, velocityUnits::pct, false);
+    l.rotateFor(directionType::fwd, 1.4, rotationUnits::rev, 40, velocityUnits::pct);
+    drive(1.15, 40);
     intake.stop();
-    stack();
+    intake.spin(directionType::fwd, 10, velocityUnits::pct);
+    Tilt.spinFor(1.6, rev, 60, velocityUnits::pct, true);
+    drive(-.7, 60);
     /*
     flipOut();
     intake.spin(directionType::rev, 127, velocityUnits::pct);
@@ -88,18 +94,22 @@ void BM()
     
     flipOut();
     intake.spin(directionType::rev, 127, velocityUnits::pct);
-    drive(3.5, 40, false);
+    drive(3.5, 60, true, true, false);
     intake.stop();
     intake.spin(directionType::rev, 30, velocityUnits::pct);
-    drive(-3.5, 40, false);
-    drive(.65, 40);
+    drive(-3.5, 60, false, false, true);
+    drive(-.1, 40, false, false, false);
+    vex::task::sleep(200);
+    drive(1.8, 60);
     //LeftFrontMotor.startRotateFor(directionType::fwd, -1, rotationUnits::rev, 40, velocityUnits::pct);
     //LeftRearMotor.startRotateFor(directionType::fwd, -1, rotationUnits::rev, 40, velocityUnits::pct);
-    l.rotateFor(directionType::fwd, -1, rotationUnits::rev, 40, velocityUnits::pct, false);
-    r.rotateFor(directionType::fwd, 1.5, rotationUnits::rev, 40, velocityUnits::pct);
-    drive(.65, 40);
+    r.rotateFor(directionType::fwd, 1.4, rotationUnits::rev, 40, velocityUnits::pct, false);
+    l.rotateFor(directionType::fwd, -1.4, rotationUnits::rev, 40, velocityUnits::pct);
+    drive(1, 40);
     intake.stop();
-    stack();
+    intake.spin(directionType::fwd, 10, velocityUnits::pct);
+    Tilt.spinFor(1.6, rev, 40, velocityUnits::pct, true);
+    drive(-.7, 60);
 }
 
 #endif /* AUTONBM_H */

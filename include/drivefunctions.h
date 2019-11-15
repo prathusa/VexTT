@@ -128,11 +128,8 @@ void beginAccelerateDrive(double rev, int maxVel)
 void flipOut()
 {
     Lift.spinFor(.3, rev, 75, velocityUnits::pct);
-    drive(-.1, 40, false, false, false);
-    vex::task::sleep(200);
-    drive(.5, 40);
-    drive(-.5, 40);
     Lift.spinFor(-.5, rev, 75, velocityUnits::pct, false);
+    drive(-.1, 60, false, false, false);
     intake.spin(vex::forward);
     Tilt.spinFor(2, rev, 127, velocityUnits::pct);
     Tilt.spinFor(-2, rev, 127, velocityUnits::pct);
@@ -193,9 +190,7 @@ void liftTiltCheck()
 void stack(void)
 {
   intake.spin(directionType::fwd, 10, velocityUnits::pct);
-  Tilt.spinFor(1.5, rev, 60, velocityUnits::pct, true);
-  Tilt.spinFor(-1.5, rev, 60, velocityUnits::pct, false); //Used to be after the drive -.5 command
-  drive(-.5, 40);
+  Tilt.spinFor(1.69, rev, 60, velocityUnits::pct, true);
 }
 
 void getAutonInfo()
