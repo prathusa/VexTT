@@ -51,29 +51,19 @@ void controls()
         // -----------------------------Toggle Stacker Command
         if(Controller1.ButtonY.pressing())
         {
-          while(!Controller1.ButtonDown.pressing())
-          {
-            //d.rotateFor(directionType::fwd, .5, rev, 40, velocityUnits::pct, false);
-            stack();
-            goto close1;
-          }
-          close1:
-          vex::task::sleep(20);
-        }
-        else
-        {
+          stack();
           Tilt.stop(brake);
         }
         
     if(mode == 0)
     {
         // -----------------------------Intake Control
-        if(Controller1.ButtonL1.pressing())
+        if(Controller1.ButtonR1.pressing())
         {
             LeftIntake.spin(directionType::fwd, 40, velocityUnits::pct);
             RightIntake.spin(directionType::fwd, 40, velocityUnits::pct);
         }
-        else if(Controller1.ButtonL2.pressing() && Lift.position(rev) < 0)
+        else if(Controller1.ButtonR2.pressing() && Lift.position(rev) < 0)
         {
             LeftIntake.spin(directionType::rev, 127, velocityUnits::pct);
             RightIntake.spin(directionType::rev, 127, velocityUnits::pct);
@@ -102,11 +92,11 @@ void controls()
         }
 
         // -----------------------------Tilt Control
-        if(Controller1.ButtonR2.pressing())
+        if(Controller1.ButtonL2.pressing())
         {
           Tilt.spin(directionType::fwd, 60/driveSpeedFactor, percentUnits::pct);
         }
-        else if(Controller1.ButtonR1.pressing())
+        else if(Controller1.ButtonL1.pressing())
         {
           Tilt.spin(directionType::rev, 60/driveSpeedFactor, percentUnits::pct);
         }
@@ -136,31 +126,10 @@ void controls()
             LeftIntake.spin(directionType::rev, 127, velocityUnits::pct);
             RightIntake.spin(directionType::rev, 127, velocityUnits::pct);
         }
-        else if(Controller1.ButtonDown.pressing())
+        else if(Controller1.ButtonB.pressing())
         {
           LeftIntake.stop(brakeType::brake);
           RightIntake.stop(brakeType::brake);
-        }
-        
-        
-        // -----------------------------Toggle Stacker Command
-        if(Controller1.ButtonY.pressing())
-        {
-          while(!Controller1.ButtonDown.pressing())
-          {
-            d.rotateFor(directionType::fwd, .5, rev, 40, velocityUnits::pct, false);
-            intake.spin(directionType::fwd, 5, velocityUnits::pct);
-            Tilt.spinFor(1.6, rev, 60, velocityUnits::pct, true);
-            drive(-.5, 40);
-            Tilt.spinFor(-1.3, rev, 60, velocityUnits::pct, false);
-            goto close;
-          }
-          close:
-          vex::task::sleep(20);
-        }
-        else
-        {
-          Tilt.stop(brake);
         }
 
         // -----------------------------Toggle Lift Positions

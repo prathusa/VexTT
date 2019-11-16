@@ -129,12 +129,12 @@ void flipOut()
 {
     Lift.spinFor(.3, rev, 75, velocityUnits::pct);
     Lift.spinFor(-.5, rev, 75, velocityUnits::pct, false);
-    drive(-.1, 60, false, false, false);
-    intake.spin(vex::forward);
+    //drive(-.1, 60, false, false, false);
+    intake.spin(vex::forward, 100, pct);
     Tilt.spinFor(2, rev, 127, velocityUnits::pct);
     Tilt.spinFor(-2, rev, 127, velocityUnits::pct);
     Lift.spinFor(-.1, rev, 75, velocityUnits::pct, true);
-    Lift.setBrake(brakeType::hold);
+    intake.stop();
 }
 
 //Resets the robot's facing position to the Gyro's 0 degrees angle
