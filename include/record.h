@@ -21,6 +21,13 @@ void record(void)
     Controller1.Screen.clearScreen();
     Controller1.Screen.setCursor(1, 1);
     Controller1.Screen.print("Recording");
+    d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 40, velocityUnits::pct, true);
+    //vex::task::sleep(200);
+    d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 40, velocityUnits::pct, true);
+    //drive(.5, 40);
+    //drive(-.5, 40);
+    flipOut();
+    d.rotateFor(-.2, rotationUnits::rev, 50, velocityUnits::pct, false);
     if(skills)
     {
       outFile.open("st.txt");

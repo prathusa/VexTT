@@ -15,7 +15,7 @@ using namespace vex;
 vex::brain Brain;
 vex::motor Lift (vex::PORT6, vex::gearSetting::ratio36_1,true);
 vex::motor Tilt (vex::PORT5, vex::gearSetting::ratio36_1,false);
-vex::motor LeftIntake (vex::PORT3, vex::gearSetting::ratio18_1,true);
+vex::motor LeftIntake (vex::PORT7, vex::gearSetting::ratio18_1,true);
 vex::motor RightIntake (vex::PORT8, vex::gearSetting::ratio18_1,false);
 vex::motor RightRearMotor (vex::PORT9, vex::gearSetting::ratio18_1,true);
 vex::motor RightFrontMotor (vex::PORT10, vex::gearSetting::ratio18_1,true);
@@ -37,6 +37,8 @@ bool azul = false;
 bool slow = false;
 bool test = false;
 bool skills = false;
+bool rm = false;
+bool bm = false;
 bool manual = false;
 double driveSpeedFactor = 1;
 

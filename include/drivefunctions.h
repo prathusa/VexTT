@@ -179,7 +179,7 @@ void liftTiltCheck()
   // -----------------------------Avoids Lift-Tilter conflict
         if(Lift.position(rotationUnits::rev) > 0 && Tilt.position(rotationUnits::rev) < .7)
         {
-            Tilt.spinFor(directionType::fwd, .7 - Tilt.position(rotationUnits::rev), rotationUnits::rev, 100, velocityUnits::pct);
+            Tilt.spinTo( .7, rotationUnits::rev, 100, velocityUnits::pct);
         }
         else if(Lift.position(rotationUnits::rev) < 0)
         {
@@ -190,7 +190,7 @@ void liftTiltCheck()
 void stack(void)
 {
   intake.spin(directionType::fwd, 10, velocityUnits::pct);
-  Tilt.spinFor(1.69, rev, 60, velocityUnits::pct, true);
+  Tilt.spinFor(1.8, rev, 40, velocityUnits::pct, true);
 }
 
 void getAutonInfo()

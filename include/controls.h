@@ -108,9 +108,9 @@ void controls()
         //----------------------------Fade Away
         if(Controller1.ButtonX.pressing())
         {
-          intake.spinFor(directionType::rev, -1, rotationUnits::rev, 40, velocityUnits::pct, false);
+          intake.spinFor(directionType::rev, -2, rotationUnits::rev, 40, velocityUnits::pct, false);
           //d.spinFor(-1, rotationUnits::rev, 40, velocityUnits::pct);
-          d.spinFor(-.5, rotationUnits::rev, 20, velocityUnits::pct);
+          d.spinFor(-.5, rotationUnits::rev, 30, velocityUnits::pct);
         }
     }
     else if(mode == 1)
@@ -135,13 +135,14 @@ void controls()
         // -----------------------------Toggle Lift Positions
         if(Controller1.ButtonL2.pressing())
         {
-            Lift.rotateTo(.4, rotationUnits::rev, 70, velocityUnits::pct);
             liftTiltCheck();
+            Lift.rotateTo(.6, rotationUnits::rev, 70, velocityUnits::pct);
+            
         }
         else if(Controller1.ButtonL1.pressing())
         {
-            Lift.rotateTo(.8, rotationUnits::rev, 70, velocityUnits::pct);
             liftTiltCheck();
+            Lift.rotateTo(1.2, rotationUnits::rev, 70, velocityUnits::pct);
         }
         else if(Lift.position(rotationUnits::rev) < -.25)
         {
@@ -154,10 +155,26 @@ void controls()
             Lift.stop();
         }
 
-        // -----------------------------Flip Out
         if(Controller1.ButtonX.pressing())
         {
-          flipOut();
+          Lift.spinFor(.3, rev, 75, velocityUnits::pct);
+    Lift.spinFor(-.5, rev, 75, velocityUnits::pct, false);
+    //drive(-.1, 60, false, false, false);
+    intake.spin(vex::forward, 100, pct);
+    Tilt.spinFor(2, rev, 127, velocityUnits::pct);
+    Tilt.spinFor(-2, rev, 127, velocityUnits::pct);
+    Lift.spinFor(-.1, rev, 75, velocityUnits::pct, true);
+    intake.stop();
+        }
+        // -----------------------------Flip Out
+        if(Controller1.ButtonUp.pressing())
+        {
+          RM();
+          //sdt.turnToHeading(0, rotationUnits::deg, 20, velocityUnits::pct);
+        }
+        if(Controller1.ButtonDown.pressing())
+        {
+          BM();
           //sdt.turnToHeading(0, rotationUnits::deg, 20, velocityUnits::pct);
         }
     }
