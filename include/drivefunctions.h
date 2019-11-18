@@ -28,7 +28,7 @@ void drive(double rev, int maxVel = 80, bool pidOn = true, bool correct = true, 
         error = rev - d.rotation(rotationUnits::rev);
         double x = (error)/rev;
         double vel = (sin(M_PI*x)*maxVel)+vInitial;
-        dt.drive(directionType::fwd, vel, velocityUnits::pct);
+        d.spin(directionType::fwd, vel, percentUnits::pct);
         vex::task::sleep(20);
       }
       if(!correct)
@@ -85,6 +85,66 @@ void drive(double rev, int maxVel = 80, bool pidOn = true, bool correct = true, 
     }
     end:
     vex::task::sleep(10);
+}
+
+void pid()
+{
+
+}
+
+void drivePID(double target) 
+{
+target *= 360 / (3.25 * M_PI);
+d.resetRotation();
+
+double kp = 0.33;
+double ki = 0.0005;
+double kd = 0.2;
+
+double proportion;
+double integralRaw;
+double integral;
+double integralActiveZone = 360 / (3.25 * M_PI);
+double integralPowerLimit = 50 / ki;
+double derivative;
+double finalPower;
+
+double error = target;
+double lastError = target;
+vex::task::sleep(50);
+while(std::abs(error) > 75){
+    error = target - d.rotation(rotationUnits::deg);
+    if(error == 0){
+        break;
+    }
+    proportion = kp * error;
+    
+    if(std::abs(error) < integralActiveZone && error != 0){
+    integralRaw += error;
+    } 
+    else integralRaw = 0.0;
+    
+    if(integralRaw > integralPowerLimit){
+        integralRaw = integralPowerLimit;
+    }
+    if(integralRaw < -integralPowerLimit){
+        integralRaw = integralPowerLimit;
+    }
+    
+    integral = ki * integralRaw;
+    
+    derivative = kd * (error - lastError);
+    lastError = error;
+    
+    if(error == 0){
+        derivative = 0;
+        
+    }
+    finalPower = 0.5 * (proportion + integral + derivative);
+    d.spin(fwd, finalPower, voltageUnits::volt);
+    vex::task::sleep(20);
+}
+d.stop();
 }
 
 void beginAccelerateDrive(double rev, int maxVel)
@@ -189,8 +249,17 @@ void liftTiltCheck()
 
 void stack(void)
 {
-  intake.spin(directionType::fwd, 10, velocityUnits::pct);
-  Tilt.spinFor(1.8, rev, 40, velocityUnits::pct, true);
+  double target = 1.8; //In revolutions
+  double error = target - Tilt.position(rev);
+  while(error > 0)
+  {
+    error = target - Tilt.position(rev);
+    double volts = 4*sqrt(error)+2;
+    Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
+    error = target - Tilt.position(rev);
+    vex::task::sleep(20);
+  }
+  Tilt.stop();
 }
 
 void getAutonInfo()

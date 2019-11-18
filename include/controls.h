@@ -94,11 +94,53 @@ void controls()
         // -----------------------------Tilt Control
         if(Controller1.ButtonL2.pressing())
         {
-          Tilt.spin(directionType::fwd, 60/driveSpeedFactor, percentUnits::pct);
+          double target = 1.8; //In revolutions
+          double error = target - Tilt.position(rev);
+          if(error > 0)
+          {
+            error = target - Tilt.position(rev);
+            double volts = 4*sqrt(error)+2;
+            Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
+            error = target - Tilt.position(rev);
+            vex::task::sleep(20);
+          }
+          else
+          {
+            double volts = 4*sqrt(target)+2;
+            Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
+          }
+          /*
+          double target = 1.8; //In revolutions
+          if(Tilt.position(rev) < target)
+          {
+            double volts = 70 - Tilt.position(rev)*30;
+            Tilt.spin(directionType::fwd, volts/10, voltageUnits::volt);
+            vex::task::sleep(20);
+          }
+          else
+          {
+            double volts = 70 - target*30;
+            Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
+          }
+          */
         }
         else if(Controller1.ButtonL1.pressing())
         {
-          Tilt.spin(directionType::rev, 60/driveSpeedFactor, percentUnits::pct);
+          double target = 1.8; //In revolutions
+          double error = target - Tilt.position(rev);
+          if(error > 0)
+          {
+            error = target - Tilt.position(rev);
+            double volts = 4*sqrt(error)+2;
+            Tilt.spin(directionType::rev, volts, voltageUnits::volt);
+            error = target - Tilt.position(rev);
+            vex::task::sleep(20);
+          }
+          else
+          {
+            double volts = 4*sqrt(target)+2;
+            Tilt.spin(directionType::rev, volts, voltageUnits::volt);
+          }
         }
         else
         {
