@@ -26,7 +26,7 @@ vex::motor_group l(LeftFrontMotor, LeftRearMotor);
 vex::motor_group r(RightFrontMotor, RightRearMotor);
 vex::motor_group d(LeftFrontMotor, LeftRearMotor, RightFrontMotor, RightRearMotor);
 vex::gyro Gyro (Brain.ThreeWirePort.G);
-//vex::smartdrive sdt(l, r, Gyro, 12.56, 16, 16, distanceUnits::in);
+vex::smartdrive sdt(l, r, Gyro, 12.56, 16, 16, distanceUnits::in);
 vex::drivetrain dt(l, r);
 vex::controller Controller1;
 vex::competition Competition;

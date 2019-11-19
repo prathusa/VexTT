@@ -8,30 +8,28 @@ int speed = 80;
 //drive command test
 void RM()
 {
-    d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 40, velocityUnits::pct, true);
-    //vex::task::sleep(200);
-    d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 40, velocityUnits::pct, true);
+    Gyro.calibrate(1000);
+    while(Gyro.isCalibrating())
+    {
+      vex::task::sleep(10);
+    }
+    drive(.75, 40);
+    drive(-.75, 40);
     flipOut();
-    //correction();
+    sdt.turnToHeading(0, rotationUnits::deg, 40, velocityUnits::pct);
     intake.spin(directionType::rev, 127, velocityUnits::pct);
-    drive(2.8, speed);
+    drive(3.3, speed);
     intake.stop();
     intake.spin(directionType::rev, 10, velocityUnits::pct);
-    drive(-2.8, speed);
+    drive(-2.4, 100);
     //drive(-.1, 50, false);
     //vex::task::sleep(200);
+    sdt.turnToHeading(-65, rotationUnits::deg, 40, velocityUnits::pct);
     d.stop();
-    drive(.7, 50);
-    r.rotateFor(directionType::fwd, -1, rotationUnits::rev, 60, velocityUnits::pct, false);
-    l.rotateFor(directionType::fwd, 1.5, rotationUnits::rev, 60, velocityUnits::pct);
-    drive(.4, 40);
-    intake.stop();
+    drive(.3, 40);
     //Stack:
-    intake.spin(directionType::fwd, 10, velocityUnits::pct);
-    Tilt.rotateFor(1.85, rev, 40, velocityUnits::pct, true);
+    stack();
     vex::task::sleep(200);
-    //drive(.1, 20);
-    //Alternatively, to stack you can use stack();
     drive(-.7, speed);
     /*
     d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 40, velocityUnits::pct, true);
@@ -112,9 +110,16 @@ void RM()
 //drivetrain/gyro test
 void BM()
 {
+    Gyro.calibrate(1000);
+    while(Gyro.isCalibrating())
+    {
+      vex::task::sleep(10);
+    }
+    drive(.75, 40);
+    drive(-.75, 40);
     flipOut();
     intake.spin(vex::forward, 127, velocityUnits::pct);
-    drive(3.4, 50);
+    drive(3.4, 60);
     intake.stop();
     intake.spin(vex::forward, 20, velocityUnits::pct);
     //make sure that this uses gyro to calculate rotated degrees if not use turn while not command
