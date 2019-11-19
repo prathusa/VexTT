@@ -106,7 +106,7 @@ void controls()
           }
           else
           {
-            double volts = 4*sqrt(target)+2;
+            double volts = 4*sqrt(0)+2;
             Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
           }
           /*
@@ -138,7 +138,7 @@ void controls()
           }
           else
           {
-            double volts = 4*sqrt(target)+2;
+            double volts = 4*sqrt(0)+2;
             Tilt.spin(directionType::rev, volts, voltageUnits::volt);
           }
         }
