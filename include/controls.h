@@ -39,13 +39,13 @@ void controls()
             Controller1.Screen.clearLine(1);
             Controller1.Screen.setCursor(1,1);
             Controller1.Screen.print("Speed Reduced");
-            Controller1.rumble("--..");
+            Controller1.rumble(".---.");
         }
         else if(Controller1.ButtonA.pressing())
         {
             driveSpeedFactor = .5; //Resets the drive speed to normal
             Controller1.Screen.clearLine(1);
-            Controller1.rumble("..--");
+            Controller1.rumble("-.-.--");
         }
 
         // -----------------------------Toggle Stacker Command
@@ -65,8 +65,8 @@ void controls()
         }
         else if(Controller1.ButtonR2.pressing() && Lift.position(rev) < 0)
         {
-            LeftIntake.spin(directionType::rev, 127, velocityUnits::pct);
-            RightIntake.spin(directionType::rev, 127, velocityUnits::pct);
+            LeftIntake.spin(directionType::rev, 100, velocityUnits::pct);
+            RightIntake.spin(directionType::rev, 100, velocityUnits::pct);
         }
         else
         {
@@ -99,14 +99,15 @@ void controls()
           if(error > 0)
           {
             error = target - Tilt.position(rev);
-            double volts = 4*sqrt(error)+2;
+            double volts = 4*sqrt(error)+3;
             Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
             error = target - Tilt.position(rev);
             vex::task::sleep(20);
           }
           else
           {
-            double volts = 4*sqrt(0)+2;
+            error = 0;
+            double volts = 4*sqrt(error)+3;
             Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
           }
           /*
@@ -131,14 +132,15 @@ void controls()
           if(error > 0)
           {
             error = target - Tilt.position(rev);
-            double volts = 4*sqrt(error)+2;
+            double volts = 4*sqrt(error)+3;
             Tilt.spin(directionType::rev, volts, voltageUnits::volt);
             error = target - Tilt.position(rev);
             vex::task::sleep(20);
           }
           else
           {
-            double volts = 4*sqrt(0)+2;
+            error = 0;
+            double volts = 4*sqrt(error)+3;
             Tilt.spin(directionType::rev, volts, voltageUnits::volt);
           }
         }
@@ -150,8 +152,7 @@ void controls()
         //----------------------------Fade Away
         if(Controller1.ButtonX.pressing())
         {
-          intake.spinFor(directionType::rev, -2, rotationUnits::rev, 40, velocityUnits::pct, false);
-          //d.spinFor(-1, rotationUnits::rev, 40, velocityUnits::pct);
+          intake.spinFor(directionType::rev, -2, rotationUnits::rev, 30, velocityUnits::pct, false);
           d.spinFor(-.5, rotationUnits::rev, 30, velocityUnits::pct);
         }
     }
@@ -165,8 +166,8 @@ void controls()
         }
         else if(Controller1.ButtonR2.pressing() && Lift.position(rev) < 0)
         {
-            LeftIntake.spin(directionType::rev, 127, velocityUnits::pct);
-            RightIntake.spin(directionType::rev, 127, velocityUnits::pct);
+            LeftIntake.spin(directionType::rev, 100, velocityUnits::pct);
+            RightIntake.spin(directionType::rev, 100, velocityUnits::pct);
         }
         else if(Controller1.ButtonB.pressing())
         {
@@ -196,18 +197,13 @@ void controls()
             Lift.setBrake(hold);
             Lift.stop();
         }
-
+        
+        // -----------------------------Flip Out
         if(Controller1.ButtonX.pressing())
         {
-          Lift.spinFor(.3, rev, 75, velocityUnits::pct);
-    Lift.spinFor(-.5, rev, 75, velocityUnits::pct, false);
-    //drive(-.1, 60, false, false, false);
-    intake.spin(vex::forward, 100, pct);
-    Tilt.spinFor(2, rev, 127, velocityUnits::pct);
-    Tilt.spinFor(-2, rev, 127, velocityUnits::pct);
-    Lift.spinFor(-.1, rev, 75, velocityUnits::pct, true);
-    intake.stop();
+          flipOut();
         }
+        
         // -----------------------------Flip Out
         if(Controller1.ButtonUp.pressing())
         {

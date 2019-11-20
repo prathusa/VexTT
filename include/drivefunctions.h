@@ -254,7 +254,7 @@ void stack(void)
   while(error > 0)
   {
     error = target - Tilt.position(rev);
-    double volts = 4*sqrt(error)+2;
+    double volts = 4*sqrt(error)+3;
     Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
     error = target - Tilt.position(rev);
     vex::task::sleep(20);

@@ -24,13 +24,6 @@ void play(void)
     {
       inFile.open("bt.txt");
     }
-    d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 40, velocityUnits::pct, true);
-    //vex::task::sleep(200);
-    d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 40, velocityUnits::pct, true);
-    //drive(.5, 40);
-    //drive(-.5, 40);
-    flipOut();
-    d.rotateFor(-.2, rotationUnits::rev, 50, velocityUnits::pct, false);
     while(!inFile.eof())
     {
       for (int i = 0; i < 1500; i+= 1) 

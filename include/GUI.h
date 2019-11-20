@@ -5,7 +5,7 @@
 #include "record.h"
 #include "controls.h"
 #include "manual.h"
-#include "autonomus.h"
+#include "autonomous.h"
 
 bool rec;
 void pre_auton(void) 

@@ -3,7 +3,7 @@
 
 #include "vex.h"
 #include "controls.h"
-#include "autonomus.h"
+#include "autonomous.h"
 
 void usercontrol(void) 
 {
