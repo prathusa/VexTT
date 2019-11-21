@@ -178,14 +178,15 @@ void controls()
         // -----------------------------Toggle Lift Positions
         if(Controller1.ButtonL2.pressing())
         {
-            liftTiltCheck();
-            Lift.rotateTo(.6, rotationUnits::rev, 70, velocityUnits::pct);
-            
+            //liftTiltCheck();
+            //Lift.rotateTo(.6, rotationUnits::rev, 70, velocityUnits::pct);
+            sdt.turnToHeading(90, rotationUnits::deg, 40, velocityUnits::pct);
         }
         else if(Controller1.ButtonL1.pressing())
         {
-            liftTiltCheck();
-            Lift.rotateTo(1.2, rotationUnits::rev, 70, velocityUnits::pct);
+            //liftTiltCheck();
+            //Lift.rotateTo(1.2, rotationUnits::rev, 70, velocityUnits::pct);
+            sdt.turnToHeading(-90, rotationUnits::deg, 40, velocityUnits::pct);
         }
         else if(Lift.position(rotationUnits::rev) < -.25)
         {
