@@ -262,18 +262,79 @@ void stack(void)
   Tilt.stop();
 }
 
-void getAutonInfo()
+//Added Controller and Brain feedback when autonomous is selected.
+void autonController()
 {
       Controller1.Screen.clearScreen();
       Controller1.Screen.setCursor(1, 1);
-      Controller1.Screen.print("red");
-      Controller1.Screen.print(rojo);
-      Controller1.Screen.print(" sk");
-      Controller1.Screen.print(skills);
-      Controller1.Screen.print(" sl");
-      Controller1.Screen.print(slow);
-      Controller1.Screen.print(" test");
-      Controller1.Screen.print(test);
+      if(rojo)
+      {
+        Controller1.Screen.print("red");
+      }
+
+      if(azul)
+      {
+        Controller1.Screen.print("blue");
+      }
+
+      if(skills)
+      {
+        Controller1.Screen.print(" sk");
+      }
+
+      if(slow)
+      {
+        Controller1.Screen.print(" slow");
+      }
+
+      if(test)
+      {
+        Controller1.Screen.print(" test");
+      }
+}
+
+void autonBrain()
+{
+      int pixelRow = 0;
+      Brain.Screen.clearScreen();
+      Brain.Screen.setFont(fontType::mono30);
+      Brain.Screen.setCursor(1, pixelRow);
+      Brain.Screen.print("Selected: ");
+
+      if(rojo)
+      {
+        Brain.Screen.print("red \n");
+        //pixelRow += 30;
+        //Brain.Screen.setCursor(1, pixelRow);
+      }
+
+      if(azul)
+      {
+        Brain.Screen.print("blue  \n");
+        //pixelRow += 30;
+        //Brain.Screen.setCursor(1, pixelRow);
+      }
+
+      if(skills)
+      {
+        Brain.Screen.print("skills  \n");
+        //pixelRow += 30;
+        //Brain.Screen.setCursor(1, pixelRow);
+      }
+
+      if(slow)
+      {
+        Brain.Screen.print("slow mode \n");
+        //pixelRow += 30;
+        //Brain.Screen.setCursor(1, pixelRow);
+      }
+
+      if(test)
+      {
+        Brain.Screen.print("test mode  \n");
+        //pixelRow += 30;
+        //Brain.Screen.setCursor(1, pixelRow);
+      }
 }
 
 #endif

@@ -31,14 +31,39 @@ void autonomous(void)
     {
       Controller1.Screen.clearScreen();
       Controller1.Screen.setCursor(1, 1);
-      Controller1.Screen.print("red");
-      Controller1.Screen.print(rojo);
-      Controller1.Screen.print(" sk");
-      Controller1.Screen.print(skills);
-      Controller1.Screen.print(" sl");
-      Controller1.Screen.print(slow);
-      Controller1.Screen.print(" test");
-      Controller1.Screen.print(test);
+      Brain.Screen.clearScreen();
+      Brain.Screen.setCursor(1, 0);
+
+      if(rojo)
+      {
+        Controller1.Screen.print("red");
+        Brain.Screen.print("red \n");
+      }
+
+      if(azul)
+      {
+        Controller1.Screen.print("blue");
+        Brain.Screen.print("blue \n");
+      }
+
+      if(skills)
+      {
+        Controller1.Screen.print(" sk");
+        Brain.Screen.print("skills \n");
+      }
+
+      if(slow)
+      {
+        Controller1.Screen.print(" slow");
+        Brain.Screen.print("slow mode \n");
+      }
+
+      if(test)
+      {
+        Controller1.Screen.print(" test");
+        Brain.Screen.print("test mode \n");
+      }
+
       Controller1.Screen.setCursor(2, 1);
       Controller1.Screen.print("By: Pratham");
       if(!skills)

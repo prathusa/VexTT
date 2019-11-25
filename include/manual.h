@@ -5,7 +5,6 @@
 #include "drivefunctions.h"
 
 int speed = 80;
-//drive command test
 void RM()
 {
     Gyro.calibrate(1000);

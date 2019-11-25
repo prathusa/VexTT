@@ -54,30 +54,23 @@ void pre_auton(void)
         else if(x < 240)
         {
           rojo = true;
-          skills = false;
-          slow = false;
-          test = false; 
-          manual = false;
           Brain.Screen.clearScreen();
           Brain.Screen.setCursor(1, 0);
           Brain.Screen.print("RP Selected");
-          getAutonInfo();
+          autonController();
+          autonBrain();
           Controller1.Screen.setCursor(2, 1);
           Controller1.Screen.print("By: PB & AB");
           goto end;
         }
         else if(x > 240)
         {
-          rojo = false;
           azul = true;
-          skills = false;
-          slow = false;
-          test = false; 
-          manual = false;
           Brain.Screen.clearScreen();
           Brain.Screen.setCursor(1, 0);
           Brain.Screen.print("BP Selected");
-          getAutonInfo();
+          autonController();
+          autonBrain();
           Controller1.Screen.setCursor(2, 1);
           Controller1.Screen.print("By: PB & AB");
           goto end;
@@ -219,14 +212,16 @@ void pre_auton(void)
       else if( x < 240)
         {
           Brain.Screen.clearScreen();
-          getAutonInfo();
+          autonController();
+          autonBrain();
           manual = true;
           goto end;
         }
         else if( x > 240)
         {
           Brain.Screen.clearScreen();
-          getAutonInfo();
+          autonController();
+          autonBrain();
           test = false;
           skills = true;
           goto end;
@@ -331,7 +326,8 @@ void pre_auton(void)
           Brain.Screen.clearScreen();
           if(!rec)
           {
-            getAutonInfo();
+            autonController();
+            autonBrain();
             skills = true;
             test = true;
           }
@@ -347,7 +343,8 @@ void pre_auton(void)
         Brain.Screen.clearScreen();
         if(!rec)
         {
-          getAutonInfo();
+          autonController();
+          autonBrain();
           skills = false;
           test = true;
         }
