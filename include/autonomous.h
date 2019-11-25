@@ -32,6 +32,7 @@ void autonomous(void)
       Controller1.Screen.clearScreen();
       Controller1.Screen.setCursor(1, 1);
       Brain.Screen.clearScreen();
+      Brain.Screen.setFont(fontType::mono30);
       Brain.Screen.setCursor(1, 0);
 
       if(rojo)
@@ -75,6 +76,37 @@ void autonomous(void)
         splay();
       }
     }
+    else 
+    {
+      Controller1.Screen.clearScreen();
+      Controller1.Screen.setCursor(1, 1);
+      Controller1.Screen.print(":( i sleep");
+      Controller1.Screen.setCursor(2, 1);
+      Controller1.Screen.print("By: Pratham");
+      
+      while(!( rojo || azul || skills || slow || test))
+      {
+        if(Controller1.ButtonLeft.pressing())
+        {
+          /*
+          turn right 90
+          drive back 1
+          drive forward 1
+          */
+        }
+
+        if(Controller1.ButtonRight.pressing())
+        {
+          /*
+          turn left 90
+          drive back 1
+          drive forward 1
+          */
+        }
+      }
+
+    }
+    /*
     else
     {
         //Runs ambiguous auton that drops preload in goal zone
@@ -87,5 +119,6 @@ void autonomous(void)
         drive(2, 100);
         flipOut();
     }
+    */
 }
 #endif /* AUTONOMUS_H */

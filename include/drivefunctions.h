@@ -112,22 +112,27 @@ double finalPower;
 double error = target;
 double lastError = target;
 vex::task::sleep(50);
-while(std::abs(error) > 75){
+while(std::abs(error) > 75)
+{
     error = target - d.rotation(rotationUnits::deg);
-    if(error == 0){
+    if(error == 0)
+    {
         break;
     }
     proportion = kp * error;
     
-    if(std::abs(error) < integralActiveZone && error != 0){
+    if(std::abs(error) < integralActiveZone && error != 0)
+    {
     integralRaw += error;
     } 
     else integralRaw = 0.0;
     
-    if(integralRaw > integralPowerLimit){
+    if(integralRaw > integralPowerLimit)
+    {
         integralRaw = integralPowerLimit;
     }
-    if(integralRaw < -integralPowerLimit){
+    if(integralRaw < -integralPowerLimit)
+    {
         integralRaw = integralPowerLimit;
     }
     
@@ -136,9 +141,9 @@ while(std::abs(error) > 75){
     derivative = kd * (error - lastError);
     lastError = error;
     
-    if(error == 0){
+    if(error == 0)
+    {
         derivative = 0;
-        
     }
     finalPower = 0.5 * (proportion + integral + derivative);
     d.spin(fwd, finalPower, voltageUnits::volt);
@@ -336,5 +341,7 @@ void autonBrain()
         //Brain.Screen.setCursor(1, pixelRow);
       }
 }
+
+
 
 #endif
