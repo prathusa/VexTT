@@ -18,6 +18,18 @@ void usercontrol(void)
           autonomous();
         }
         */
+
+        // -----------------------------Debug Mode (gets drive data for pid control)
+        if(Debug.pressing() == 1)
+        {
+          Brain.Screen.clearScreen();
+          Brain.Screen.setCursor(1, 0);
+          Brain.Screen.print("Recording data");
+          getData();
+          Brain.Screen.clearScreen();
+          Brain.Screen.setCursor(1, 0);
+          Brain.Screen.print("Done!");
+        }
     }
 }
 

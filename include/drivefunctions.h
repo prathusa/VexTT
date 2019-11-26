@@ -274,71 +274,75 @@ void autonController()
       Controller1.Screen.setCursor(1, 1);
       if(rojo)
       {
-        Controller1.Screen.print("red");
+        Controller1.Screen.print("RED");
       }
 
       if(azul)
       {
-        Controller1.Screen.print("blue");
+        Controller1.Screen.print("BLUE");
       }
 
       if(skills)
       {
-        Controller1.Screen.print(" sk");
+        Controller1.Screen.print(" SK");
       }
 
       if(slow)
       {
-        Controller1.Screen.print(" slow");
+        Controller1.Screen.print(" SLOW");
       }
 
       if(test)
       {
-        Controller1.Screen.print(" test");
+        Controller1.Screen.print(" TEST");
       }
 }
 
 void autonBrain()
 {
-      int pixelRow = 0;
+      int row = 1;
       Brain.Screen.clearScreen();
-      Brain.Screen.setFont(fontType::mono30);
-      Brain.Screen.setCursor(1, pixelRow);
-      Brain.Screen.print("Selected: ");
+      Brain.Screen.setFont(fontType::mono60);
+      Brain.Screen.setCursor(1, row);
 
       if(rojo)
       {
-        Brain.Screen.print("red \n");
-        //pixelRow += 30;
-        //Brain.Screen.setCursor(1, pixelRow);
+        Brain.Screen.setFillColor(red);
+        Brain.Screen.print("RED");
+        row += 1;
+        Brain.Screen.setCursor(row, 0);
       }
 
       if(azul)
       {
-        Brain.Screen.print("blue  \n");
-        //pixelRow += 30;
-        //Brain.Screen.setCursor(1, pixelRow);
+        Brain.Screen.setFillColor(blue);
+        Brain.Screen.print("BLUE");
+        row += 1;
+        Brain.Screen.setCursor(row, 0);
       }
 
       if(skills)
       {
-        Brain.Screen.print("skills  \n");
-        //pixelRow += 30;
-        //Brain.Screen.setCursor(1, pixelRow);
+        Brain.Screen.setFillColor(yellow);
+        Brain.Screen.print("SKILLS");
+        row += 1;
+        Brain.Screen.setCursor(row, 0);
       }
 
       if(slow)
       {
-        Brain.Screen.print("slow mode \n");
-        //pixelRow += 30;
-        //Brain.Screen.setCursor(1, pixelRow);
+        Brain.Screen.setFillColor(orange);
+        Brain.Screen.print("SLOW MODE");
+        row += 1;
+        Brain.Screen.setCursor(row, 0);
       }
 
       if(test)
       {
-        Brain.Screen.print("test mode  \n");
-        //pixelRow += 30;
-        //Brain.Screen.setCursor(1, pixelRow);
+        Brain.Screen.setFillColor(purple);
+        Brain.Screen.print("TEST MODE");
+        row += 1;
+        Brain.Screen.setCursor(row, 0);
       }
 }
 

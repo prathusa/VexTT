@@ -61,7 +61,7 @@ void pre_auton(void)
           autonBrain();
           Controller1.Screen.setCursor(2, 1);
           Controller1.Screen.print("By: PB & AB");
-          goto end;
+          break;
         }
         else if(x > 240)
         {
@@ -73,7 +73,7 @@ void pre_auton(void)
           autonBrain();
           Controller1.Screen.setCursor(2, 1);
           Controller1.Screen.print("By: PB & AB");
-          goto end;
+          break;
         }
       vex::task::sleep(20);
     }
@@ -212,19 +212,19 @@ void pre_auton(void)
       else if( x < 240)
         {
           Brain.Screen.clearScreen();
+          manual = true;
           autonController();
           autonBrain();
-          manual = true;
-          goto end;
+          break;
         }
         else if( x > 240)
         {
           Brain.Screen.clearScreen();
-          autonController();
-          autonBrain();
           test = false;
           skills = true;
-          goto end;
+          autonController();
+          autonBrain();
+          break;
         }
         vex::task::sleep(20);
     }
@@ -290,13 +290,6 @@ void pre_auton(void)
     {
       int x = Brain.Screen.xPosition();
       int y = Brain.Screen.yPosition();
-      if(x > 410 && y < 70)
-        {
-          Brain.Screen.clearScreen();
-          Brain.Screen.setCursor(1, 0);
-          Brain.Screen.print("Recording data");
-          getData();
-        }
       if(x < 60 && y < 40)
       {
           Brain.Screen.clearScreen();
@@ -326,34 +319,34 @@ void pre_auton(void)
           Brain.Screen.clearScreen();
           if(!rec)
           {
-            autonController();
-            autonBrain();
             skills = true;
             test = true;
+            autonController();
+            autonBrain();
           }
           else 
           {
             skills = true;
             record();
           }
-          goto end;
+          break;
         }
       else if( x > 240)
       {
         Brain.Screen.clearScreen();
         if(!rec)
         {
-          autonController();
-          autonBrain();
           skills = false;
           test = true;
+          autonController();
+          autonBrain();
         }
         else 
         {
           skills = false;
           record();
         }
-        goto end;
+        break;
       }
         vex::task::sleep(20);
     }

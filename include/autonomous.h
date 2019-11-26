@@ -29,40 +29,56 @@ void autonomous(void)
     }
     else if (( rojo || azul || skills || slow || test))
     {
+      int row = 1;
       Controller1.Screen.clearScreen();
       Controller1.Screen.setCursor(1, 1);
       Brain.Screen.clearScreen();
       Brain.Screen.setFont(fontType::mono30);
-      Brain.Screen.setCursor(1, 0);
+      Brain.Screen.setCursor(0, row);
 
       if(rojo)
       {
-        Controller1.Screen.print("red");
-        Brain.Screen.print("red \n");
+        Controller1.Screen.print("RED");
+        Brain.Screen.setFillColor(red);
+        Brain.Screen.print("RED");
+        row += 1;
+        Brain.Screen.setCursor(row, 0);
       }
 
       if(azul)
       {
-        Controller1.Screen.print("blue");
-        Brain.Screen.print("blue \n");
+        Controller1.Screen.print("BLUE");
+        Brain.Screen.setFillColor(blue);
+        Brain.Screen.print("BLUE");
+        row += 1;
+        Brain.Screen.setCursor(row, 0);
       }
 
       if(skills)
       {
-        Controller1.Screen.print(" sk");
-        Brain.Screen.print("skills \n");
+        Controller1.Screen.print(" SK");
+        Brain.Screen.setFillColor(yellow);
+        Brain.Screen.print("SKILLS");
+        row += 1;
+        Brain.Screen.setCursor(row, 0);
       }
 
       if(slow)
       {
-        Controller1.Screen.print(" slow");
-        Brain.Screen.print("slow mode \n");
+        Controller1.Screen.print(" SLOW");
+        Brain.Screen.setFillColor(orange);
+        Brain.Screen.print("SLOW MODE");
+        row += 1;
+        Brain.Screen.setCursor(row, 0);
       }
 
       if(test)
       {
-        Controller1.Screen.print(" test");
-        Brain.Screen.print("test mode \n");
+        Controller1.Screen.print(" TEST");
+        Brain.Screen.setFillColor(purple);
+        Brain.Screen.print("TEST MODE");
+        row += 1;
+        Brain.Screen.setCursor(row, 0);
       }
 
       Controller1.Screen.setCursor(2, 1);
