@@ -61,7 +61,7 @@ void pre_auton(void)
           autonBrain();
           Controller1.Screen.setCursor(2, 1);
           Controller1.Screen.print("By: PB & AB");
-          break;
+          goto end;
         }
         else if(x > 240)
         {
@@ -73,7 +73,7 @@ void pre_auton(void)
           autonBrain();
           Controller1.Screen.setCursor(2, 1);
           Controller1.Screen.print("By: PB & AB");
-          break;
+          goto end;
         }
       vex::task::sleep(20);
     }
@@ -215,7 +215,7 @@ void pre_auton(void)
           manual = true;
           autonController();
           autonBrain();
-          break;
+          goto end;
         }
         else if( x > 240)
         {
@@ -224,7 +224,7 @@ void pre_auton(void)
           skills = true;
           autonController();
           autonBrain();
-          break;
+          goto end;
         }
         vex::task::sleep(20);
     }
@@ -329,7 +329,7 @@ void pre_auton(void)
             skills = true;
             record();
           }
-          break;
+          goto end;
         }
       else if( x > 240)
       {
@@ -346,7 +346,7 @@ void pre_auton(void)
           skills = false;
           record();
         }
-        break;
+        goto end;
       }
         vex::task::sleep(20);
     }

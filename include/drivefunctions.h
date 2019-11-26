@@ -87,9 +87,49 @@ void drive(double rev, int maxVel = 80, bool pidOn = true, bool correct = true, 
     vex::task::sleep(10);
 }
 
-void pid()
+void pid(double rev)
 {
-
+  double error = rev - d.position(rotationUnits::rev);
+  double integral = error;
+  double prevError = error;
+  double derivative = error - prevError;
+  double kP = 0; //Guess and check to find this
+  double kI = 0; //Guess and check to find this
+  double kD = 0; //Guess and check to find this
+  if(error > 0)
+  {
+    while(error > 0)
+    {
+      error = rev - d.position(rotationUnits::rev);
+      integral += error;
+      if(error <= 0)
+      {
+        integral = 0;
+      }
+      derivative = error - prevError;
+      prevError = error;
+      double volts = error*kP + integral*kI + derivative*kD;
+      d.spin(fwd, volts, voltageUnits::volt);
+      vex::task::sleep(15);
+    }
+  }
+  else if (error < 0)
+  {
+    while(error < 0)
+    {
+      error = rev - d.position(rotationUnits::rev);
+      integral += error;
+      if(error >= 0)
+      {
+        integral = 0;
+      }
+      derivative = error - prevError;
+      prevError = error;
+      double volts = error*kP + integral*kI + derivative*kD;
+      d.spin(fwd, volts, voltageUnits::volt);
+      vex::task::sleep(15);
+    }
+  }
 }
 
 void drivePID(double target) 
@@ -192,13 +232,10 @@ void beginAccelerateDrive(double rev, int maxVel)
 
 void flipOut()
 {
-    Lift.spinFor(.3, rev, 75, velocityUnits::pct);
-    Lift.spinFor(-.5, rev, 75, velocityUnits::pct, false);
     //drive(-.1, 60, false, false, false);
     intake.spin(vex::forward, 100, pct);
     Tilt.spinFor(2, rev, 127, velocityUnits::pct);
     Tilt.spinFor(-2, rev, 127, velocityUnits::pct);
-    Lift.spinFor(-.1, rev, 75, velocityUnits::pct, true);
     intake.stop();
 }
 
@@ -239,14 +276,64 @@ void correction()
     vex::task::sleep(20);
 }
 
+void tiltTo(double targetDegrees)
+{
+  double error = targetDegrees - Potentiometer.angle(rotationUnits::deg);
+  double integral = error;
+  double prevError = error;
+  double derivative = error - prevError;
+  double kP = 4 * (1/360);
+  double kI = 1/360;
+  double kD = 1/360;
+  if(error > 0)
+  {
+    while(error > 0)
+    {
+      error = targetDegrees - Potentiometer.angle(rotationUnits::deg);
+      integral += error;
+      if(error <= 0)
+      {
+        integral = 0;
+      }
+      derivative = error - prevError;
+      prevError = error;
+      double volts = error*kP + integral*kI + derivative*kD;
+      Tilt.spin(fwd, volts, voltageUnits::volt);
+      vex::task::sleep(15);
+    }
+  }
+  else if (error < 0)
+  {
+    while(error < 0)
+    {
+      error = targetDegrees - Potentiometer.angle(rotationUnits::deg);
+      integral += error;
+      if(error >= 0)
+      {
+        integral = 0;
+      }
+      derivative = error - prevError;
+      prevError = error;
+      double volts = error*kP + integral*kI + derivative*kD;
+      Tilt.spin(fwd, volts, voltageUnits::volt);
+      vex::task::sleep(15);
+    }
+  }
+}
+
+void tiltFor(double revolutions)
+{
+
+}
+
 void liftTiltCheck()
 {
   // -----------------------------Avoids Lift-Tilter conflict
-        if(Lift.position(rotationUnits::rev) > 0 && Tilt.position(rotationUnits::rev) < .7)
+        if(Lift.position(rotationUnits::rev) > .3 && Tilt.position(rotationUnits::rev) < .7)
         {
             Tilt.spinTo( .7, rotationUnits::rev, 100, velocityUnits::pct);
         }
-        else if(Lift.position(rotationUnits::rev) < 0)
+        else if(Lift.position(rotationUnits::rev) < .3)
         {
             Tilt.spinTo(0, rotationUnits::rev, 70, velocityUnits::pct);
         }
@@ -345,6 +432,73 @@ void autonBrain()
         Brain.Screen.setCursor(row, 0);
       }
 }
+
+
+
+
+
+// ----------------------Reference PID Loop
+/*
+
+void drivePID(double target) {
+target *= 360 / (3.25 * M_PI);
+DLB.resetRotation();
+
+double kp = 0.33;
+double ki = 0.0005;
+double kd = 0.2;
+
+double proportion;
+double integralRaw;
+double integral;
+double integralActiveZone = 360 / (3.25 * M_PI);
+double integralPowerLimit = 50 / ki;
+double derivative;
+double finalPower;
+
+double error = target;
+double lastError = target;
+sleepMs(50);
+while(abs(error) > 75){
+    error = target - DLB.rotation(rotationUnits::deg);
+    if(error == 0){
+        break;
+    }
+    proportion = kp * error;
+    
+    if(abs(error) < integralActiveZone && error != 0){
+    integralRaw += error;
+    } 
+    else integralRaw = 0.0;
+    
+    if(integralRaw > integralPowerLimit){
+        integralRaw = integralPowerLimit;
+    }
+    if(integralRaw < -integralPowerLimit){
+        integralRaw = integralPowerLimit;
+    }
+    
+    integral = ki * integralRaw;
+    
+    derivative = kd * (error - lastError);
+    lastError = error;
+    
+    if(error == 0){
+        derivative = 0;
+        
+    }
+    finalPower = 0.5 * (proportion + integral + derivative);
+    driveForward(finalPower);
+    sleepMs(20);
+}
+DLF.stop(brakeType::coast);
+DLB.stop(brakeType::coast);
+DRF.stop(brakeType::coast);
+DRB.stop(brakeType::coast);
+}
+
+*/
+
 
 
 

@@ -113,8 +113,9 @@ void getData(void)
       vex::task::sleep(1000);
     }
     Controller1.Screen.clearScreen();
+    Brain.Screen.clearScreen();
     Controller1.Screen.setCursor(1, 1);
-    Controller1.Screen.print("Recording");
+    Controller1.Screen.print("Getting Data");
     outFile.open("data.txt");
     for (int i = 0; i < 10000; i+= 1) 
     {
@@ -127,6 +128,15 @@ void getData(void)
       outFile << r.current() << "\n";
       outFile << r.efficiency() << "\n";
       outFile << r.position(rotationUnits::rev) << "\n";
+      if(i % 100 == 0)
+      {
+        int cs = i/100;
+        
+        Brain.Screen.setFont(fontType::mono30);
+        Brain.Screen.setCursor(0, 1);
+        Brain.Screen.print(cs);
+        Controller1.Screen.print(cs);
+      }
       vex::task::sleep(1);
     }
     outFile.close();      

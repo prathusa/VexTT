@@ -33,7 +33,7 @@ void autonomous(void)
       Controller1.Screen.clearScreen();
       Controller1.Screen.setCursor(1, 1);
       Brain.Screen.clearScreen();
-      Brain.Screen.setFont(fontType::mono30);
+      Brain.Screen.setFont(fontType::mono60);
       Brain.Screen.setCursor(0, row);
 
       if(rojo)

@@ -26,9 +26,19 @@ void usercontrol(void)
           Brain.Screen.setCursor(1, 0);
           Brain.Screen.print("Recording data");
           getData();
-          Brain.Screen.clearScreen();
-          Brain.Screen.setCursor(1, 0);
-          Brain.Screen.print("Done!");
+        }
+
+        // -----------------------------Test Mode (gets drive data for pid control)
+        if(Test.pressing() == 1)
+        {
+          vex::task::sleep(1000);
+          drivePID(1);
+          //vex::task::sleep(1000);
+          //drivePID(-1);
+          //vex::task::sleep(1000);
+          //pid(1);
+          //vex::task::sleep(1000);
+          //pid(-1);
         }
     }
 }

@@ -27,6 +27,7 @@ vex::motor_group r(RightFrontMotor, RightRearMotor);
 vex::motor_group d(LeftFrontMotor, LeftRearMotor, RightFrontMotor, RightRearMotor);
 vex::gyro Gyro (Brain.ThreeWirePort.G);
 vex::pot Potentiometer (Brain.ThreeWirePort.H);
+vex::limit Test (Brain.ThreeWirePort.B);
 vex::limit Debug (Brain.ThreeWirePort.D);
 //vex::encoder LeftTrack (Brain.ThreeWirePort.A);
 //vex::encoder LeRightTrack (Brain.ThreeWirePort.C);

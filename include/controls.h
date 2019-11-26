@@ -39,13 +39,13 @@ void controls()
             Controller1.Screen.clearLine(1);
             Controller1.Screen.setCursor(1,1);
             Controller1.Screen.print("Speed Reduced");
-            Controller1.rumble(".---.");
+            Controller1.rumble("-");
         }
         else if(Controller1.ButtonA.pressing())
         {
             driveSpeedFactor = .5; //Resets the drive speed to normal
             Controller1.Screen.clearLine(1);
-            Controller1.rumble("-.-.--");
+            Controller1.rumble(".");
         }
 
         // -----------------------------Toggle Stacker Command
@@ -63,7 +63,7 @@ void controls()
             LeftIntake.spin(directionType::fwd, 40, velocityUnits::pct);
             RightIntake.spin(directionType::fwd, 40, velocityUnits::pct);
         }
-        else if(Controller1.ButtonR2.pressing() && Lift.position(rev) < 0)
+        else if(Controller1.ButtonR2.pressing() && Lift.position(rev) < .3)
         {
             LeftIntake.spin(directionType::rev, 100, velocityUnits::pct);
             RightIntake.spin(directionType::rev, 100, velocityUnits::pct);
@@ -164,7 +164,7 @@ void controls()
             LeftIntake.spin(directionType::fwd, 40, velocityUnits::pct);
             RightIntake.spin(directionType::fwd, 40, velocityUnits::pct);
         }
-        else if(Controller1.ButtonR2.pressing() && Lift.position(rev) < 0)
+        else if(Controller1.ButtonR2.pressing() && Lift.position(rev) < 0.3)
         {
             LeftIntake.spin(directionType::rev, 100, velocityUnits::pct);
             RightIntake.spin(directionType::rev, 100, velocityUnits::pct);
