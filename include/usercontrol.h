@@ -32,11 +32,11 @@ void usercontrol(void)
         if(Test.pressing() == 1)
         {
           vex::task::sleep(1000);
-          drivePID(1);
+          //drivePID(1);
           //vex::task::sleep(1000);
           //drivePID(-1);
           //vex::task::sleep(1000);
-          //pid(1);
+          pid(1);
           //vex::task::sleep(1000);
           //pid(-1);
         }
