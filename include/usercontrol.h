@@ -37,6 +37,7 @@ void usercontrol(void)
           //drivePID(-1);
           //vex::task::sleep(1000);
           pid(1);
+          d.spinFor(fwd, 1, rotationUnits::rev, 60, velocityUnits::pct);
           //vex::task::sleep(1000);
           //pid(-1);
         }

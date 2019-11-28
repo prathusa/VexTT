@@ -30,7 +30,7 @@ vex::pot Potentiometer (Brain.ThreeWirePort.H);
 vex::limit Test (Brain.ThreeWirePort.B);
 vex::limit Debug (Brain.ThreeWirePort.D);
 //vex::encoder LeftTrack (Brain.ThreeWirePort.A);
-//vex::encoder LeRightTrack (Brain.ThreeWirePort.C);
+//vex::encoder RightTrack (Brain.ThreeWirePort.C);
 vex::smartdrive sdt(l, r, Gyro, 12.56, 16, 16, distanceUnits::in);
 vex::drivetrain dt(l, r);
 vex::controller Controller1;
