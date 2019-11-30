@@ -93,9 +93,9 @@ void pid(double rev)
   double integral = error;
   double prevError = error;
   double derivative = error - prevError;
-  double kP = 0.33;
-  double kI = 0.0005;
-  double kD = 0.2;
+  double kP = 0; //0.15
+  double kI = 0; //0.03
+  double kD = 0; //0.1
   if(error > 0)
   {
     while(error > 0)
