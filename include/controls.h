@@ -7,6 +7,7 @@
 #include "drivefunctions.h"
 using namespace vex;
 
+bool displayed = false;
 void controls()
 {       
         //Arcade Control
@@ -54,16 +55,32 @@ void controls()
           stack();
           Tilt.stop(brake);
         }
+
+        // -----------------------------Tilter Overextension Warning
+        if(t.value(percentUnits::pct) > tiltMax && !displayed)
+        {
+          Controller1.Screen.clearLine(2);
+          Controller1.Screen.setCursor(2,1);
+          Controller1.Screen.print("Tilter Overextended");
+          displayed = true;
+        }
+
+        // -----------------------------Tilter Overextension Warning
+        if(t.value(percentUnits::pct) < tiltMax && displayed)
+        {
+          Controller1.Screen.clearLine(2);
+          displayed = false;
+        }
         
     if(mode == 0)
     {
         // -----------------------------Intake Control
-        if(Controller1.ButtonR1.pressing())
+        if(Controller1.ButtonL1.pressing())
         {
             LeftIntake.spin(directionType::fwd, 40, velocityUnits::pct);
             RightIntake.spin(directionType::fwd, 40, velocityUnits::pct);
         }
-        else if(Controller1.ButtonR2.pressing() && Lift.position(rev) < .3)
+        else if(Controller1.ButtonL2.pressing() && Lift.position(rev) < .3)
         {
             LeftIntake.spin(directionType::rev, 100, velocityUnits::pct);
             RightIntake.spin(directionType::rev, 100, velocityUnits::pct);
@@ -92,22 +109,21 @@ void controls()
         }
 
         // -----------------------------Tilt Control
-        if(Controller1.ButtonL2.pressing())
+        if(Controller1.ButtonR2.pressing() && t.value(percentUnits::pct) < tiltMax)
         {
-          double target = 1.8; //In revolutions
-          double error = target - Tilt.rotation(rev);
+          double target = tiltMax; //In revolutions
+          double error = target - t.value(percentUnits::pct);
           if(error > 0)
           {
-            error = target - Tilt.rotation(rev);
-            double volts = error+2;
+            error = target - t.value(percentUnits::pct);
+            double volts = .1*error+3;
             Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
-            error = target - Tilt.rotation(rev);
             vex::task::sleep(20);
           }
           else
           {
             error = 0;
-            double volts = error+2;
+            double volts = error+3;
             Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
           }
           /*
@@ -125,16 +141,15 @@ void controls()
           }
           */
         }
-        else if(Controller1.ButtonL1.pressing())
+        else if(Controller1.ButtonR1.pressing() && t.value(percentUnits::pct) > tiltMin)
         {
-          double target = 1.8; //In revolutions
-          double error = target - Tilt.rotation(rev);
+          double target = tiltMax; //In revolutions
+          double error = target - t.value(percentUnits::pct);
           if(error > 0)
           {
-            error = target - Tilt.rotation(rev);
-            double volts = error+2;
+            error = target - t.value(percentUnits::pct);
+            double volts = .1*error+3;
             Tilt.spin(directionType::rev, volts, voltageUnits::volt);
-            error = target - Tilt.rotation(rev);
             vex::task::sleep(20);
           }
           else

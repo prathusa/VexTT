@@ -14,7 +14,7 @@
 using namespace vex;
 vex::brain Brain;
 vex::motor Lift (vex::PORT6, vex::gearSetting::ratio36_1,true);
-vex::motor Tilt (vex::PORT5, vex::gearSetting::ratio36_1,false);
+vex::motor Tilt (vex::PORT5, vex::gearSetting::ratio36_1,true);
 vex::motor LeftIntake (vex::PORT7, vex::gearSetting::ratio18_1,true);
 vex::motor RightIntake (vex::PORT8, vex::gearSetting::ratio18_1,false);
 vex::motor RightRearMotor (vex::PORT9, vex::gearSetting::ratio18_1,true);
@@ -26,7 +26,7 @@ vex::motor_group l(LeftFrontMotor, LeftRearMotor);
 vex::motor_group r(RightFrontMotor, RightRearMotor);
 vex::motor_group d(LeftFrontMotor, LeftRearMotor, RightFrontMotor, RightRearMotor);
 vex::gyro Gyro (Brain.ThreeWirePort.G);
-vex::pot Potentiometer (Brain.ThreeWirePort.H);
+vex::pot t (Brain.ThreeWirePort.H);
 vex::limit Test (Brain.ThreeWirePort.B);
 vex::limit Debug (Brain.ThreeWirePort.D);
 //vex::encoder LeftTrack (Brain.ThreeWirePort.A);
@@ -37,6 +37,8 @@ vex::controller Controller1;
 vex::competition Competition;
 
 int mode = 0;
+int tiltMax = 85;
+int tiltMin = 44; 
 bool rojo = false;
 bool azul = false;
 bool slow = false;
@@ -46,5 +48,6 @@ bool rm = false;
 bool bm = false;
 bool manual = false;
 double driveSpeedFactor = 1;
+double gyroLinearFactor = 47/90;
 
 #endif

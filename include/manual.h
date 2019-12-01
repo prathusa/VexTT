@@ -7,29 +7,29 @@
 int speed = 80;
 void RM()
 {
-    Gyro.calibrate(1000);
+    resetEncoders(true);
     while(Gyro.isCalibrating())
     {
       vex::task::sleep(10);
     }
-    drive(.75, 40);
-    drive(-.75, 40);
+    drive(.75);
+    drive(-.75);
     flipOut();
     sdt.turnToHeading(0, rotationUnits::deg, 40, velocityUnits::pct);
     intake.spin(directionType::rev, 127, velocityUnits::pct);
-    drive(3.3, speed);
+    drive(3.3);
     intake.stop();
     intake.spin(directionType::rev, 10, velocityUnits::pct);
-    drive(-2.4, 100);
+    drive(-2.4);
     //drive(-.1, 50, false);
     //vex::task::sleep(200);
     sdt.turnToHeading(-65, rotationUnits::deg, 40, velocityUnits::pct);
     d.stop();
-    drive(.3, 40);
+    drive(.3);
     //Stack:
     stack();
     vex::task::sleep(200);
-    drive(-.7, speed);
+    drive(-.7);
     /*
     d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 40, velocityUnits::pct, true);
     //vex::task::sleep(200);
@@ -109,27 +109,25 @@ void RM()
 //drivetrain/gyro test
 void BM()
 {
-    Gyro.calibrate(1000);
-    while(Gyro.isCalibrating())
-    {
-      vex::task::sleep(10);
-    }
-    drive(.75, 40);
-    drive(-.75, 40);
+    resetEncoders();
+    int calibrateTime = 1000;
+    Gyro.calibrate(calibrateTime);
+    vex::task::sleep(calibrateTime);
+    drive(.75);
+    drive(-.75);
     flipOut();
-    intake.spin(vex::forward, 127, velocityUnits::pct);
-    drive(3.4, 60);
+    d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 40, velocityUnits::pct, false);
+    vex::task::sleep(300);
+    intake.spin(reverse, 100, velocityUnits::pct);
+    drive(3.4);
     intake.stop();
-    intake.spin(vex::forward, 20, velocityUnits::pct);
-    //make sure that this uses gyro to calculate rotated degrees if not use turn while not command
-    ///////////dt.turnFor(-40, rotationUnits::deg, 40, velocityUnits::pct);
-    //need to figure out a way to reduce/remove gyro drift
-    r.rotateFor(directionType::fwd, 1.4, rotationUnits::rev, 50, velocityUnits::pct, false);
-    l.rotateFor(directionType::fwd, -1.6, rotationUnits::rev, 50, velocityUnits::pct);
-    drive(3, 80);
+    intake.spin(reverse, 20, velocityUnits::pct);
+    drive(-1);
+    turnFor(gyroLinearFactor*160);
+    drive(2.6);
     intake.stop();
     stack();
-    drive(-1, 40);
+    drive(-1);
     
     /*
     d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 40, velocityUnits::pct, true);
