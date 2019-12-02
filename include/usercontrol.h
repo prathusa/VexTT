@@ -32,21 +32,22 @@ void usercontrol(void)
         // -----------------------------Test Mode (gets drive data for pid control)
         if(Test.pressing() == 1)
         {
-          /*
+          
           Gyro.calibrate(1000);
           while(Gyro.isCalibrating())
           {
             vex::task::sleep(10);
           }
-          turnFor(-47);
+          turnFor(-83.5);
           vex::task::sleep(3000);
           sdt.turnToHeading(0, rotationUnits::deg, 40, velocityUnits::pct);
-          */
+          
           /*
           drive(2);
           vex::task::sleep(1000);
           drive(-1);
           */
+          //turnFor(-90);
         }
     }
 }

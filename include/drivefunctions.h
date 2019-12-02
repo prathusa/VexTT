@@ -113,7 +113,7 @@ void turnTo(double raw)
 void turnFor(double raw)
 {
   double kP = 0.1; //.5
-  double kI = 0.001; //.0035
+  double kI = 0.0035; //.0035
   double kD = 0.05; //0.3
   if(raw > 0)
   {

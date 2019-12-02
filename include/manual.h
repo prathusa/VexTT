@@ -123,7 +123,7 @@ void BM()
     intake.stop();
     intake.spin(reverse, 20, velocityUnits::pct);
     drive(-1);
-    turnFor(gyroLinearFactor*160);
+    turnFor(-83);
     drive(2.6);
     intake.stop();
     stack();
