@@ -8,6 +8,7 @@
 
 void usercontrol(void) 
 {
+    tiltTo(tiltMin, 2.5);
     while(1) 
     {
         controls();
@@ -38,7 +39,7 @@ void usercontrol(void)
           {
             vex::task::sleep(10);
           }
-          turnFor(-83.5);
+          turnFor(rightAngle);
           vex::task::sleep(3000);
           sdt.turnToHeading(0, rotationUnits::deg, 40, velocityUnits::pct);
           

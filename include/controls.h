@@ -109,9 +109,9 @@ void controls()
         }
 
         // -----------------------------Tilt Control
-        if(Controller1.ButtonR2.pressing() && t.value(percentUnits::pct) < tiltMax)
+        if(Controller1.ButtonR2.pressing() && t.value(percentUnits::pct) < tiltStack)
         {
-          double target = tiltMax; //In revolutions
+          double target = tiltStack; //In revolutions
           double error = target - t.value(percentUnits::pct);
           if(error > 0)
           {

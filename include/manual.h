@@ -110,9 +110,11 @@ void RM()
 void BM()
 {
     resetEncoders();
-    int calibrateTime = 1000;
-    Gyro.calibrate(calibrateTime);
-    vex::task::sleep(calibrateTime);
+    Gyro.calibrate();
+    while(Gyro.isCalibrating())
+    {
+      vex::task::sleep(10);
+    }
     drive(.75);
     drive(-.75);
     flipOut();

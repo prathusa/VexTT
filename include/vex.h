@@ -29,16 +29,17 @@ vex::gyro Gyro (Brain.ThreeWirePort.G);
 vex::pot t (Brain.ThreeWirePort.H);
 vex::limit Test (Brain.ThreeWirePort.B);
 vex::limit Debug (Brain.ThreeWirePort.D);
-//vex::encoder LeftTrack (Brain.ThreeWirePort.A);
-//vex::encoder RightTrack (Brain.ThreeWirePort.C);
 vex::smartdrive sdt(l, r, Gyro, 12.56, 16, 16, distanceUnits::in);
 vex::drivetrain dt(l, r);
 vex::controller Controller1;
 vex::competition Competition;
+//vex::encoder LeftTrack (Brain.ThreeWirePort.A);
+//vex::encoder RightTrack (Brain.ThreeWirePort.C);
 
 int mode = 0;
-int tiltMax = 85;
-int tiltMin = 44; 
+int tiltMax = 70;
+int tiltStack = 56;
+int tiltMin = 23; 
 bool rojo = false;
 bool azul = false;
 bool slow = false;
@@ -49,5 +50,6 @@ bool bm = false;
 bool manual = false;
 double driveSpeedFactor = 1;
 double gyroLinearFactor = 47/90;
-
+double leftAngle = -47;
+double rightAngle = 47;
 #endif

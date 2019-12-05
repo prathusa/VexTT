@@ -470,7 +470,7 @@ void liftTiltCheck()
 
 void stack(void)
 {
-  double target = 85; //In revolutions
+  double target = tiltStack; //In revolutions
   double error = target - t.value(percentUnits::pct);
   while(error > 0)
   {
