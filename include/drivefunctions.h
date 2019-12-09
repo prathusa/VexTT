@@ -577,7 +577,69 @@ void resetEncoders(bool resetGyro = false)
   RightRearMotor.resetPosition();
 }
 
+void getDrift()
+{
 
+}
+
+void kalmanFilter()
+{
+  
+}
+
+void cGUI ()
+{
+  start:
+  int row = 1;
+  int cursor = 1;
+  std::string dialog[] =  {"Side: R|B", "Test: Y|N", "Ambi: Y|N", "Manual: Y|N", "Record: Y|N", "Play: Y|N"};
+  std::string modularManual[] =  {"Side: R|B", "Test: Y|N", "Ambi: Y|N", "Manual: Y|N", "Record: Y|N", "Play: Y|N"};
+  Controller1.Screen.clearScreen();
+  Controller1.Screen.setCursor(row, 1);
+  Controller1.Screen.print(dialog[row]);
+  row++;
+  Controller1.Screen.setCursor(row, 1);
+  Controller1.Screen.print("Test: Y|N");
+  row++;
+  Controller1.Screen.setCursor(row, 1);
+  Controller1.Screen.print("Ambi: Y|N");
+  Controller1.Screen.print("Manual: Y|N");
+  Controller1.Screen.print("Record: Y|N");
+  Controller1.Screen.print("Play: Y|N");
+  Controller1.Screen.print("Manual: >Y|N");
+  while(1)
+  {
+    while((Controller1.ButtonUp.pressing() || Controller1.Axis3.value() > 20) && cursor >= 3)
+    {
+      cursor++;
+      vex::task::sleep(200);
+    }
+
+    while((Controller1.ButtonDown.pressing() || Controller1.Axis3.value() < -20) && cursor > 1)
+    {
+      cursor--;
+      vex::task::sleep(200);
+    }
+
+    if(Controller1.ButtonRight.pressing() || Controller1.Axis1.value() > 20)
+    {
+      
+    }
+
+    if(Controller1.ButtonLeft.pressing() || Controller1.Axis1.value() < -20)
+    {
+      Controller1.Screen.print("Manual: >Y|N");
+    }
+
+    if(Controller1.ButtonA.pressing())
+    {
+      
+      autonBrain();
+      autonController();
+      break;
+    }
+  }
+}
 
 // ----------------------Reference PID Loop
 /*
