@@ -456,16 +456,14 @@ void flipOut()
 void liftTiltCheck()
 {
   // -----------------------------Avoids Lift-Tilter conflict
-        if(Lift.position(rotationUnits::rev) > 1 && t.value(percentUnits::pct) < tiltMin)
-        {
-            tiltTo(tiltMin, 5);
-        }
-        /*
-        else if(Lift.position(rotationUnits::rev) < 1)
-        {
-            tiltTo(44, 4);
-        }
-        */
+  if(Lift.position(rotationUnits::rev) > 1 && t.value(percentUnits::pct) < 34)
+  {
+    tiltTo(34, 5);
+  }
+  else if(Lift.position(rotationUnits::rev) < 1)
+  {
+    tiltTo(tiltMin, 4);
+  }
 }
 
 void stack(void)

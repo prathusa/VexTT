@@ -14,7 +14,7 @@
 using namespace vex;
 vex::brain Brain;
 vex::motor Lift (vex::PORT6, vex::gearSetting::ratio36_1,true);
-vex::motor Tilt (vex::PORT5, vex::gearSetting::ratio36_1,true);
+vex::motor Tilt (vex::PORT5, vex::gearSetting::ratio36_1,false);
 vex::motor LeftIntake (vex::PORT7, vex::gearSetting::ratio18_1,true);
 vex::motor RightIntake (vex::PORT8, vex::gearSetting::ratio18_1,false);
 vex::motor RightRearMotor (vex::PORT9, vex::gearSetting::ratio18_1,true);
@@ -29,6 +29,7 @@ vex::gyro Gyro (Brain.ThreeWirePort.G);
 vex::pot t(Brain.ThreeWirePort.H);
 vex::limit Test (Brain.ThreeWirePort.B);
 vex::limit Debug (Brain.ThreeWirePort.D);
+vex::pwm_out LED(Brain.ThreeWirePort.E);
 vex::smartdrive sdt(l, r, Gyro, 12.56, 16, 16, distanceUnits::in);
 vex::drivetrain dt(l, r);
 vex::controller Controller1;
@@ -38,7 +39,7 @@ vex::competition Competition;
 
 int mode = 0;
 int tiltMax = 72;
-int tiltStack = 63;
+int tiltStack = 65;
 int tiltMin = 23; 
 bool rojo = false;
 bool azul = false;
