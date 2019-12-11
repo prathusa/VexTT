@@ -8,7 +8,7 @@
 
 void usercontrol(void) 
 {
-    tiltTo(tiltMin, 2.5);
+    //tiltTo(tiltMin, 2.5);
     while(1) 
     {
         controls();
