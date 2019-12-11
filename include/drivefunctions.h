@@ -586,7 +586,7 @@ void kalmanFilter()
 {
   
 }
-
+/*
 void cGUI ()
 {
   start:
@@ -640,7 +640,7 @@ void cGUI ()
     }
   }
 }
-
+*/
 // ----------------------Reference PID Loop
 /*
 
