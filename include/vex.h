@@ -26,7 +26,7 @@ vex::motor_group l(LeftFrontMotor, LeftRearMotor);
 vex::motor_group r(RightFrontMotor, RightRearMotor);
 vex::motor_group d(LeftFrontMotor, LeftRearMotor, RightFrontMotor, RightRearMotor);
 vex::gyro Gyro (Brain.ThreeWirePort.G);
-vex::pot t (Brain.ThreeWirePort.H);
+vex::pot t(Brain.ThreeWirePort.H);
 vex::limit Test (Brain.ThreeWirePort.B);
 vex::limit Debug (Brain.ThreeWirePort.D);
 vex::smartdrive sdt(l, r, Gyro, 12.56, 16, 16, distanceUnits::in);
