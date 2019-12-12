@@ -9,6 +9,7 @@ void RM()
 {
     resetEncoders(false);
     Gyro.resetAngle();
+    Inertial.resetRotation();
     drive(.75);
     drive(-.75);
     flipOut();
@@ -108,6 +109,7 @@ void BM()
 {
     resetEncoders(false);
     Gyro.resetAngle();
+    Inertial.resetRotation();
     drive(.75);
     drive(-.75);
     flipOut();
@@ -119,6 +121,7 @@ void BM()
     intake.spin(reverse, 20, velocityUnits::pct);
     drive(-1);
     turnFor(-83);
+    //sdt.turnFor(160, rotationUnits::deg, 40, velocityUnits::pct);
     drive(2.6);
     intake.stop();
     stack();
