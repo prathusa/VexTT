@@ -7,11 +7,8 @@
 int speed = 80;
 void RM()
 {
-    resetEncoders(true);
-    while(Gyro.isCalibrating())
-    {
-      vex::task::sleep(10);
-    }
+    resetEncoders(false);
+    Gyro.resetAngle();
     drive(.75);
     drive(-.75);
     flipOut();
@@ -109,12 +106,8 @@ void RM()
 //drivetrain/gyro test
 void BM()
 {
-    resetEncoders();
-    Gyro.calibrate();
-    while(Gyro.isCalibrating())
-    {
-      vex::task::sleep(10);
-    }
+    resetEncoders(false);
+    Gyro.resetAngle();
     drive(.75);
     drive(-.75);
     flipOut();

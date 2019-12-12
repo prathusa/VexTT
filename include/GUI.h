@@ -12,7 +12,12 @@ void pre_auton(void)
 {
     Controller1.Screen.clearScreen();
     Controller1.Screen.setCursor(1, 1);
-    Controller1.Screen.print("Select Auton");
+    Controller1.Screen.print("Calibrating Sensors...");
+    Gyro.calibrate(2000);
+    Inertial.calibrate(2000);
+    Controller1.Screen.clearScreen();
+    Controller1.Screen.setCursor(1, 1);
+    Controller1.Screen.print("Calibration Complete!");
     Brain.Screen.drawImageFromFile("1.png", 0, 0);
 
     if(Brain.Battery.capacity() > 60)
