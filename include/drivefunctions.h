@@ -446,6 +446,8 @@ void tiltFor(int potentiometerPCT, double volts)
 
 void flipOut()
 {
+    Lift.spinFor(.3, rev, 75, velocityUnits::pct);
+    Lift.spinFor(-.5, rev, 75, velocityUnits::pct, false);
     //drive(-.1, 60, false, false, false);
     intake.spin(vex::forward, 100, pct);
     tiltTo(tiltMax, 12);
@@ -473,7 +475,7 @@ void stack(void)
   while(error > 0)
   {
     error = target - t.value(percentUnits::pct);
-    double volts = .1*error+3;
+    double volts = .1*error+2;
     Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
     vex::task::sleep(20);
   }

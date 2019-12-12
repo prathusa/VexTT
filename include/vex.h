@@ -39,7 +39,7 @@ vex::competition Competition;
 
 int mode = 0;
 int tiltMax = 72;
-int tiltStack = 65;
+int tiltStack = 63;
 int tiltMin = 23; 
 bool rojo = false;
 bool azul = false;
