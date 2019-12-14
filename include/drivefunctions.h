@@ -423,31 +423,41 @@ void correction()
 }
 */
 
-void tiltTo(int potentiometerPCT, double volts, bool slowDown = false) {
+void tiltTo(int potentiometerPCT, double volts, bool slowDown = false) 
+{
   double target = potentiometerPCT; // In revolutions
   double error = target - t.value(percentUnits::pct);
   if (std::abs(error) == 0)
     goto end;
-  while (std::abs(error) > 0 && !slowDown) {
-    if (error > 0) {
+  while (std::abs(error) > 0 && !slowDown) 
+  {
+    if (error > 0) 
+    {
       error = target - t.value(percentUnits::pct);
       Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
-    } else if (error < 0) {
+    } 
+    else if (error < 0) 
+    {
       error = target - t.value(percentUnits::pct);
       Tilt.spin(directionType::rev, volts, voltageUnits::volt);
-    } else
+    } 
+    else
       goto end;
 
     vex::task::sleep(20);
   }
   // Not completed yet don't use!
-  while (std::abs(error) > 0 && slowDown) {
-    if (t.value(percentUnits::pct) < tiltMax) {
+  while (std::abs(error) > 0 && slowDown) 
+  {
+    if (t.value(percentUnits::pct) < tiltMax) 
+    {
       error = target - t.value(percentUnits::pct);
       double volts = .1 * error + 3;
       Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
       vex::task::sleep(20);
-    } else {
+    } 
+    else 
+    {
       error = 0;
       double volts = error + 3;
       Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
@@ -500,14 +510,16 @@ end:
   */
 }
 
-void tiltFor(int potentiometerPCT, double volts) {
+void tiltFor(int potentiometerPCT, double volts) 
+{
   int start = t.value(pct);
   int distance = potentiometerPCT;
   double target = distance + start;
   tiltTo(target, volts);
 }
 
-void flipOut() {
+void flipOut() 
+{
   Lift.spinFor(.3, rev, 75, velocityUnits::pct);
   Lift.spinFor(-.5, rev, 75, velocityUnits::pct, false);
   // drive(-.1, 60, false, false, false);
@@ -517,20 +529,26 @@ void flipOut() {
   intake.stop();
 }
 
-void liftTiltCheck() {
+void liftTiltCheck() 
+{
   // -----------------------------Avoids Lift-Tilter conflict
   if (Lift.position(rotationUnits::rev) > 1 &&
-      t.value(percentUnits::pct) < 34) {
+      t.value(percentUnits::pct) < 34) 
+      {
     tiltTo(34, 5);
-  } else if (Lift.position(rotationUnits::rev) < 1) {
+  } 
+  else if (Lift.position(rotationUnits::rev) < 1) 
+  {
     tiltTo(tiltMin, 4);
   }
 }
 
-void stack(void) {
+void stack(void) 
+{
   double target = tiltStack; // In revolutions
   double error = target - t.value(percentUnits::pct);
-  while (error > 0) {
+  while (error > 0) 
+  {
     error = target - t.value(percentUnits::pct);
     double volts = .1 * error + 2;
     Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
@@ -540,65 +558,77 @@ void stack(void) {
 }
 
 // Added Controller and Brain feedback when autonomous is selected.
-void autonController() {
+void autonController() 
+{
   Controller1.Screen.clearScreen();
   Controller1.Screen.setCursor(1, 1);
-  if (rojo) {
+  if (rojo) 
+  {
     Controller1.Screen.print("RED");
   }
 
-  if (azul) {
+  if (azul) 
+  {
     Controller1.Screen.print("BLUE");
   }
 
-  if (skills) {
+  if (skills) 
+  {
     Controller1.Screen.print(" SK");
   }
 
-  if (slow) {
+  if (slow) 
+  {
     Controller1.Screen.print(" SLOW");
   }
 
-  if (test) {
+  if (test) 
+  {
     Controller1.Screen.print(" TEST");
   }
 }
 
-void autonBrain() {
+void autonBrain() 
+{
   int row = 1;
   Brain.Screen.clearScreen();
   Brain.Screen.setFont(fontType::mono60);
   Brain.Screen.setCursor(1, row);
 
-  if (rojo) {
+  if (rojo) 
+  {
     Brain.Screen.setFillColor(red);
     Brain.Screen.print("RED");
     row += 1;
     Brain.Screen.setCursor(row, 0);
   }
 
-  if (azul) {
+  if (azul) 
+  {
     Brain.Screen.setFillColor(blue);
     Brain.Screen.print("BLUE");
     row += 1;
     Brain.Screen.setCursor(row, 0);
   }
 
-  if (skills) {
+  if (skills) 
+  {
     Brain.Screen.setFillColor(yellow);
     Brain.Screen.print("SKILLS");
     row += 1;
     Brain.Screen.setCursor(row, 0);
   }
 
-  if (slow) {
+  if (slow) 
+  {
     Brain.Screen.setFillColor(orange);
     Brain.Screen.print("SLOW MODE");
     row += 1;
     Brain.Screen.setCursor(row, 0);
   }
 
-  if (test) {
+  if (test) 
+  {
     Brain.Screen.setFillColor(purple);
     Brain.Screen.print("TEST MODE");
     row += 1;
@@ -606,8 +636,10 @@ void autonBrain() {
   }
 }
 
-void resetEncoders(bool resetGyro = false) {
-  if (resetGyro) {
+void resetEncoders(bool resetGyro = false) 
+{
+  if (resetGyro) 
+  {
     Gyro.calibrate(1000);
   }
   Lift.resetPosition();
