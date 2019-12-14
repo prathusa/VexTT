@@ -33,14 +33,16 @@ void usercontrol(void)
         // -----------------------------Test Mode (gets drive data for pid control)
         if(Test.pressing() == 1)
         {
-          Gyro.resetAngle();
-          turnFor(47);
-          vex::task::sleep(2000);
+          
+          Gyro.calibrate(1000);
+          while(Gyro.isCalibrating())
+          {
+            vex::task::sleep(10);
+          }
+          turnFor(rightAngle);
+          vex::task::sleep(3000);
           sdt.turnToHeading(0, rotationUnits::deg, 40, velocityUnits::pct);
-          vex::task::sleep(2000);
-          sdt.turnFor(90, rotationUnits::deg, 40, velocityUnits::pct);
-          vex::task::sleep(2000);
-          sdt.turnToHeading(0, rotationUnits::deg, 40, velocityUnits::pct);
+          
           /*
           drive(2);
           vex::task::sleep(1000);
