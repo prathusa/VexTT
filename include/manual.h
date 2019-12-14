@@ -9,7 +9,7 @@ void RM()
 {
     resetEncoders(false);
     Gyro.resetAngle();
-//    Inertial.resetRotation();
+    Inertial.resetRotation();
     drive(.75);
     drive(-.75);
     flipOut();
@@ -109,7 +109,7 @@ void BM()
 {
     resetEncoders(false);
     Gyro.resetAngle();
-//    Inertial.resetRotation();
+    Inertial.resetRotation();
     drive(.75);
     drive(-.75);
     flipOut();

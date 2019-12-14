@@ -108,49 +108,49 @@ void turnTo(double target, bool inertialSenor = true)
     double kP = 0.1;    //.5
     double kI = 0.0035; //.0035
     double kD = 0.05;   // 0.3
-//    double error = target - Inertial.rotation(rotationUnits::deg);
-//    if (error  < 180) 
+    double error = target - Inertial.rotation(rotationUnits::deg);
+    if (error  < 180) 
     {
-//      double error = target - Inertial.rotation(rotationUnits::deg);
-//      double integral = error;
-//      double prevError = error;
-//      double derivative = error - prevError;
-//      while (std::abs(error) > 0) 
+      double error = target - Inertial.rotation(rotationUnits::deg);
+      double integral = error;
+      double prevError = error;
+      double derivative = error - prevError;
+      while (std::abs(error) > 0) 
       {
-//        error = target - Inertial.rotation(rotationUnits::deg);
-//        integral += error;
-//        if (error <= 0) 
+        error = target - Inertial.rotation(rotationUnits::deg);
+        integral += error;
+        if (error <= 0) 
         {
-//         integral = 0;
+          integral = 0;
         }
-//        derivative = error - prevError;
-//        prevError = error;
-//        double volts = error * kP + integral * kI + derivative * kD;
-//        l.spin(fwd, volts, voltageUnits::volt);
-//        r.spin(reverse, volts, voltageUnits::volt);
+        derivative = error - prevError;
+        prevError = error;
+        double volts = error * kP + integral * kI + derivative * kD;
+        l.spin(fwd, volts, voltageUnits::volt);
+        r.spin(reverse, volts, voltageUnits::volt);
         vex::task::sleep(15);
       }
       goto end;
     } 
-//    else if (error  > 180) 
+    else if (error  > 180) 
     {
-//      double error = target + Inertial.rotation(rotationUnits::deg);
-//      double integral = error;
-//      double prevError = error;
-//      double derivative = error - prevError;
-//      while (std::abs(error) > 0) 
+      double error = target + Inertial.rotation(rotationUnits::deg);
+      double integral = error;
+      double prevError = error;
+      double derivative = error - prevError;
+      while (std::abs(error) > 0) 
       {
-//        error = target + Inertial.rotation(rotationUnits::deg);
-//        integral += error;
-//        if (error <= 0) 
+        error = target + Inertial.rotation(rotationUnits::deg);
+        integral += error;
+        if (error <= 0) 
         {
-//          integral = 0;
+          integral = 0;
         }
-//       derivative = error - prevError;
-//        prevError = error;
-//        double volts = error * kP + integral * kI + derivative * kD;
-//        l.spin(reverse, volts, voltageUnits::volt);
-//        r.spin(fwd, volts, voltageUnits::volt);
+        derivative = error - prevError;
+        prevError = error;
+        double volts = error * kP + integral * kI + derivative * kD;
+        l.spin(reverse, volts, voltageUnits::volt);
+        r.spin(fwd, volts, voltageUnits::volt);
         vex::task::sleep(15);
       }
       goto end;
@@ -223,48 +223,48 @@ void turnFor(double raw, bool inertialSenor = true)
     double kD = 0.05;   // 0.3
     if (raw > 0) 
     {
- //     double target = Inertial.rotation(rotationUnits::deg) + raw;
-  //    double error = target - Inertial.rotation(rotationUnits::deg);
-  //    double integral = error;
-  //    double prevError = error;
-  //    double derivative = error - prevError;
-  //    while (std::abs(error) > 0) 
+      double target = Inertial.rotation(rotationUnits::deg) + raw;
+      double error = target - Inertial.rotation(rotationUnits::deg);
+      double integral = error;
+      double prevError = error;
+      double derivative = error - prevError;
+      while (std::abs(error) > 0) 
       {
-   //     error = target - Inertial.rotation(rotationUnits::deg);
-  //      integral += error;
-  //      if (error <= 0) 
+        error = target - Inertial.rotation(rotationUnits::deg);
+        integral += error;
+        if (error <= 0) 
         {
- //         integral = 0;
+          integral = 0;
         }
- //       derivative = error - prevError;
- //       prevError = error;
-  //      double volts = error * kP + integral * kI + derivative * kD;
- //       l.spin(fwd, volts, voltageUnits::volt);
-//        r.spin(reverse, volts, voltageUnits::volt);
+        derivative = error - prevError;
+        prevError = error;
+        double volts = error * kP + integral * kI + derivative * kD;
+        l.spin(fwd, volts, voltageUnits::volt);
+        r.spin(reverse, volts, voltageUnits::volt);
         vex::task::sleep(15);
       }
       goto end;
     } 
     else if (raw < 0) 
     {
-//      double target = Inertial.rotation(rotationUnits::deg) - raw;
-//      double error = target + Inertial.rotation(rotationUnits::deg);
-//      double integral = error;
-//      double prevError = error;
-///      double derivative = error - prevError;
-//      while (std::abs(error) > 0) 
+      double target = Inertial.rotation(rotationUnits::deg) - raw;
+      double error = target + Inertial.rotation(rotationUnits::deg);
+      double integral = error;
+      double prevError = error;
+      double derivative = error - prevError;
+      while (std::abs(error) > 0) 
       {
- //       error = target + Inertial.rotation(rotationUnits::deg);
- //       integral += error;
-  //      if (error <= 0) 
+        error = target + Inertial.rotation(rotationUnits::deg);
+        integral += error;
+        if (error <= 0) 
         {
-  //        integral = 0;
+          integral = 0;
         }
-  //      derivative = error - prevError;
-   //     prevError = error;
-   //     double volts = error * kP + integral * kI + derivative * kD;
-    //    l.spin(reverse, volts, voltageUnits::volt);
-   //     r.spin(fwd, volts, voltageUnits::volt);
+        derivative = error - prevError;
+        prevError = error;
+        double volts = error * kP + integral * kI + derivative * kD;
+        l.spin(reverse, volts, voltageUnits::volt);
+        r.spin(fwd, volts, voltageUnits::volt);
         vex::task::sleep(15);
       }
       goto end;

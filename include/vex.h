@@ -11,7 +11,6 @@
 #include <iostream>
 #include <fstream>
 
-
 using namespace vex;
 vex::brain Brain;
 vex::motor Lift (vex::PORT6, vex::gearSetting::ratio36_1,true);
@@ -26,7 +25,7 @@ vex::motor_group intake(LeftIntake, RightIntake);
 vex::motor_group l(LeftFrontMotor, LeftRearMotor);
 vex::motor_group r(RightFrontMotor, RightRearMotor);
 vex::motor_group d(LeftFrontMotor, LeftRearMotor, RightFrontMotor, RightRearMotor);
-//vex::inertial(vex::PORT20);
+vex::inertial Inertial(vex::PORT20);
 vex::gyro Gyro (Brain.ThreeWirePort.G);
 vex::pot t(Brain.ThreeWirePort.H);
 vex::limit Test (Brain.ThreeWirePort.B);
