@@ -5,7 +5,7 @@
 int main() 
 {
     //Provides power to the LED lights.
-    LED.state(100, percentUnits::pct);
+    //LED.state(100, percentUnits::pct);
 
     //Run the pre-autonomous function. 
     pre_auton();

@@ -30,7 +30,7 @@ vex::gyro Gyro (Brain.ThreeWirePort.G);
 vex::pot t(Brain.ThreeWirePort.H);
 vex::limit Test (Brain.ThreeWirePort.B);
 vex::limit Debug (Brain.ThreeWirePort.D);
-vex::pwm_out LED(Brain.ThreeWirePort.E);
+//vex::pwm_out LED(Brain.ThreeWirePort.E);
 vex::smartdrive sdt(l, r, Gyro, 12.56, 16, 16, distanceUnits::in);
 vex::drivetrain dt(l, r);
 vex::controller Controller1;
