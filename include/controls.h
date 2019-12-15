@@ -22,6 +22,10 @@ void controls()
             mode = 0;
             Controller1.Screen.setCursor(3,1);
             Controller1.Screen.print("Mode 0");
+            driveSpeedFactor = 3; //Makes robot slower
+            Controller1.Screen.clearLine(1);
+            Controller1.Screen.setCursor(1,1);
+            Controller1.Screen.print("Speed Reduced x1.5");
             Controller1.rumble("...");
         }
         else if(Controller1.ButtonRight.pressing())
@@ -30,23 +34,9 @@ void controls()
             Controller1.Screen.clearLine(3);
             Controller1.Screen.setCursor(3,1);
             Controller1.Screen.print("Mode 1");
+            driveSpeedFactor = 1; //Resets the drive speed to normal
+            Controller1.Screen.clearLine(1);
             Controller1.rumble("---");
-        }
-
-        //------------------------------DriveSpeed Control
-        if(Controller1.ButtonB.pressing())
-        {
-            driveSpeedFactor = 2; //Makes robot slower
-            Controller1.Screen.clearLine(1);
-            Controller1.Screen.setCursor(1,1);
-            Controller1.Screen.print("Speed Reduced");
-            Controller1.rumble("-");
-        }
-        else if(Controller1.ButtonA.pressing())
-        {
-            driveSpeedFactor = .5; //Resets the drive speed to normal
-            Controller1.Screen.clearLine(1);
-            Controller1.rumble(".");
         }
 
         // -----------------------------Toggle Stacker Command
@@ -74,6 +64,24 @@ void controls()
         
     if(mode == 0)
     {
+        //------------------------------DriveSpeed Control
+        if(Controller1.ButtonB.pressing())
+        {
+            driveSpeedFactor = 3; //Makes robot slower
+            Controller1.Screen.clearLine(1);
+            Controller1.Screen.setCursor(1,1);
+            Controller1.Screen.print("Speed Reduced x3");
+            Controller1.rumble("-");
+        }
+        else if(Controller1.ButtonA.pressing())
+        {
+            driveSpeedFactor = 3; //Makes robot slower
+            Controller1.Screen.clearLine(1);
+            Controller1.Screen.setCursor(1,1);
+            Controller1.Screen.print("Speed Reduced x1.5");
+            Controller1.rumble(".");
+        }
+        
         // -----------------------------Intake Control
         if(Controller1.ButtonL1.pressing())
         {
@@ -82,8 +90,8 @@ void controls()
         }
         else if(Controller1.ButtonL2.pressing() && Lift.position(rev) < .3)
         {
-            LeftIntake.spin(directionType::rev, 100, velocityUnits::pct);
-            RightIntake.spin(directionType::rev, 100, velocityUnits::pct);
+            LeftIntake.spin(directionType::rev, 40, velocityUnits::pct);
+            RightIntake.spin(directionType::rev, 40, velocityUnits::pct);
         }
         else
         {
@@ -116,14 +124,14 @@ void controls()
           if(error > 0)
           {
             error = target - t.value(percentUnits::pct);
-            double volts = .1*error+3;
+            double volts = .1*error+2;
             Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
             vex::task::sleep(20);
           }
           else
           {
             error = 0;
-            double volts = error+3;
+            double volts = error+2;
             Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
           }
           /*
@@ -148,7 +156,7 @@ void controls()
           if(error > 0)
           {
             error = target - t.value(percentUnits::pct);
-            double volts = .1*error+3;
+            double volts = .1*error+2;
             Tilt.spin(directionType::rev, volts, voltageUnits::volt);
             vex::task::sleep(20);
           }
@@ -163,21 +171,30 @@ void controls()
         {
           Tilt.stop(brake);
         }
-
-        //----------------------------Fade Away
-        if(Controller1.ButtonX.pressing())
-        {
-          intake.spinFor(directionType::rev, -2, rotationUnits::rev, 30, velocityUnits::pct, false);
-          d.spinFor(-.5, rotationUnits::rev, 30, velocityUnits::pct);
-        }
     }
     else if(mode == 1)
     {     
+        //------------------------------DriveSpeed Control
+        if(Controller1.ButtonB.pressing())
+        {
+            driveSpeedFactor = 2; //Makes robot slower
+            Controller1.Screen.clearLine(1);
+            Controller1.Screen.setCursor(1,1);
+            Controller1.Screen.print("Speed Reduced x2");
+            Controller1.rumble("-");
+        }
+        else if(Controller1.ButtonA.pressing())
+        {
+            driveSpeedFactor = 1; //Resets the drive speed to normal
+            Controller1.Screen.clearLine(1);
+            Controller1.rumble(".");
+        }
+        
         // -----------------------------Intake Control
         if(Controller1.ButtonR1.pressing())
         {
-            LeftIntake.spin(directionType::fwd, 40, velocityUnits::pct);
-            RightIntake.spin(directionType::fwd, 40, velocityUnits::pct);
+            LeftIntake.spin(directionType::fwd, 100, velocityUnits::pct);
+            RightIntake.spin(directionType::fwd, 100, velocityUnits::pct);
         }
         else if(Controller1.ButtonR2.pressing() && Lift.position(rev) < 0.3)
         {
@@ -191,22 +208,9 @@ void controls()
         }
 
         // -----------------------------Toggle Lift Positions
-        if(Controller1.ButtonL2.pressing())
+        if(Controller1.ButtonUp.pressing())
         {
-            //liftTiltCheck();
-            //Lift.rotateTo(.6, rotationUnits::rev, 70, velocityUnits::pct);
-            sdt.turnToHeading(90, rotationUnits::deg, 40, velocityUnits::pct);
-        }
-        else if(Controller1.ButtonL1.pressing())
-        {
-            //liftTiltCheck();
-            //Lift.rotateTo(1.2, rotationUnits::rev, 70, velocityUnits::pct);
-            sdt.turnToHeading(-90, rotationUnits::deg, 40, velocityUnits::pct);
-        }
-        else if(Lift.position(rotationUnits::rev) < -.25)
-        {
-            Lift.setBrake(brake);
-            Lift.stop();
+          //liftTo(top position);
         }
         else 
         {
@@ -214,23 +218,52 @@ void controls()
             Lift.stop();
         }
         
-        // -----------------------------Flip Out
+        //----------------------------Fade Away
         if(Controller1.ButtonX.pressing())
         {
-          flipOut();
+          intake.spinFor(directionType::rev, -2, rotationUnits::rev, 100, velocityUnits::pct, false);
+          d.spinFor(-.75, rotationUnits::rev, 100, velocityUnits::pct);
         }
-        
-        // -----------------------------Flip Out
-        if(Controller1.ButtonUp.pressing())
+
+        // -----------------------------Run Auton
+        if(Controller1.ButtonDown.pressing() && Controller1.ButtonL2.pressing())
         {
-          RM();
-          //sdt.turnToHeading(0, rotationUnits::deg, 20, velocityUnits::pct);
+          mode = 2;
+          Controller1.Screen.clearLine(3);
+          Controller1.Screen.setCursor(3,1);
+          Controller1.Screen.print("Test Mode");
+          driveSpeedFactor = 1; //Resets the drive speed to normal
+          Controller1.Screen.clearLine(1);
+          Controller1.rumble("-.-");
         }
-        if(Controller1.ButtonDown.pressing())
-        {
-          BM();
-          //sdt.turnToHeading(0, rotationUnits::deg, 20, velocityUnits::pct);
-        }
+    }
+    if(mode == 2)
+    {
+      // -----------------------------Flip Out
+      if(Controller1.ButtonY.pressing())
+      {
+        flipOut();
+      }
+
+      // -----------------------------Run Auton
+      if(Controller1.ButtonX.pressing())
+      {
+        BM();
+      }
+      if(Controller1.ButtonUp.pressing())
+      {
+        RM();
+      }
+
+      // -----------------------------90 degree turns
+      if(Controller1.ButtonRight.pressing())
+      {
+        turnFor(47);
+      }
+      else if(Controller1.ButtonLeft.pressing())
+      {
+        turnFor(-47);
+      }
     }
 }
 

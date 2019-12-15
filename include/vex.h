@@ -38,7 +38,7 @@ vex::competition Competition;
 //vex::encoder LeftTrack (Brain.ThreeWirePort.A);
 //vex::encoder RightTrack (Brain.ThreeWirePort.C);
 
-int mode = 0;
+int mode = 1;
 int tiltMax = 72;
 int tiltStack = 63;
 int tiltMin = 23; 
