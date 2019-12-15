@@ -4,7 +4,8 @@
 #include "vex.h"
 using namespace vex;
 
-void driveTo(double positionRev) {
+void driveTo(double positionRev) 
+{
   double error = positionRev - d.position(rotationUnits::rev);
   double integral = error;
   double prevError = error;
@@ -12,11 +13,14 @@ void driveTo(double positionRev) {
   double kP = 4;    // 0.15
   double kI = .035; // 0.03
   double kD = 1;    // 0.1
-  if (error > 0) {
-    while (error > 0) {
+  if (error > 0) 
+  {
+    while (error > 0) 
+    {
       error = positionRev - d.position(rotationUnits::rev);
       integral += error;
-      if (error <= 0) {
+      if (error <= 0) 
+      {
         integral = 0;
       }
       derivative = error - prevError;
@@ -25,11 +29,15 @@ void driveTo(double positionRev) {
       d.spin(fwd, volts, voltageUnits::volt);
       vex::task::sleep(15);
     }
-  } else if (error < 0) {
-    while (error < 0) {
+  } 
+  else if (error < 0) 
+  {
+    while (error < 0) 
+    {
       error = positionRev - d.position(rotationUnits::rev);
       integral += error;
-      if (error >= 0) {
+      if (error >= 0) 
+      {
         integral = 0;
       }
       derivative = error - prevError;
