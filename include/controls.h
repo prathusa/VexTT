@@ -82,8 +82,8 @@ void controls()
         }
         else if(Controller1.ButtonL2.pressing() && Lift.position(rev) < .3)
         {
-            LeftIntake.spin(directionType::rev, 33, velocityUnits::pct);
-            RightIntake.spin(directionType::rev, 33, velocityUnits::pct);
+            LeftIntake.spin(directionType::rev, 50, velocityUnits::pct);
+            RightIntake.spin(directionType::rev, 50, velocityUnits::pct);
         }
         else
         {
