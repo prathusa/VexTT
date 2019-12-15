@@ -77,8 +77,8 @@ void controls()
         // -----------------------------Intake Control
         if(Controller1.ButtonL1.pressing())
         {
-            LeftIntake.spin(directionType::fwd, 40, velocityUnits::pct);
-            RightIntake.spin(directionType::fwd, 40, velocityUnits::pct);
+            LeftIntake.spin(directionType::fwd, 20, velocityUnits::pct);
+            RightIntake.spin(directionType::fwd, 20, velocityUnits::pct);
         }
         else if(Controller1.ButtonL2.pressing() && Lift.position(rev) < .3)
         {
@@ -168,7 +168,7 @@ void controls()
         if(Controller1.ButtonX.pressing())
         {
           intake.spinFor(directionType::rev, -2, rotationUnits::rev, 30, velocityUnits::pct, false);
-          d.spinFor(-.5, rotationUnits::rev, 30, velocityUnits::pct);
+          d.spinFor(-.5, rotationUnits::rev, 10, velocityUnits::pct);
         }
     }
     else if(mode == 1)
