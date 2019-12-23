@@ -15,6 +15,10 @@ void pre_auton(void)
     Controller1.Screen.print("Calibrating Sensors...");
     Gyro.calibrate(2000);
     Inertial.calibrate(2000);
+    while(Inertial.isCalibrating())
+    {
+      vex::task::sleep(20);
+    }
     Controller1.Screen.clearScreen();
     Controller1.Screen.setCursor(1, 1);
     Controller1.Screen.print("Calibration Complete!");

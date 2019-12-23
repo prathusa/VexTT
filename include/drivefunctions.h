@@ -227,8 +227,8 @@ void turnFor(double raw, bool inertialSenor = true)
   if (inertialSenor && Inertial.installed()) 
   {
     double kP = 0.1;    //.5
-    double kI = 0.0035; //.0035
-    double kD = 0.05;   // 0.3
+    double kI = 0.0006; //.0035
+    double kD = 0.03;   // 0.3
     if (raw > 0) 
     {
       double target = Inertial.rotation(rotationUnits::deg) + raw;
@@ -236,7 +236,7 @@ void turnFor(double raw, bool inertialSenor = true)
       double integral = error;
       double prevError = error;
       double derivative = error - prevError;
-      while (std::abs(error) > 0) 
+      while (std::abs(error) > .5) 
       {
         error = target - Inertial.rotation(rotationUnits::deg);
         integral += error;
@@ -260,7 +260,7 @@ void turnFor(double raw, bool inertialSenor = true)
       double integral = error;
       double prevError = error;
       double derivative = error - prevError;
-      while (std::abs(error) > 0) 
+      while (std::abs(error) > .5) 
       {
         error = target + Inertial.rotation(rotationUnits::deg);
         integral += error;

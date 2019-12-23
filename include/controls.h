@@ -16,29 +16,6 @@ void controls()
 	      RightFrontMotor.spin(directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct);//(Axis3-Axis4)/2;
 	      RightRearMotor.spin(directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct);//(Axis3-Axis4)/2;
 
-        // -----------------------------Robot Sensitivity Change && Mode Change
-        if(Controller1.ButtonLeft.pressing())
-        {
-            mode = 0;
-            Controller1.Screen.setCursor(3,1);
-            Controller1.Screen.print("Mode 0");
-            driveSpeedFactor = 3; //Makes robot slower
-            Controller1.Screen.clearLine(1);
-            Controller1.Screen.setCursor(1,1);
-            Controller1.Screen.print("Speed Reduced x1.5");
-            Controller1.rumble("...");
-        }
-        else if(Controller1.ButtonRight.pressing())
-        {
-            mode = 1;
-            Controller1.Screen.clearLine(3);
-            Controller1.Screen.setCursor(3,1);
-            Controller1.Screen.print("Mode 1");
-            driveSpeedFactor = 1; //Resets the drive speed to normal
-            Controller1.Screen.clearLine(1);
-            Controller1.rumble("---");
-        }
-
         // -----------------------------Toggle Stacker Command
         if(Controller1.ButtonY.pressing())
         {
@@ -171,6 +148,29 @@ void controls()
         {
           Tilt.stop(brake);
         }
+
+        // -----------------------------Robot Sensitivity Change && Mode Change
+        if(Controller1.ButtonLeft.pressing())
+        {
+            mode = 0;
+            Controller1.Screen.setCursor(3,1);
+            Controller1.Screen.print("Mode 0");
+            driveSpeedFactor = 3; //Makes robot slower
+            Controller1.Screen.clearLine(1);
+            Controller1.Screen.setCursor(1,1);
+            Controller1.Screen.print("Speed Reduced x1.5");
+            Controller1.rumble("...");
+        }
+        else if(Controller1.ButtonRight.pressing())
+        {
+            mode = 1;
+            Controller1.Screen.clearLine(3);
+            Controller1.Screen.setCursor(3,1);
+            Controller1.Screen.print("Mode 1");
+            driveSpeedFactor = 1; //Resets the drive speed to normal
+            Controller1.Screen.clearLine(1);
+            Controller1.rumble("---");
+        }
     }
     else if(mode == 1)
     {     
@@ -225,6 +225,29 @@ void controls()
           d.spinFor(-.75, rotationUnits::rev, 100, velocityUnits::pct);
         }
 
+        // -----------------------------Robot Sensitivity Change && Mode Change
+        if(Controller1.ButtonLeft.pressing())
+        {
+            mode = 0;
+            Controller1.Screen.setCursor(3,1);
+            Controller1.Screen.print("Mode 0");
+            driveSpeedFactor = 3; //Makes robot slower
+            Controller1.Screen.clearLine(1);
+            Controller1.Screen.setCursor(1,1);
+            Controller1.Screen.print("Speed Reduced x1.5");
+            Controller1.rumble("...");
+        }
+        else if(Controller1.ButtonRight.pressing())
+        {
+            mode = 1;
+            Controller1.Screen.clearLine(3);
+            Controller1.Screen.setCursor(3,1);
+            Controller1.Screen.print("Mode 1");
+            driveSpeedFactor = 1; //Resets the drive speed to normal
+            Controller1.Screen.clearLine(1);
+            Controller1.rumble("---");
+        }
+
         // -----------------------------Run Auton
         if(Controller1.ButtonDown.pressing() && Controller1.ButtonL2.pressing())
         {
@@ -239,6 +262,17 @@ void controls()
     }
     if(mode == 2)
     {
+      if(Controller1.ButtonB.pressing())
+        {
+            mode = 1;
+            Controller1.Screen.clearLine(3);
+            Controller1.Screen.setCursor(3,1);
+            Controller1.Screen.print("Mode 1");
+            driveSpeedFactor = 1; //Resets the drive speed to normal
+            Controller1.Screen.clearLine(1);
+            Controller1.rumble("---");
+        }
+      
       // -----------------------------Flip Out
       if(Controller1.ButtonY.pressing())
       {
@@ -258,11 +292,11 @@ void controls()
       // -----------------------------90 degree turns
       if(Controller1.ButtonRight.pressing())
       {
-        turnFor(47);
+        turnFor(90);
       }
       else if(Controller1.ButtonLeft.pressing())
       {
-        turnFor(-47);
+        turnFor(-90);
       }
     }
 }
