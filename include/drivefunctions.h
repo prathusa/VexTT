@@ -114,8 +114,8 @@ void turnTo(double target, bool inertialSenor = true)
   if (inertialSenor && Inertial.installed()) 
   {
     double kP = 0.1;    //.5
-    double kI = 0.0035; //.0035
-    double kD = 0.05;   // 0.3
+    double kI = 0.0006; //.0035
+    double kD = 0.03;   // 0.3
     double error = target - Inertial.rotation(rotationUnits::deg);
     if (error  < 180) 
     {
@@ -167,8 +167,8 @@ void turnTo(double target, bool inertialSenor = true)
   else if (!inertialSenor) 
   {
     double kP = 0.1;    //.5
-    double kI = 0.0035; //.0035
-    double kD = 0.05;   // 0.3
+    double kI = 0.0006; //.0035
+    double kD = 0.03;   // 0.3
     double error = target - Gyro.value(rotationUnits::deg);
     if (error  < 180) 
     {
@@ -281,8 +281,8 @@ void turnFor(double raw, bool inertialSenor = true)
   else if (!inertialSenor) 
   {
     double kP = 0.1;    //.5
-    double kI = 0.0035; //.0035
-    double kD = 0.05;   // 0.3
+    double kI = 0.0006; //.0035
+    double kD = 0.03;   // 0.3
     if (raw > 0) 
     {
       double target = Gyro.value(rotationUnits::deg) + raw;
