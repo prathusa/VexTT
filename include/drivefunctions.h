@@ -123,7 +123,7 @@ void turnTo(double target, bool inertialSenor = true)
       double integral = error;
       double prevError = error;
       double derivative = error - prevError;
-      while (std::abs(error) > 0) 
+      while (std::abs(error) > 0.5) 
       {
         error = target - Inertial.rotation(rotationUnits::deg);
         integral += error;
@@ -146,7 +146,7 @@ void turnTo(double target, bool inertialSenor = true)
       double integral = error;
       double prevError = error;
       double derivative = error - prevError;
-      while (std::abs(error) > 0) 
+      while (std::abs(error) > 0.5) 
       {
         error = target + Inertial.rotation(rotationUnits::deg);
         integral += error;
