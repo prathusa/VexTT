@@ -236,7 +236,8 @@ void turnFor(double raw, bool inertialSenor = true)
       double integral = error;
       double prevError = error;
       double derivative = error - prevError;
-      while (std::abs(error) > .5) 
+      int motionless = 0;
+      while (std::abs(error) > 0 && motionless < 150) 
       {
         error = target - Inertial.rotation(rotationUnits::deg);
         integral += error;
@@ -249,6 +250,10 @@ void turnFor(double raw, bool inertialSenor = true)
         double volts = error * kP + integral * kI + derivative * kD;
         l.spin(fwd, volts, voltageUnits::volt);
         r.spin(reverse, volts, voltageUnits::volt);
+        if(dt.velocity(percentUnits::pct) == 0)
+        {
+          motionless+=15;
+        }
         vex::task::sleep(15);
       }
       goto end;
@@ -260,7 +265,8 @@ void turnFor(double raw, bool inertialSenor = true)
       double integral = error;
       double prevError = error;
       double derivative = error - prevError;
-      while (std::abs(error) > .5) 
+      int motionless = 0;
+      while (std::abs(error) > 0 && motionless < 150) 
       {
         error = target + Inertial.rotation(rotationUnits::deg);
         integral += error;
@@ -273,6 +279,10 @@ void turnFor(double raw, bool inertialSenor = true)
         double volts = error * kP + integral * kI + derivative * kD;
         l.spin(reverse, volts, voltageUnits::volt);
         r.spin(fwd, volts, voltageUnits::volt);
+        if(dt.velocity(percentUnits::pct) == 0)
+        {
+          motionless+=15;
+        }
         vex::task::sleep(15);
       }
       goto end;

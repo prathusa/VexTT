@@ -191,12 +191,12 @@ void controls()
         }
         
         // -----------------------------Intake Control
-        if(Controller1.ButtonR1.pressing())
+        if(Controller1.ButtonL1.pressing())
         {
             LeftIntake.spin(directionType::fwd, 100, velocityUnits::pct);
             RightIntake.spin(directionType::fwd, 100, velocityUnits::pct);
         }
-        else if(Controller1.ButtonR2.pressing() && Lift.position(rev) < 0.3)
+        else if(Controller1.ButtonL2.pressing() && Lift.position(rev) < 0.3)
         {
             LeftIntake.spin(directionType::rev, 100, velocityUnits::pct);
             RightIntake.spin(directionType::rev, 100, velocityUnits::pct);
@@ -210,7 +210,7 @@ void controls()
         // -----------------------------Toggle Lift Positions
         if(Controller1.ButtonUp.pressing())
         {
-          //liftTo(top position);
+            //liftTo(top position);
         }
         else 
         {
@@ -292,11 +292,21 @@ void controls()
       // -----------------------------90 degree turns
       if(Controller1.ButtonRight.pressing())
       {
-        turnTo(90);
+        turnFor(90);
       }
       else if(Controller1.ButtonLeft.pressing())
       {
-        turnTo(-90);
+        turnFor(-90);
+      }
+
+      // -----------------------------90 degree turns
+      if(Controller1.ButtonR1.pressing())
+      {
+        sdt.turnFor(90, rotationUnits::deg, 30, velocityUnits::pct);
+      }
+      else if(Controller1.ButtonL1.pressing())
+      {
+        sdt.turnFor(-90, rotationUnits::deg, 30, velocityUnits::pct);
       }
 
       // -----------------------------90 degree turns
