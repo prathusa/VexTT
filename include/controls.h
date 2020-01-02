@@ -94,7 +94,7 @@ void controls()
         }
 
         // -----------------------------Tilt Control
-        if(Controller1.ButtonR2.pressing() && t.value(percentUnits::pct) < tiltStack)
+        if(Controller1.ButtonR2.pressing() && t.value(percentUnits::pct) < tiltMax)
         {
           double target = tiltStack; //In revolutions
           double error = target - t.value(percentUnits::pct);
@@ -196,7 +196,7 @@ void controls()
             LeftIntake.spin(directionType::fwd, 100, velocityUnits::pct);
             RightIntake.spin(directionType::fwd, 100, velocityUnits::pct);
         }
-        else if(Controller1.ButtonL2.pressing() && Lift.position(rev) < 0.3)
+        else if(Controller1.ButtonL2.pressing() && Lift.position(rev) < 0.3 && !Controller1.ButtonDown.pressing())
         {
             LeftIntake.spin(directionType::rev, 100, velocityUnits::pct);
             RightIntake.spin(directionType::rev, 100, velocityUnits::pct);

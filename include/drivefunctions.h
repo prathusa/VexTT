@@ -237,7 +237,7 @@ void turnFor(double raw, bool inertialSenor = true)
       double prevError = error;
       double derivative = error - prevError;
       int motionless = 0;
-      while (std::abs(error) > 0 && motionless < 150) 
+      while (std::abs(error) > 0 && motionless < 350) 
       {
         error = target - Inertial.rotation(rotationUnits::deg);
         integral += error;
@@ -266,7 +266,7 @@ void turnFor(double raw, bool inertialSenor = true)
       double prevError = error;
       double derivative = error - prevError;
       int motionless = 0;
-      while (std::abs(error) > 0 && motionless < 150) 
+      while (std::abs(error) > 0 && motionless < 350) 
       {
         error = target + Inertial.rotation(rotationUnits::deg);
         integral += error;
