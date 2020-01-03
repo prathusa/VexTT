@@ -292,11 +292,11 @@ void controls()
       // -----------------------------90 degree turns
       if(Controller1.ButtonRight.pressing())
       {
-        turnFor(90);
+        turnTo(90);
       }
       else if(Controller1.ButtonLeft.pressing())
       {
-        turnFor(-90);
+        turnTo(-90);
       }
 
       // -----------------------------90 degree turns

@@ -114,7 +114,7 @@ void turnTo(double target, bool inertialSenor = true)
   if (inertialSenor && Inertial.installed()) 
   {
     double kP = 0.1;    //.5
-    double kI = 0.001; //.0035
+    double kI = 0.00042; //.0035
     double kD = 0.03;   // 0.3
     double error = target - Inertial.rotation(rotationUnits::deg);
     if (error  < 180) 
@@ -227,7 +227,7 @@ void turnFor(double raw, bool inertialSenor = true)
   if (inertialSenor && Inertial.installed()) 
   {
     double kP = 0.1;    //.5
-    double kI = 0.001; //.0035
+    double kI = 0.00035; //.0035
     double kD = 0.03;   // 0.3
     if (raw > 0) 
     {
