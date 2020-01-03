@@ -7,27 +7,25 @@
 int speed = 80;
 void RM()
 {
-    resetEncoders(false);
-    Gyro.resetAngle();
+    double driveFwdDistance = 3.3;
+    resetEncoders();
     Inertial.resetRotation();
     drive(.75);
     drive(-.75);
     flipOut();
-    sdt.turnToHeading(0, rotationUnits::deg, 40, velocityUnits::pct);
-    intake.spin(directionType::rev, 127, velocityUnits::pct);
-    drive(3.3);
+    turnTo(0);
+    intake.spin(directionType::rev, 100, velocityUnits::pct);
+    drive(driveFwdDistance);
     intake.stop();
-    intake.spin(directionType::rev, 10, velocityUnits::pct);
-    drive(-2.4);
+    intake.spin(directionType::rev, 20, velocityUnits::pct);
+    drive((-1/3)*driveFwdDistance);
     //drive(-.1, 50, false);
     //vex::task::sleep(200);
-    sdt.turnToHeading(-65, rotationUnits::deg, 40, velocityUnits::pct);
-    d.stop();
-    drive(.3);
-    //Stack:
+    turnTo(155);
+    drive((2/3)*driveFwdDistance);
     stack();
     vex::task::sleep(200);
-    drive(-.7);
+    fadeAway();
     /*
     d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 40, velocityUnits::pct, true);
     //vex::task::sleep(200);
@@ -107,25 +105,25 @@ void RM()
 //drivetrain/gyro test
 void BM()
 {
-    resetEncoders(false);
-    Gyro.resetAngle();
+    double driveFwdDistance = 3.3;
+    resetEncoders();
     Inertial.resetRotation();
     drive(.75);
     drive(-.75);
     flipOut();
-    d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 40, velocityUnits::pct, false);
-    vex::task::sleep(300);
-    intake.spin(reverse, 100, velocityUnits::pct);
-    drive(3.4);
+    turnTo(0);
+    intake.spin(directionType::rev, 100, velocityUnits::pct);
+    drive(driveFwdDistance);
     intake.stop();
-    intake.spin(reverse, 20, velocityUnits::pct);
-    drive(-1);
-    turnFor(-83);
-    //sdt.turnFor(160, rotationUnits::deg, 40, velocityUnits::pct);
-    drive(2.6);
-    intake.stop();
+    intake.spin(directionType::rev, 20, velocityUnits::pct);
+    drive((-1/3)*driveFwdDistance);
+    //drive(-.1, 50, false);
+    //vex::task::sleep(200);
+    turnTo(-155);
+    drive((2/3)*driveFwdDistance);
     stack();
-    drive(-1);
+    vex::task::sleep(200);
+    fadeAway();
     
     /*
     d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 40, velocityUnits::pct, true);

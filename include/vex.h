@@ -35,10 +35,13 @@ vex::smartdrive sdt(l, r, Inertial, 12.56, 16, 16, distanceUnits::in);
 vex::drivetrain dt(l, r);
 vex::controller Controller1;
 vex::competition Competition;
-//vex::encoder LeftTrack (Brain.ThreeWirePort.A);
-//vex::encoder RightTrack (Brain.ThreeWirePort.C);
+vex::encoder le(Brain.ThreeWirePort.A);
+vex::encoder re(Brain.ThreeWirePort.C);
 
 int mode = 1;
+int liftMax;
+int liftTower;
+int liftMin;
 int tiltMax = 72;
 int tiltStack = 60;
 int tiltMin = 25; 

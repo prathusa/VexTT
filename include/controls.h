@@ -52,7 +52,7 @@ void controls()
         }
         else if(Controller1.ButtonA.pressing())
         {
-            driveSpeedFactor = 3; //Makes robot slower
+            driveSpeedFactor = 2; //Makes robot slower
             Controller1.Screen.clearLine(1);
             Controller1.Screen.setCursor(1,1);
             Controller1.Screen.print("Speed Reduced x1.5");
@@ -201,7 +201,7 @@ void controls()
             LeftIntake.spin(directionType::rev, 100, velocityUnits::pct);
             RightIntake.spin(directionType::rev, 100, velocityUnits::pct);
         }
-        else if(Controller1.ButtonB.pressing())
+        else if(Controller1.ButtonB.pressing() || Controller1.ButtonA.pressing())
         {
           LeftIntake.stop(brakeType::brake);
           RightIntake.stop(brakeType::brake);
@@ -210,19 +210,18 @@ void controls()
         // -----------------------------Toggle Lift Positions
         if(Controller1.ButtonUp.pressing())
         {
-            //liftTo(top position);
+            liftTo(liftTower);
         }
         else 
         {
-            Lift.setBrake(hold);
+            Lift.setBrake(hold); //potentially make a custom hold function for the lift using potentiometer
             Lift.stop();
         }
         
         //----------------------------Fade Away
         if(Controller1.ButtonX.pressing())
         {
-          intake.spinFor(directionType::rev, -2, rotationUnits::rev, 25, velocityUnits::pct, false);
-          d.spinFor(-.75, rotationUnits::rev, 35, velocityUnits::pct);
+          fadeAway();
         }
 
         // -----------------------------Robot Sensitivity Change && Mode Change
@@ -302,14 +301,14 @@ void controls()
       // -----------------------------90 degree turns
       if(Controller1.ButtonR1.pressing())
       {
-        sdt.turnFor(90, rotationUnits::deg, 30, velocityUnits::pct);
+        sdt.turnFor(80, rotationUnits::deg, 30, velocityUnits::pct);
       }
       else if(Controller1.ButtonL1.pressing())
       {
-        sdt.turnFor(-90, rotationUnits::deg, 30, velocityUnits::pct);
+        sdt.turnFor(-80, rotationUnits::deg, 30, velocityUnits::pct);
       }
 
-      // -----------------------------90 degree turns
+      // -----------------------------PID Drive
       if(Controller1.ButtonR2.pressing())
       {
         drive(3);
