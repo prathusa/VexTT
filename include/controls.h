@@ -24,7 +24,7 @@ void controls()
         }
 
         // -----------------------------Tilter Overextension Warning
-        if(t.value(percentUnits::pct) > tiltMax && !displayed)
+        if(tilt.value(percentUnits::pct) > tiltMax && !displayed)
         {
           Controller1.Screen.clearLine(2);
           Controller1.Screen.setCursor(2,1);
@@ -33,7 +33,7 @@ void controls()
         }
 
         // -----------------------------Tilter Overextension Warning
-        if(t.value(percentUnits::pct) < tiltMax && displayed)
+        if(tilt.value(percentUnits::pct) < tiltMax && displayed)
         {
           Controller1.Screen.clearLine(2);
           displayed = false;
@@ -94,13 +94,13 @@ void controls()
         }
 
         // -----------------------------Tilt Control
-        if(Controller1.ButtonR2.pressing() && t.value(percentUnits::pct) < tiltMax)
+        if(Controller1.ButtonR2.pressing() && tilt.value(percentUnits::pct) < tiltMax)
         {
           double target = tiltStack; //In revolutions
-          double error = target - t.value(percentUnits::pct);
+          double error = target - tilt.value(percentUnits::pct);
           if(error > 0)
           {
-            error = target - t.value(percentUnits::pct);
+            error = target - tilt.value(percentUnits::pct);
             double volts = .1*error+2;
             Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
             vex::task::sleep(20);
@@ -126,13 +126,13 @@ void controls()
           }
           */
         }
-        else if(Controller1.ButtonR1.pressing() && t.value(percentUnits::pct) > tiltMin)
+        else if(Controller1.ButtonR1.pressing() && tilt.value(percentUnits::pct) > tiltMin)
         {
           double target = tiltMax; //In revolutions
-          double error = target - t.value(percentUnits::pct);
+          double error = target - tilt.value(percentUnits::pct);
           if(error > 0)
           {
-            error = target - t.value(percentUnits::pct);
+            error = target - tilt.value(percentUnits::pct);
             double volts = .1*error+2;
             Tilt.spin(directionType::rev, volts, voltageUnits::volt);
             vex::task::sleep(20);
@@ -221,8 +221,8 @@ void controls()
         //----------------------------Fade Away
         if(Controller1.ButtonX.pressing())
         {
-          intake.spinFor(directionType::rev, -2, rotationUnits::rev, 100, velocityUnits::pct, false);
-          d.spinFor(-.75, rotationUnits::rev, 100, velocityUnits::pct);
+          intake.spinFor(directionType::rev, -2, rotationUnits::rev, 25, velocityUnits::pct, false);
+          d.spinFor(-.75, rotationUnits::rev, 35, velocityUnits::pct);
         }
 
         // -----------------------------Robot Sensitivity Change && Mode Change

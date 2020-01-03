@@ -114,7 +114,7 @@ void turnTo(double target, bool inertialSenor = true)
   if (inertialSenor && Inertial.installed()) 
   {
     double kP = 0.1;    //.5
-    double kI = 0.0006; //.0035
+    double kI = 0.001; //.0035
     double kD = 0.03;   // 0.3
     double error = target - Inertial.rotation(rotationUnits::deg);
     if (error  < 180) 
@@ -227,7 +227,7 @@ void turnFor(double raw, bool inertialSenor = true)
   if (inertialSenor && Inertial.installed()) 
   {
     double kP = 0.1;    //.5
-    double kI = 0.0006; //.0035
+    double kI = 0.001; //.0035
     double kD = 0.03;   // 0.3
     if (raw > 0) 
     {
@@ -444,19 +444,19 @@ void correction()
 void tiltTo(int potentiometerPCT, double volts, bool slowDown = false) 
 {
   double target = potentiometerPCT; // In revolutions
-  double error = target - t.value(percentUnits::pct);
+  double error = target - tilt.value(percentUnits::pct);
   if (std::abs(error) == 0)
     goto end;
   while (std::abs(error) > 0 && !slowDown) 
   {
     if (error > 0) 
     {
-      error = target - t.value(percentUnits::pct);
+      error = target - tilt.value(percentUnits::pct);
       Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
     } 
     else if (error < 0) 
     {
-      error = target - t.value(percentUnits::pct);
+      error = target - tilt.value(percentUnits::pct);
       Tilt.spin(directionType::rev, volts, voltageUnits::volt);
     } 
     else
@@ -467,9 +467,9 @@ void tiltTo(int potentiometerPCT, double volts, bool slowDown = false)
   // Not completed yet don't use!
   while (std::abs(error) > 0 && slowDown) 
   {
-    if (t.value(percentUnits::pct) < tiltMax) 
+    if (tilt.value(percentUnits::pct) < tiltMax) 
     {
-      error = target - t.value(percentUnits::pct);
+      error = target - tilt.value(percentUnits::pct);
       double volts = .1 * error + 3;
       Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
       vex::task::sleep(20);
@@ -530,7 +530,7 @@ end:
 
 void tiltFor(int potentiometerPCT, double volts) 
 {
-  int start = t.value(pct);
+  int start = tilt.value(pct);
   int distance = potentiometerPCT;
   double target = distance + start;
   tiltTo(target, volts);
@@ -551,7 +551,7 @@ void liftTiltCheck()
 {
   // -----------------------------Avoids Lift-Tilter conflict
   if (Lift.position(rotationUnits::rev) > 1 &&
-      t.value(percentUnits::pct) < 34) 
+      tilt.value(percentUnits::pct) < 34) 
       {
     tiltTo(34, 5);
   } 
@@ -564,14 +564,16 @@ void liftTiltCheck()
 void stack(void) 
 {
   double target = tiltStack; // In revolutions
-  double error = target - t.value(percentUnits::pct);
+  double error = target - tilt.value(percentUnits::pct);
   while (error > 0) 
   {
-    error = target - t.value(percentUnits::pct);
+    intake.spin(directionType::rev, 30, percentUnits::pct);
+    error = target - tilt.value(percentUnits::pct);
     double volts = .1 * error + 2;
     Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
     vex::task::sleep(20);
   }
+  intake.stop();
   Tilt.stop();
 }
 
