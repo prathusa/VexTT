@@ -17,7 +17,7 @@ void controls()
 	      RightRearMotor.spin(directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct);//(Axis3-Axis4)/2;
 
         // -----------------------------Toggle Stacker Command
-        if(Controller1.ButtonY.pressing())
+        if(Controller1.ButtonY.pressing() && lift.value(pct) < 32)
         {
           stack();
           Tilt.stop(brake);
@@ -82,7 +82,7 @@ void controls()
             Lift.spin(directionType::fwd, 70, velocityUnits::pct);
             liftTiltCheck();
         }
-        else if(Controller1.ButtonDown.pressing())
+        else if(Controller1.ButtonDown.pressing() && lift.value(pct) > liftMin)
         {
             Lift.spin(directionType::rev, 70, velocityUnits::pct);
             liftTiltCheck();
@@ -210,7 +210,11 @@ void controls()
         // -----------------------------Toggle Lift Positions
         if(Controller1.ButtonUp.pressing())
         {
-            liftTo(liftTower);
+          liftTo(liftTower);
+        }
+        else if(Controller1.ButtonDown.pressing())
+        {
+          liftTo(liftMin);
         }
         else 
         {
@@ -273,13 +277,13 @@ void controls()
         }
       
       // -----------------------------Flip Out
-      if(Controller1.ButtonY.pressing())
+      if(Controller1.ButtonX.pressing())
       {
         flipOut();
       }
 
       // -----------------------------Run Auton
-      if(Controller1.ButtonX.pressing())
+      if(Controller1.ButtonY.pressing())
       {
         BM();
       }
@@ -291,14 +295,19 @@ void controls()
       // -----------------------------90 degree turns
       if(Controller1.ButtonRight.pressing())
       {
-        turnTo(90);
+        turnTo(-155, true, 1000);
       }
       else if(Controller1.ButtonLeft.pressing())
       {
-        turnTo(-90);
+        turnFor(-155, true, 1000);
+      }
+      else if(Controller1.ButtonR2.pressing())
+      {
+        turnTo(0, true, 1000);
       }
 
       // -----------------------------90 degree turns
+      /**
       if(Controller1.ButtonR1.pressing())
       {
         sdt.turnFor(80, rotationUnits::deg, 30, velocityUnits::pct);
@@ -313,6 +322,7 @@ void controls()
       {
         drive(3);
       }
+      */
     }
 }
 

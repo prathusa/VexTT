@@ -20,7 +20,12 @@ void usercontrol(void)
           autonomous();
         }
         */
-
+/*
+        if(mode == 2 && Controller1.ButtonR1.pressing() && Controller1.ButtonL1.pressing())
+        {
+          autonomous();
+        }
+*/
         // -----------------------------Debug Mode (gets drive data for pid control)
         if(Debug.pressing() == 1)
         {
