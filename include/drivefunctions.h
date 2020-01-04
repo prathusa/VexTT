@@ -665,10 +665,10 @@ void liftFor(int potentiometerPCT)
 
 void flipOut() 
 {
-  liftTo(liftMax, 12);
+  liftTo(liftMin+12, 12);
+  intake.spin(vex::forward, 100, pct);
   liftTo(liftMin);
   // drive(-.1, 60, false, false, false);
-  //intake.spin(vex::forward, 100, pct);
   //tiltTo(tiltMax, 12);
   //tiltTo(tiltMin, 12);
   //intake.stop();
@@ -680,14 +680,14 @@ void stack(void)
   double error = target - tilt.value(percentUnits::pct);
   while (error > 0) 
   {
-    if(tilt.value(pct) <= 40)
+    if(tilt.value(pct) <= 38)
     {
       intake.spin(directionType::rev, 30, percentUnits::pct);
     }
     else
       intake.stop();
     error = target - tilt.value(percentUnits::pct);
-    double volts = .1 * error + 3.5;
+    double volts = .15 * error + 2;
     Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
     vex::task::sleep(20);
   }
@@ -702,8 +702,8 @@ void tower(void)
 
 void fadeAway()
 {
-  intake.spinFor(directionType::rev, -2, rotationUnits::rev, 25, velocityUnits::pct, false);
-  d.spinFor(-.75, rotationUnits::rev, 40, velocityUnits::pct);
+  intake.spinFor(directionType::rev, -2, rotationUnits::rev, 35, velocityUnits::pct, false);
+  d.spinFor(-.75, rotationUnits::rev, 30, velocityUnits::pct);
 }
 
 // Added Controller and Brain feedback when autonomous is selected.
