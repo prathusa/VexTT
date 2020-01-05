@@ -12,14 +12,9 @@ void RM()
     resetEncoders();
     Inertial.resetRotation();
     vex::task::sleep(50);
-    //d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 50, velocityUnits::pct, false);
-    liftTo(liftMax, 12);
-    intake.spin(reverse);
-    liftTo(liftMin);
-    //d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 50, velocityUnits::pct, false);
-    //intake.spin(vex::forward, 100, pct);
-    //tiltTo(tiltMax, 12);
-    //tiltTo(tiltMin, 12);
+    d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 50, velocityUnits::pct, false);
+    flipOut();
+    d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 50, velocityUnits::pct, false);
     intake.stop();
     //turnTo(0, true, 50);
     intake.spin(directionType::rev, 100, velocityUnits::pct);
@@ -28,7 +23,7 @@ void RM()
     intake.spin(directionType::rev, 20, velocityUnits::pct);
     drive((-1.0/3)*driveFwdDistance);
     //d.rotateFor(directionType::fwd, (-1.0/3)*driveFwdDistance, rotationUnits::rev, 50, velocityUnits::pct, false);
-    turnTo(155, true, 40);
+    turnTo(155, true, 70);
     drive((2.0/3)*driveFwdDistance);
     stack();
     //vex::task::sleep(200);
