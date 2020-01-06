@@ -19,12 +19,8 @@ void controls()
         // -----------------------------Toggle Stacker Command
         if(Controller1.ButtonY.pressing() && lift.value(pct) < 32)
         {
-          Brain.Timer.reset();
           stack();
           Tilt.stop(brake);
-          Controller1.Screen.clearLine(3);
-          Controller1.Screen.setCursor(3, 1);
-          Controller1.Screen.print("%d ", Brain.Timer.time()); 
         }
 
         // -----------------------------Tilter Overextension Warning
@@ -205,7 +201,7 @@ void controls()
             LeftIntake.spin(directionType::rev, 100, velocityUnits::pct);
             RightIntake.spin(directionType::rev, 100, velocityUnits::pct);
         }
-        else //if(Controller1.ButtonB.pressing() || Controller1.ButtonA.pressing())
+        else if(Controller1.ButtonB.pressing() || Controller1.ButtonA.pressing())
         {
           LeftIntake.stop(brakeType::brake);
           RightIntake.stop(brakeType::brake);
@@ -246,10 +242,10 @@ void controls()
         }
         else if(Controller1.ButtonRight.pressing())
         {
-            mode = 2;
+            mode = 1;
             Controller1.Screen.clearLine(3);
             Controller1.Screen.setCursor(3,1);
-            Controller1.Screen.print("Mode 2");
+            Controller1.Screen.print("Mode 1");
             driveSpeedFactor = 1; //Resets the drive speed to normal
             Controller1.Screen.clearLine(1);
             Controller1.rumble("---");
@@ -283,11 +279,7 @@ void controls()
       // -----------------------------Flip Out
       if(Controller1.ButtonX.pressing())
       {
-        Brain.Timer.reset();
         flipOut();
-        Controller1.Screen.clearLine(3);
-        Controller1.Screen.setCursor(3, 1);
-        Controller1.Screen.print("%d ", Brain.Timer.time());  
       }
 
       // -----------------------------Run Auton
@@ -300,28 +292,19 @@ void controls()
         RM();
       }
 
-      // -----------------------------Robot Sensitivity Change && Mode Change
-        if(Controller1.ButtonLeft.pressing())
-        {
-            mode = 0;
-            Controller1.Screen.setCursor(3,1);
-            Controller1.Screen.print("Mode 0");
-            driveSpeedFactor = 3; //Makes robot slower
-            Controller1.Screen.clearLine(1);
-            Controller1.Screen.setCursor(1,1);
-            Controller1.Screen.print("Speed Reduced x1.5");
-            Controller1.rumble("...");
-        }
-        else if(Controller1.ButtonRight.pressing())
-        {
-            mode = 1;
-            Controller1.Screen.clearLine(3);
-            Controller1.Screen.setCursor(3,1);
-            Controller1.Screen.print("Mode 1");
-            driveSpeedFactor = 1; //Resets the drive speed to normal
-            Controller1.Screen.clearLine(1);
-            Controller1.rumble("---");
-        }
+      // -----------------------------90 degree turns
+      if(Controller1.ButtonRight.pressing())
+      {
+        turnTo(-155, true, 1000);
+      }
+      else if(Controller1.ButtonLeft.pressing())
+      {
+        turnFor(-155, true, 1000);
+      }
+      else if(Controller1.ButtonR2.pressing())
+      {
+        turnTo(0, true, 1000);
+      }
 
       // -----------------------------90 degree turns
       /**
