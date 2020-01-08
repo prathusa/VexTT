@@ -12,7 +12,6 @@ double getEncoderPosition()
 
 void driveTo(double positionRev) 
 {
-  //int dT = 15/1000;
   double error = positionRev - d.position(rotationUnits::rev);
   double integral = error;
   double prevError = error;
