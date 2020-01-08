@@ -9,7 +9,6 @@
 #include "autonomous.h"
 
 bool rec;
-
 void pre_auton(void) 
 {
     Controller1.Screen.clearScreen();
@@ -43,7 +42,6 @@ void pre_auton(void)
     Brain.Screen.setFillColor(vex::black);
     Brain.Screen.setPenColor(vex::white);
 
-    ROBOT.reset();		//Resets the motor's position
 	  OS.menuCONFIG();	//Calls ACCESS_OS's menuCONFIG, the main reason why you downloaded this
 	  OS.notificationHUD("Robot: OK");	//Sends message to driver
 }
