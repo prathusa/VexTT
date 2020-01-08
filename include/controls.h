@@ -152,8 +152,12 @@ void controls()
         {
           Tilt.stop(brake);
         }
-
+        //Fade away
+        if(Controller1.ButtonX.pressing()){
+          fadeAway();
+        }
         // -----------------------------Robot Sensitivity Change && Mode Change
+        /*
         if(Controller1.ButtonLeft.pressing())
         {
             mode = 0;
@@ -165,7 +169,7 @@ void controls()
             Controller1.Screen.print("Speed Reduced x1.5");
             Controller1.rumble("...");
         }
-        else if(Controller1.ButtonRight.pressing())
+        else */if(Controller1.ButtonLeft.pressing())
         {
             mode = 1;
             Controller1.Screen.clearLine(3);
@@ -290,37 +294,11 @@ void controls()
         Controller1.Screen.print("%d ", Brain.Timer.time());  
       }
 
-      // -----------------------------Run Auton
-      if(Controller1.ButtonY.pressing())
-      {
-        BM();
-      }
-      if(Controller1.ButtonUp.pressing())
-      {
-        RM();
-      }
-
       // -----------------------------Robot Sensitivity Change && Mode Change
-        if(Controller1.ButtonLeft.pressing())
+        
+        else if(Controller1.ButtonLeft.pressing())
         {
-            mode = 0;
-            Controller1.Screen.setCursor(3,1);
-            Controller1.Screen.print("Mode 0");
-            driveSpeedFactor = 3; //Makes robot slower
-            Controller1.Screen.clearLine(1);
-            Controller1.Screen.setCursor(1,1);
-            Controller1.Screen.print("Speed Reduced x1.5");
-            Controller1.rumble("...");
-        }
-        else if(Controller1.ButtonRight.pressing())
-        {
-            mode = 1;
-            Controller1.Screen.clearLine(3);
-            Controller1.Screen.setCursor(3,1);
-            Controller1.Screen.print("Mode 1");
-            driveSpeedFactor = 1; //Resets the drive speed to normal
-            Controller1.Screen.clearLine(1);
-            Controller1.rumble("---");
+            turnTo(90);
         }
 
       // -----------------------------90 degree turns
@@ -343,88 +321,90 @@ void controls()
     }
 }
 
+void skillscontrol()
+{       
+        //Arcade Control
+        LeftFrontMotor.spin(directionType::fwd, (Controller1.Axis3.value() + Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct); //(Axis3+Axis4)/2;
+        LeftRearMotor.spin(directionType::fwd, (Controller1.Axis3.value() + Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct); //(Axis3+Axis4)/2;
+	      RightFrontMotor.spin(directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct);//(Axis3-Axis4)/2;
+	      RightRearMotor.spin(directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct);//(Axis3-Axis4)/2;
 
-        // ---------------------------Driver Control Modes
-        /*
-        if(tank)
+        // -----------------------------Toggle Stacker Command
+        if(Controller1.ButtonY.pressing() && lift.value(pct) < 32)
         {
-            //Tank Control
-            LeftFrontMotor.spin(vex::directionType::fwd, Controller1.Axis3.value()/driveSpeedFactor, vex::velocityUnits::pct);
-            RightFrontMotor.spin(vex::directionType::fwd, Controller1.Axis2.value()/driveSpeedFactor, vex::velocityUnits::pct);
-            RightRearMotor.spin(vex::directionType::fwd, Controller1.Axis2.value()/driveSpeedFactor, vex::velocityUnits::pct);
-            LeftRearMotor.spin(vex::directionType::fwd, Controller1.Axis3.value()/driveSpeedFactor, vex::velocityUnits::pct); 
+          Brain.Timer.reset();
+          stack();
+          Tilt.stop(brake);
+          Controller1.Screen.clearLine(3);
+          Controller1.Screen.setCursor(3, 1);
+          Controller1.Screen.print("%d ", Brain.Timer.time()); 
+        }
+
+        //------------------------------DriveSpeed Control
+        if(Controller1.ButtonA.pressing())
+        {
+            driveSpeedFactor = 1.5; //Makes robot slower
+            Controller1.Screen.clearLine(1);
+            Controller1.Screen.setCursor(1,1);
+            Controller1.Screen.print("Speed Reduced x3");
+            Controller1.rumble("-");
+        }
+        else if(Controller1.ButtonA.pressing())
+        {
+            driveSpeedFactor = 1; //Makes robot slower
+            Controller1.Screen.clearLine(1);
+            Controller1.Screen.setCursor(1,1);
+            Controller1.Screen.print("Speed Reduced x1.5");
+            Controller1.rumble(".");
+        }
+        
+        // -----------------------------Intake Control
+        if(Controller1.ButtonL1.pressing())
+        {
+            LeftIntake.spin(directionType::fwd, 100, velocityUnits::pct);
+            RightIntake.spin(directionType::fwd, 100, velocityUnits::pct);
+        }
+        else if(Controller1.ButtonL2.pressing() && Lift.position(rev) < .3)
+        {
+            LeftIntake.spin(directionType::rev, 100, velocityUnits::pct);
+            RightIntake.spin(directionType::rev, 100, velocityUnits::pct);
         }
         else
         {
-            
-            //Arcade Control
-            LeftFrontMotor.spin(directionType::fwd, (Controller1.Axis3.value() + Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct); //(Axis3+Axis4)/2;
-            LeftRearMotor.spin(directionType::fwd, (Controller1.Axis3.value() + Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct); //(Axis3+Axis4)/2;
-	          RightFrontMotor.spin(directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct);//(Axis3-Axis4)/2;
-	          RightRearMotor.spin(directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct);//(Axis3-Axis4)/2;
+          LeftIntake.stop(brakeType::brake);
+          RightIntake.stop(brakeType::brake);
         }
-        
-        // -----------------------------Controller Drive Mode Switch
-        if(Controller1.ButtonLeft.pressing())
-        {
-          tank = true;
-          Controller1.Screen.clearLine(2);
-          Controller1.Screen.setCursor(2,1);
-          Controller1.Screen.print("Tank Control");
-        }
-        else if(Controller1.ButtonRight.pressing())
-        {
-          tank = false;
-          Controller1.Screen.clearLine(2);
-          Controller1.Screen.setCursor(2,1);
-          Controller1.Screen.print("Split-Arcade");
-        }
-        */
 
-        // -----------------------------Robot Lock
-        /*
-        if(Controller1.ButtonY.pressing())
-        {
-          while(!Controller1.ButtonA.pressing() || !Controller1.ButtonB.pressing())
-          {
-            vex::task::sleep(20);
-          }
-        }
-        */
-        // -----------------------------Controller Screen Manipulation
-        
-        /**
-        Prints the motor speed to the controller screen and notifies the driver if Aim Mode is on.
-        **/
-        /*    
-        if(Controller1.ButtonLeft.pressing())
-        {
-            Controller1.Screen.clearLine(2);
-            Controller1.Screen.clearLine(3);
-            Controller1.Screen.setCursor(2,1);
-            Controller1.Screen.print("Left Rev: ");
-            Controller1.Screen.setCursor(2,11);
-            Controller1.Screen.print(LeftFrontMotor.rotation(rotationUnits::rev));
-            Controller1.Screen.setCursor(3,1);
-            Controller1.Screen.print("Right Rev: ");
-            Controller1.Screen.setCursor(3,12);
-            Controller1.Screen.print(RightFrontMotor.rotation(rotationUnits::rev));
+          Tilt.stop(brake);
+        //Fade away
+        if(Controller1.ButtonX.pressing()){
+          fadeAway();
         }
         
-        if(Controller1.ButtonRight.pressing())
+        // -----------------------------Toggle Lift Positions
+        if(Controller1.ButtonUp.pressing())
         {
-            LeftFrontMotor.resetRotation();
-            RightFrontMotor.resetRotation();
-            Controller1.Screen.clearLine(2);
-            Controller1.Screen.clearLine(3);
-            Controller1.Screen.setCursor(2,1);
-            Controller1.Screen.print("Left Rev: ");
-            Controller1.Screen.setCursor(2,11);
-            Controller1.Screen.print(LeftFrontMotor.rotation(rotationUnits::rev));
-            Controller1.Screen.setCursor(3,1);
-            Controller1.Screen.print("Right Rev: ");
-            Controller1.Screen.setCursor(3,12);
-            Controller1.Screen.print(RightFrontMotor.rotation(rotationUnits::rev));
+          liftTo(liftTower);
         }
-        */
+        else if(Controller1.ButtonDown.pressing())
+        {
+          liftTo(liftMin);
+        }
+        else 
+        {
+            Lift.setBrake(hold); //potentially make a custom hold function for the lift using potentiometer
+            Lift.stop();
+        }
+        
+        // -----------------------------Robot Sensitivity Change && Mode Change
+      // -----------------------------Flip Out
+      if(Controller1.ButtonRight.pressing())
+      {
+        Brain.Timer.reset();
+        flipOut();
+        Controller1.Screen.clearLine(3);
+        Controller1.Screen.setCursor(3, 1);
+        Controller1.Screen.print("%d ", Brain.Timer.time());  
+      }
+}
 #endif

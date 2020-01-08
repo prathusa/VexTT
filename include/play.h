@@ -10,11 +10,39 @@ void play(void)
     double vel[5];
     if (rojo &! test)
     {
-      inFile.open("r.txt");
+      //inFile.open("r.txt");
+    Brain.Timer.reset();
+    double driveFwdDistance = 2.7;
+    resetEncoders();
+    Inertial.resetRotation();
+    d.rotateFor(directionType::fwd, 1, rotationUnits::rev, 50, velocityUnits::pct, true);
+    d.rotateFor(directionType::fwd, -1, rotationUnits::rev, 50, velocityUnits::pct, true);
+    flipOut();
+    d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 50, velocityUnits::pct, false);
+    vex::task::sleep(200);
+    //turnTo(0, true, 50);
+    intake.spin(directionType::rev, 100, velocityUnits::pct);
+    d.rotateFor(directionType::fwd, driveFwdDistance, rotationUnits::rev, 50, velocityUnits::pct, true);
+    //drive((-1.0/3)*driveFwdDistance);
+    //d.rotateFor(directionType::fwd, (-1.0/3)*driveFwdDistance, rotationUnits::rev, 50, velocityUnits::pct, true);
+    turnTo(120, true, 100);
+    d.rotateFor(directionType::fwd, 3.2, rotationUnits::rev, 50, velocityUnits::pct, true);
+    intake.stop();
+    intake.spin(directionType::rev, 20, velocityUnits::pct);
+    stack();
+    //vex::task::sleep(200);
+    fadeAway();
+    intake.stop();
+    Controller1.Screen.clearLine(3);
+    Controller1.Screen.setCursor(3, 1);
+    Controller1.Screen.print("%d ", Brain.Timer.time()); 
     }
     else if (azul &! test)
     {
-      inFile.open("b.txt");
+      //inFile.open("b.txt");
+      d.rotateFor(directionType::fwd, -2, rotationUnits::rev, 50, velocityUnits::pct, false);
+      vex::task::sleep(4000);
+      drive(2);
     }
     else if (rojo && test)
     {

@@ -40,7 +40,7 @@ vex::encoder re(Brain.ThreeWirePort.C);
 
 int mode = 1;
 int liftMax = 65;
-int liftTower = 55;
+int liftTower = 60;
 int liftMin = 25;
 int tiltMax = 77;
 int tiltStack = 59;

@@ -9,17 +9,17 @@ double getEncoderPosition()
   //return -(re.position(rev) + le.position(rotationUnits::rev))/2;
   return -(le.position(rotationUnits::rev));
 }
-/*
+
 void driveTo(double positionRev) 
 {
-  int dT = 15/1000;
+  //int dT = 15/1000;
   double error = positionRev - d.position(rotationUnits::rev);
   double integral = error;
   double prevError = error;
   double derivative = error - prevError;
   double kP = 4;    // 0.15
-  double kI = .04 / dT; // 0.03
-  double kD = 1.1 * dT;    // 0.1
+  double kI = .04; // dT; // 0.03
+  double kD = 1.1; //* dT;    // 0.1
   while (std::abs(error) > 0) 
   {
     error = positionRev - d.position(rotationUnits::rev);
@@ -30,7 +30,7 @@ void driveTo(double positionRev)
     }
     derivative = error - prevError;
     prevError = error;
-    double volts = kP * error + kI * integral * dT + kD * (derivative / dT);
+    double volts = kP * error + kI * integral + kD * derivative;
     d.spin(fwd, volts, voltageUnits::volt);
     vex::task::sleep(15);
     }
@@ -41,7 +41,7 @@ void drive(double revolutions)
   double target = revolutions + d.position(rotationUnits::rev);
   driveTo(target);
 }
-*/
+/*
 
 void driveTo(double positionRev) 
 {
@@ -65,7 +65,7 @@ void driveTo(double positionRev)
       }
       derivative = error - prevError;
       prevError = error;
-      double volts = kP * error + kI * integral * dT + kD * (derivative / dT);
+      double volts = kP * error + kI * integral + kD * derivative;
       d.spin(fwd, volts, voltageUnits::volt);
       vex::task::sleep(15);
     }
@@ -82,7 +82,7 @@ void driveTo(double positionRev)
       }
       derivative = error - prevError;
       prevError = error;
-      double volts = kP * error + kI * integral * dT + kD * (derivative / dT);
+      double volts = kP * error + kI * integral + kD * derivative;
       d.spin(fwd, volts, voltageUnits::volt);
       vex::task::sleep(15);
     }
@@ -93,7 +93,7 @@ void drive(double revolutions) {
   double target = revolutions + getEncoderPosition();
   driveTo(target);
 }
-
+*/
 // BROKEN
 /*
 void turnTo(double raw)
@@ -158,9 +158,9 @@ void turnTo(double raw, bool timeout = false, int time = 250)
 {
   if (Inertial.installed()) 
   {
-    double kP = 0.1;    //.5
-    double kI = 0.0006; //.0035
-    double kD = 0.03;   // 0.3
+    double kP = .3;    //.5
+    double kI = 0.0; //.0035
+    double kD = 0.0;   // 0.3
     double target = raw;
     double error = target - Inertial.rotation(rotationUnits::deg);
     double integral = error;
@@ -178,7 +178,7 @@ void turnTo(double raw, bool timeout = false, int time = 250)
       }
       derivative = error - prevError;
       prevError = error;
-      double volts = kP * error + kI * integral * dT + kD * (derivative / dT);
+      double volts = kP * error + kI * integral + kD * derivative;
       l.spin(fwd, volts, voltageUnits::volt);
       r.spin(reverse, volts, voltageUnits::volt);
       if(dt.velocity(percentUnits::pct) == 0)
@@ -197,8 +197,8 @@ void turnFor(double raw, bool timeout = false, int time = 250)
 {
   if (Inertial.installed()) 
   {
-    double kP = 0.1;    //.5
-    double kI = 0.0006; //.0035
+    double kP = 0.5;    //.5
+    double kI = 0.006; //.0035
     double kD = 0.03;   // 0.3
     double target = Inertial.rotation(rotationUnits::deg) + raw;
     double error = target - Inertial.rotation(rotationUnits::deg);
@@ -217,7 +217,7 @@ void turnFor(double raw, bool timeout = false, int time = 250)
       }
       derivative = error - prevError;
       prevError = error;
-      double volts = kP * error + kI * integral * dT + kD * (derivative / dT);
+      double volts = kP * error + kI * integral + kD * derivative;
       l.spin(fwd, volts, voltageUnits::volt);
       r.spin(reverse, volts, voltageUnits::volt);
       if(dt.velocity(percentUnits::pct) == 0)
@@ -265,7 +265,7 @@ void turnToHeading(double target, bool timeout = false, int time = 250)
         }
         derivative = error - prevError;
         prevError = error;
-        double volts = kP * error + kI * integral * dT + kD * (derivative / dT);
+        double volts = kP * error + kI * integral + kD * derivative;
         l.spin(fwd, volts, voltageUnits::volt);
         r.spin(reverse, volts, voltageUnits::volt);
         if(dt.velocity(percentUnits::pct) == 0)
@@ -292,7 +292,7 @@ void turnToHeading(double target, bool timeout = false, int time = 250)
         }
         derivative = error - prevError;
         prevError = error;
-        double volts = kP * error + kI * integral * dT + kD * (derivative / dT);
+        double volts = kP * error + kI * integral + kD * derivative;
         l.spin(reverse, volts, voltageUnits::volt);
         r.spin(fwd, volts, voltageUnits::volt);
         if(dt.velocity(percentUnits::pct) == 0)
@@ -335,7 +335,7 @@ void turnFor(double raw, bool timeout = false, int time = 250)
         }
         derivative = error - prevError;
         prevError = error;
-        double volts = kP * error + kI * integral * dT + kD * (derivative / dT);
+        double volts = kP * error + kI * integral + kD * derivative;
         l.spin(fwd, volts, voltageUnits::volt);
         r.spin(reverse, volts, voltageUnits::volt);
         if(dt.velocity(percentUnits::pct) == 0)
@@ -506,7 +506,7 @@ void tiltTo(int potentiometerPCT)
       }
       derivative = error - prevError;
       prevError = error;
-      double volts = kP * error + kI * integral * dT + kD * (derivative / dT);
+      double volts = kP * error + kI * integral + kD * derivative;
       Tilt.spin(fwd, volts, voltageUnits::volt);
       vex::task::sleep(15);
     }
@@ -523,7 +523,7 @@ void tiltTo(int potentiometerPCT)
       }
       derivative = error - prevError;
       prevError = error;
-      double volts = kP * error + kI * integral * dT + kD * (derivative / dT);
+      double volts = kP * error + kI * integral + kD * derivative;
       Tilt.spin(fwd, volts, voltageUnits::volt);
       vex::task::sleep(15);
     }
@@ -599,8 +599,8 @@ void liftTo(int potentiometerPCT)
   double prevError = error;
   double derivative = error - prevError;
   double kP = .55;    // 0.15
-  double kI = 0.0066 / dT;    // 0.03
-  double kD = 0.04 * dT;    // 0.1
+  double kI = 0.0066; // dT;    // 0.03
+  double kD = 0.04; //* dT;    // 0.1
   int motionless = 0;
   if (error > 0) 
   {
@@ -611,7 +611,7 @@ void liftTo(int potentiometerPCT)
       integral += error;
       derivative = error - prevError;
       prevError = error;
-      double volts = kP * error + kI * integral * dT + kD * (derivative / dT);
+      double volts = kP * error + kI * integral + kD * derivative;
       Lift.spin(fwd, volts, voltageUnits::volt);
       if(Lift.velocity(percentUnits::pct) == 0)
       {
@@ -629,7 +629,7 @@ void liftTo(int potentiometerPCT)
       integral += error;
       derivative = error - prevError;
       prevError = error;
-      double volts = kP * error + kI * integral * dT + kD * (derivative / dT);
+      double volts = kP * error + kI * integral + kD * derivative;
       Lift.spin(fwd, volts, voltageUnits::volt);
       if(Lift.velocity(percentUnits::pct) == 0)
       {
@@ -653,9 +653,10 @@ void flipOut()
 {
   tiltTo(tiltMax, 12);
   tiltTo(tiltMin, 12);
-  liftTo(liftMin+12, 12);
+  liftTo(liftMin+9, 12);
   intake.spin(vex::forward, 100, pct);
   liftTo(liftMin);
+  intake.stop();
   // drive(-.1, 60, false, false, false);
   //tiltTo(tiltMax, 12);
   //tiltTo(tiltMin, 12);
@@ -690,8 +691,8 @@ void tower(void)
 
 void fadeAway()
 {
-  intake.spinFor(directionType::rev, -2, rotationUnits::rev, 35, velocityUnits::pct, false);
-  d.spinFor(-.75, rotationUnits::rev, 30, velocityUnits::pct);
+  intake.spinFor(directionType::rev, -2, rotationUnits::rev, 30, velocityUnits::pct, false);
+  d.spinFor(-.75, rotationUnits::rev, 20, velocityUnits::pct);
 }
 
 // Added Controller and Brain feedback when autonomous is selected.

@@ -99,7 +99,7 @@ void autonomous(void)
       Controller1.Screen.print(":( i sleep");
       Controller1.Screen.setCursor(2, 1);
       Controller1.Screen.print("By: Pratham");
-      
+      /*
       while(!( rojo || azul || skills || slow || test))
       {
         if(Controller1.ButtonLeft.pressing())
@@ -109,6 +109,7 @@ void autonomous(void)
           drive back 1
           drive forward 1
           */
+          /*
         }
 
         if(Controller1.ButtonRight.pressing())
@@ -118,9 +119,10 @@ void autonomous(void)
           drive back 1
           drive forward 1
           */
+          /*
         }
       }
-
+*/
     }
     /*
     else
