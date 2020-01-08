@@ -5,6 +5,22 @@
 #include "drivefunctions.h"
 
 int speed = 80;
+
+void autonFrontRow()
+{
+	//Add code for front row auton here
+}
+
+void autonBackRow()
+{
+	//Add code for front row auton here
+}
+
+void autonSkills()
+{
+	//Got Skills? Add code for skills here
+}
+
 void RM()
 {
     Brain.Timer.reset();

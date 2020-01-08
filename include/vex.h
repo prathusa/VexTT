@@ -1,3 +1,14 @@
+//Drive system class
+#ifndef ROBOT_C
+#define ROBOT_C
+#include "robot-base.cpp"
+#endif
+//ACCESS_OS file
+#ifndef ACCESS_OS_C
+#define ACCESS_OS_C
+#include "ACCESS_OS.cpp"
+#endif
+//VEX
 #ifndef VEX_H
 #define VEX_H
 
@@ -37,6 +48,8 @@ vex::controller Controller1;
 vex::competition Competition;
 vex::encoder le(Brain.ThreeWirePort.A);
 vex::encoder re(Brain.ThreeWirePort.C);
+ROBOT_BASE ROBOT;
+ACCESS_OS OS;
 
 int mode = 1;
 int liftMax = 65;
@@ -54,7 +67,5 @@ bool rm = false;
 bool bm = false;
 bool manual = false;
 double driveSpeedFactor = 1;
-double gyroLinearFactor = 47/90;
-double leftAngle = -47;
-double rightAngle = 47;
+int tempStatus = 0;
 #endif

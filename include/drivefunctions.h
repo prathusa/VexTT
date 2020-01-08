@@ -211,6 +211,19 @@ end:
   vex::task::sleep(20);
 }
 
+void turn(double x) 
+{
+	ROBOT.timeOut(2.5);
+	ROBOT.reset();
+
+	if (OS.getValues(AUTON_COLOR) == BLUE) //If color is 0 (BLUE) flip the values 
+	{
+		x = -x;
+	}
+
+	turnTo(x);
+}
+
 void turnFor(double raw, bool timeout = false, int time = 250) 
 {
   if (Inertial.installed()) 

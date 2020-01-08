@@ -36,15 +36,15 @@ Link to website: https://dev.azure.com/roboVEX/_git/ACCESS_OS
 [GLOBAL] Devices > Connected devices and sensors
 ------------------------------------------------------------------------------------------------------*/
 //Main compoments
-vex::brain Brain;
-vex::controller Controller = vex::controller();
+//vex::brain Brain;
+//vex::controller Controller = vex::controller();
 
 //Drive motors
-vex::motor LeftBaseM1 = vex::motor(vex::PORT1, vex::gearSetting::ratio18_1, false);		//geared 1:1
-vex::motor RightBaseM1 = vex::motor(vex::PORT10, vex::gearSetting::ratio18_1, true);	//geared 1:1
+//vex::motor LeftBaseM1 = vex::motor(vex::PORT1, vex::gearSetting::ratio18_1, false);		//geared 1:1
+//vex::motor RightBaseM1 = vex::motor(vex::PORT10, vex::gearSetting::ratio18_1, true);	//geared 1:1
 
 //Create object Compettition of the Competition class
 #ifndef COMPETITION_DEFINED
 #define COMPETITION_DEFINED
-vex::competition Competition;
+//vex::competition Competition;
 #endif
