@@ -54,7 +54,7 @@ Link to website: https://dev.azure.com/roboVEX/_git/ACCESS_OS
 
 //Define max entries in 2d array for easy coding
 #define maxMenus			3		//Make this the same # as items in maxMenusIndex
-#define maxOptions			3		//Make this the same # as items in 2D of menuDisplayIndex
+#define maxOptions			4		//Make this the same # as items in 2D of menuDisplayIndex
 
 //Define robot status for easy coding
 #define modeDisabled		0
@@ -67,13 +67,13 @@ Link to website: https://dev.azure.com/roboVEX/_git/ACCESS_OS
 #define RED							1
 #define FRONT						0
 #define BACK						1
-#define SKILLS		  		2
-#define AMBI						0
-#define RC							1
-#define TANK						2
-#define AUTON_COLOR			0
-#define AUTON_TYPE			1
-#define AUTON_MOD			  2
+#define SKILLS		  				2
+#define AMBI						3
+#define RC							0
+#define TANK						1
+#define AUTON_COLOR					0
+#define AUTON_TYPE					1
+#define AUTON_DRIVE			  		2
 
 
 /*------------------------------------------------------------------------------------------------------
@@ -99,9 +99,9 @@ private:
 	//1D Array for max options in menu
 	int maxMenusIndex[maxMenus] =
 	{
-		2,
 		3,
-		2
+		4,
+		3
 	};
 
 	//1D Array for default selected options.
@@ -125,8 +125,8 @@ private:
 	std::string menuOptions[maxMenus][maxOptions] =
 	{
 		{ "Blue",	"Red",		"" }, //If "" doesn't work, try "NULL"
-		{ "Front",	"Back",		"Skills" },
-		{ "Ambi",		"---",		"----" }
+		{ "Front",	"Back",		"Skills",		"Ambi" },
+		{ "--",		"---",		"----" }
 	};
 public:
 	ACCESS_OS();											//???

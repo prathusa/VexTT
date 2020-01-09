@@ -29,11 +29,6 @@ Link to website: https://dev.azure.com/roboVEX/_git/ACCESS_OS
 #include "vex.h"
 #endif
 
-#ifndef MANUAL_H
-#define MANUAL_H
-#include "manual.h"
-#endif
-
 /*------------------------------------------------------------------------------------------------------
 [GLOBAL] Defines > Constant vars that won't change during program run
 ------------------------------------------------------------------------------------------------------*/
@@ -124,7 +119,7 @@ void ROBOT_BASE::stop(bool coastOrBrake)
 ------------------------------------------------------------------------------------------------------*/
 void ROBOT_BASE::tankDrive()
 {
-	ambi();
+	
 }
 
 /*------------------------------------------------------------------------------------------------------

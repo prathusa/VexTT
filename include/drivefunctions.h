@@ -213,17 +213,17 @@ end:
   vex::task::sleep(20);
 }
 
-void turn(double x) 
+void turn(double raw, bool timeout = false, int time = 250)
 {
 	ROBOT.timeOut(2.5);
 	ROBOT.reset();
 
 	if (OS.getValues(AUTON_COLOR) == BLUE) //If color is 0 (BLUE) flip the values 
 	{
-		x = -x;
+		raw = -raw;
 	}
 
-	turnTo(x);
+	turnTo(raw, timeout, time);
 }
 
 void turnFor(double raw, bool timeout = false, int time = 250) 
@@ -267,76 +267,18 @@ end:
 //Left turning is broken
 void turnToHeading(double target, bool timeout = false, int time = 250) 
 {
-  if (Inertial.installed()) 
+  double rotation = Inertial.rotation(rotationUnits::deg);
+  while(rotation >= 360)
   {
-    double kP = 0.4;    //.5
-    double kI = 0.001; //.0035
-    double kD = 2.3;   // 0.3 
-    
-    if(target < 0)
-    {
-      target += 360;
-    }
-    
-    double error = target - Inertial.heading();
-    int motionless = 0;
-    if (error  <= 180) 
-    {
-      double error = target - Inertial.heading();
-      double integral = error;
-      double prevError = error;
-      double derivative = error - prevError;
-      while (std::abs(error) > 0 && (motionless < time || !timeout))
-      {
-        error = target - Inertial.heading();
-        integral += error;
-        if (error <= 0) 
-        {
-          integral = 0;
-        }
-        derivative = error - prevError;
-        prevError = error;
-        double volts = error * kP + integral * kI + derivative * kD;
-        l.spin(fwd, volts, voltageUnits::volt);
-        r.spin(reverse, volts, voltageUnits::volt);
-        if(dt.velocity(percentUnits::pct) == 0)
-        {
-          motionless+=15;
-        }
-        vex::task::sleep(15);
-      }
-      goto end;
-    } 
-    else if (error > 180) 
-    {
-      double error = target - Inertial.heading();
-      double integral = error;
-      double prevError = error;
-      double derivative = error - prevError;
-      while (std::abs(error) > 0 && (motionless < time || !timeout))
-      {
-        error = error = target - Inertial.heading();
-        integral += error;
-        if (error <= 0) 
-        {
-          integral = 0;
-        }
-        derivative = error - prevError;
-        prevError = error;
-        double volts = error * kP + integral * kI + derivative * kD;
-        l.spin(reverse, volts, voltageUnits::volt);
-        r.spin(fwd, volts, voltageUnits::volt);
-        if(dt.velocity(percentUnits::pct) == 0)
-        {
-          motionless+=15;
-        }
-        vex::task::sleep(15);
-      }
-      goto end;
-    }
+    target += 360;
+    rotation -= 360;
   }
-end:
-  vex::task::sleep(20);
+  while(rotation <= 0)
+  {
+    target -= 360;
+    rotation += 360;
+  }
+  turnTo(target, timeout, time);
 }
 
 
@@ -813,6 +755,7 @@ void resetEncoders(void)
   le.setPosition(0, rotationUnits::rev);
   re.setPosition(0, rotationUnits::rev);
 }
+
 /*
 void cGUI ()
 {
