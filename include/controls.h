@@ -2,9 +2,9 @@
 #define CONTROLS_H
 
 #include "vex.h" 
-#include "play.h"
-#include "manual.h"
-#include "drivefunctions.h"
+//#include "play.h"
+//#include "manual.h"
+//#include "drivefunctions.h"
 using namespace vex;
 
 void controls()
@@ -14,17 +14,6 @@ void controls()
         LeftRearMotor.spin(directionType::fwd, (Controller1.Axis3.value() + Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct); //(Axis3+Axis4)/2;
 	      RightFrontMotor.spin(directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct);//(Axis3-Axis4)/2;
 	      RightRearMotor.spin(directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct);//(Axis3-Axis4)/2;
-
-        // -----------------------------Toggle Stacker Command
-        if(Controller1.ButtonY.pressing() && lift.value(pct) < liftTilter)
-        {
-          Brain.Timer.reset();
-          stack();
-          Tilt.stop(brake);
-          Controller1.Screen.clearLine(3);
-          Controller1.Screen.setCursor(3, 1);
-          Controller1.Screen.print("%d ", Brain.Timer.time()); 
-        }
 
         //------------------------------DriveSpeed Control
         if(Controller1.ButtonB.pressing())
@@ -102,46 +91,5 @@ void controls()
         {
           Tilt.stop(brake);
         }
-
-        //Fade away
-        if(Controller1.ButtonX.pressing()){
-          fadeAway();
-        }
-        
-        // -----------------------------Lift Control
-        if(Controller1.ButtonUp.pressing())
-        {
-            Lift.spin(directionType::fwd, 100, velocityUnits::pct);
-            liftTiltCheck();
-        }
-        else if(Controller1.ButtonDown.pressing() && lift.value(pct) > liftMin)
-        {
-            Lift.spin(directionType::rev, 100, velocityUnits::pct);
-            liftTiltCheck();
-        }
-        // -----------------------------Toggle Lift Positions
-        else if(Controller1.ButtonLeft.pressing())
-        {
-          liftTo(liftTower);
-        }
-        else if(Controller1.ButtonA.pressing())
-        {
-          liftTo(liftMin);
-        }
-        else 
-        {
-            Lift.setBrake(hold); //potentially make a custom hold function for the lift using potentiometer
-            Lift.stop();
-        }
-        
-      // -----------------------------Flip Out
-      if(Controller1.ButtonRight.pressing())
-      {
-        Brain.Timer.reset();
-        flipOut();
-        Controller1.Screen.clearLine(3);
-        Controller1.Screen.setCursor(3, 1);
-        Controller1.Screen.print("%d ", Brain.Timer.time());  
-      }
 }
 #endif

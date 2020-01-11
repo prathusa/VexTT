@@ -1,7 +1,11 @@
-#ifndef DRIVER_FUNCTIONS_H
-#define DRIVER_FUNCTIONS_H
+#ifndef DRIVERFUNCTIONS_H
+#define DRIVERFUNCTIONS_H
 
 #include "vex.h"
+#ifndef CONTROLS1_H
+#define CONTROLS1_H
+#include "controls.h"
+#endif
 using namespace vex;
 ROBOT_BASE ROBOT;
 ACCESS_OS OS;
@@ -25,6 +29,7 @@ void driveTo(double positionRev)
   {
     while (error > 0) 
     {
+      controls();
       error = positionRev - d.position(rotationUnits::rev);
       integral += error;
       if (error <= 0) 
@@ -42,6 +47,7 @@ void driveTo(double positionRev)
   {
     while (error < 0) 
     {
+      controls();
       error = positionRev - d.position(rotationUnits::rev);
       integral += error;
       if (error >= 0) 
@@ -78,6 +84,7 @@ void turnTo(double raw, bool timeout = false, int time = 250)
     int motionless = 0;
     while (std::abs(error) > 0 && (motionless < time || !timeout))
     {
+      controls();
       error = target - Inertial.rotation(rotationUnits::deg);
       integral += error;
       if (error == 0) 
@@ -177,6 +184,7 @@ void tiltTo(int potentiometerPCT, double volts, bool slowDown = false)
     goto end;
   while (std::abs(error) > 0 && !slowDown) 
   {
+    controls();
     if (error > 0) 
     {
       error = target - tilt.value(percentUnits::pct);
@@ -195,6 +203,7 @@ void tiltTo(int potentiometerPCT, double volts, bool slowDown = false)
   // Not completed yet don't use!
   while (std::abs(error) > 0 && slowDown) 
   {
+    controls();
     if (tilt.value(percentUnits::pct) < tiltStack) 
     {
       error = target - tilt.value(percentUnits::pct);
@@ -234,6 +243,7 @@ void tiltTo(int potentiometerPCT)
   {
     while (std::abs(error) > 0) 
     {
+      controls();
       error = potentiometerPCT - tilt.value(pct);
       integral += error;
       if (error <= 0) 
@@ -251,6 +261,7 @@ void tiltTo(int potentiometerPCT)
   {
     while (std::abs(error) > 0) 
     {
+      controls();
       error = potentiometerPCT - tilt.value(pct);
       integral += error;
       if (error >= 0) 
@@ -297,6 +308,7 @@ void liftTo(int potentiometerPCT, double volts)
     goto end;
   while (std::abs(error) > 0) 
   {
+    controls();
     liftTiltCheck();
     if (error > 0) 
     {
@@ -341,6 +353,7 @@ void liftTo(int potentiometerPCT)
   {
     while (std::abs(error) > 0 && (motionless < time || !timeout)) 
     {
+      controls();
       liftTiltCheck();
       error = potentiometerPCT - lift.value(pct);
       integral += error;
@@ -359,6 +372,7 @@ void liftTo(int potentiometerPCT)
   {
     while (std::abs(error) > 0 && (motionless < time || !timeout)) 
     {
+      controls();
       liftTiltCheck();
       error = potentiometerPCT - lift.value(pct);
       integral += error;
@@ -401,6 +415,7 @@ void stack(void)
   double error = target - tilt.value(percentUnits::pct);
   while (error > 0) 
   {
+    controls();
     if(tilt.value(pct) <= 38)
     {
       intake.spin(directionType::rev, 30, percentUnits::pct);
@@ -408,7 +423,7 @@ void stack(void)
     else
       intake.stop();
     error = target - tilt.value(percentUnits::pct);
-    double volts = .15 * error + 2;
+    double volts = .3 * error + 2.25; //.15 * error + 2;
     Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
     vex::task::sleep(20);
   }

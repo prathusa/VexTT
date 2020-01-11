@@ -8,11 +8,63 @@
 
 void usercontrol(void) 
 {
-    //tiltTo(tiltMin, 2.5);
     while(1) 
     {
         controls();
         
+        // -----------------------------Toggle Stacker Command
+        if(Controller1.ButtonY.pressing() && lift.value(pct) < liftTilter)
+        {
+          Brain.Timer.reset();
+          stack();
+          Tilt.stop(brake);
+          Controller1.rumble("..");
+          Controller1.Screen.clearLine(3);
+          Controller1.Screen.setCursor(3, 1);
+          Controller1.Screen.print("%d ", Brain.Timer.time()); 
+        }
+
+        //Fade away
+        if(Controller1.ButtonX.pressing()){
+          fadeAway();
+        }
+        
+        // -----------------------------Lift Control
+        if(Controller1.ButtonUp.pressing())
+        {
+            Lift.spin(directionType::fwd, 100, velocityUnits::pct);
+            liftTiltCheck();
+        }
+        else if(Controller1.ButtonDown.pressing() && lift.value(pct) > liftMin)
+        {
+            Lift.spin(directionType::rev, 100, velocityUnits::pct);
+            liftTiltCheck();
+        }
+        // -----------------------------Toggle Lift Positions
+        else if(Controller1.ButtonLeft.pressing())
+        {
+          liftTo(liftTower);
+        }
+        else if(Controller1.ButtonA.pressing())
+        {
+          liftTo(liftMin);
+        }
+        else 
+        {
+            Lift.setBrake(hold); //potentially make a custom hold function for the lift using potentiometer
+            Lift.stop();
+        }
+        
+      // -----------------------------Flip Out
+      if(Controller1.ButtonRight.pressing())
+      {
+        Brain.Timer.reset();
+        flipOut();
+        Controller1.Screen.clearLine(3);
+        Controller1.Screen.setCursor(3, 1);
+        Controller1.Screen.print("%d ", Brain.Timer.time());  
+      }
+
         //Press Y to run autonomus
         /*
         if(Controller1.ButtonY.pressing())
