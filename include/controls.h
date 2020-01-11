@@ -58,14 +58,14 @@ void controls()
           if(error > 0)
           {
             error = target - tilt.value(percentUnits::pct);
-            double volts = .1*error+2;
+            double volts = .1*error+2.5;
             Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
             vex::task::sleep(20);
           }
           else
           {
             error = 0;
-            double volts = error+2;
+            double volts = error+2.5;
             Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
           }
         }
@@ -76,14 +76,14 @@ void controls()
           if(error > 0)
           {
             error = target - tilt.value(percentUnits::pct);
-            double volts = .1*error+2;
+            double volts = .1*error+2.5;
             Tilt.spin(directionType::rev, volts, voltageUnits::volt);
             vex::task::sleep(20);
           }
           else
           {
             error = 0;
-            double volts = error+2;
+            double volts = error+2.5;
             Tilt.spin(directionType::rev, volts, voltageUnits::volt);
           }
         }
