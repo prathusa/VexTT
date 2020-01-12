@@ -49,11 +49,10 @@ vex::competition Competition;
 vex::encoder le(Brain.ThreeWirePort.A);
 vex::encoder re(Brain.ThreeWirePort.C);
 
-int mode = 1;
-int liftMax = 65;
-int liftTower = 60;
-int liftTilter = 32;
-int liftMin = 20;
+int liftMax = 55;
+int liftTower = 54;
+int liftTilter = 31;
+int liftMin = 23;
 int tiltMax = 77;
 int tiltStack = 59;
 int tiltMin = 25; 

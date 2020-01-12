@@ -401,7 +401,7 @@ void liftFor(int potentiometerPCT)
 void flipOut() 
 {
   liftTo(liftMin+12, 12);
-  liftTo(liftMin);
+  liftTo(liftMin, 12);
   //intake.spin(vex::forward, 100, pct);
   // drive(-.1, 60, false, false, false);
   //tiltTo(tiltMax, 12);
