@@ -73,9 +73,9 @@ void turnTo(double raw, bool timeout = false, int time = 250)
 {
   if (Inertial.installed()) 
   {
-    double kP = 0.1;    //.5
-    double kI = 0.00065; //.0035
-    double kD = 0.022;   // 0.3
+    double kP = 0.6;    //.5
+    double kI = 0.0000; //.0035
+    double kD = 0.006;   // 0.3
     double target = raw;
     double error = target - Inertial.rotation(rotationUnits::deg);
     double integral = error;
@@ -85,6 +85,7 @@ void turnTo(double raw, bool timeout = false, int time = 250)
     while (std::abs(error) > 0 && (motionless < time || !timeout))
     {
       controls();
+      //intake.spin(directionType::rev, 100, velocityUnits::pct);
       error = target - Inertial.rotation(rotationUnits::deg);
       integral += error;
       if (error == 0) 
@@ -136,6 +137,7 @@ void turnFor(double raw, bool timeout = false, int time = 250)
       int motionless = 0;
       while (std::abs(error) > 0 && (motionless < time || !timeout))
       {
+        controls();
         error = target - Inertial.rotation(rotationUnits::deg);
         integral += error;
         if (error == 0) 
@@ -290,13 +292,13 @@ void liftTiltCheck()
   // -----------------------------Avoids Lift-Tilter conflict
   Lift.setBrake(hold);
   Tilt.setBrake(hold);
-  if (lift.value(pct) > 32 && tilt.value(percentUnits::pct) < 34) 
+  if (lift.value(pct) > 32 && tilt.value(percentUnits::pct) < 32) 
   {
-    tiltTo(34, 5);
+    tiltTo(32, 12);
   } 
-  else if (lift.value(pct) <= 32 && tilt.value(percentUnits::pct) >= 34) 
+  else if (lift.value(pct) <= 32 && tilt.value(percentUnits::pct) >= 32) 
   {
-    tiltTo(tiltMin, 4);
+    tiltTo(tiltMin, 12);
   }
 }
 
@@ -400,7 +402,7 @@ void liftFor(int potentiometerPCT)
 
 void flipOut() 
 {
-  liftTo(liftMin+12, 12);
+  liftTo(liftMin+10, 12);
   liftTo(liftMin, 12);
   //intake.spin(vex::forward, 100, pct);
   // drive(-.1, 60, false, false, false);
@@ -417,7 +419,7 @@ void stack(void)
   {
     controls();
     error = target - tilt.value(percentUnits::pct);
-    double volts = .3 * error + 2.25; //.15 * error + 2;
+    double volts = .5 * error + 2.25; //.15 * error + 2;
     Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
     vex::task::sleep(20);
   }
@@ -432,7 +434,7 @@ void tower(void)
 
 void fadeAway()
 {
-  intake.spinFor(directionType::rev, -2, rotationUnits::rev, 35, velocityUnits::pct, false);
+  intake.spinFor(directionType::rev, -2, rotationUnits::rev, 55, velocityUnits::pct, false);
   d.spinFor(-.75, rotationUnits::rev, 30, velocityUnits::pct);
 }
 

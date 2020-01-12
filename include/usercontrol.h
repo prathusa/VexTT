@@ -56,7 +56,8 @@ void usercontrol(void)
         // -----------------------------Toggle Lift Positions
         else if(Controller1.ButtonLeft.pressing())
         {
-          liftTo(liftTower);
+          liftTo(liftTower, 12);
+          //turnTo(90);
         }
         else if(Controller1.ButtonA.pressing())
         {
@@ -67,7 +68,7 @@ void usercontrol(void)
             Lift.setBrake(hold); //potentially make a custom hold function for the lift using potentiometer
             Lift.stop();
         }
-        
+        /*
       // -----------------------------Flip Out
       if(Controller1.ButtonRight.pressing())
       {
@@ -76,7 +77,7 @@ void usercontrol(void)
         Controller1.Screen.clearLine(3);
         Controller1.Screen.setCursor(3, 1);
         Controller1.Screen.print("%d ", Brain.Timer.time());  
-      }
+      }*/
 
         //Press Y to run autonomus
         /*

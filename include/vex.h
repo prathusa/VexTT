@@ -27,7 +27,7 @@ vex::brain Brain;
 vex::motor Lift (vex::PORT6, vex::gearSetting::ratio36_1,true);
 vex::motor Tilt (vex::PORT5, vex::gearSetting::ratio36_1,false);
 vex::motor LeftIntake (vex::PORT11, vex::gearSetting::ratio18_1,true);
-vex::motor RightIntake (vex::PORT13, vex::gearSetting::ratio18_1,false);
+vex::motor RightIntake (vex::PORT15, vex::gearSetting::ratio18_1,false);
 vex::motor RightRearMotor (vex::PORT9, vex::gearSetting::ratio18_1,true);
 vex::motor RightFrontMotor (vex::PORT10, vex::gearSetting::ratio18_1,true);
 vex::motor LeftFrontMotor (vex::PORT1, vex::gearSetting::ratio18_1,false);
@@ -50,7 +50,7 @@ vex::encoder le(Brain.ThreeWirePort.A);
 vex::encoder re(Brain.ThreeWirePort.C);
 
 int liftMax = 55;
-int liftTower = 54;
+int liftTower = 57;
 int liftTilter = 31;
 int liftMin = 23;
 int tiltMax = 77;
