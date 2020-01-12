@@ -69,7 +69,12 @@ void autonSkills()
 	//Got Skills? Add code for skills here
 }
 
-
+void autonAmbi()
+{
+	d.rotateFor(directionType::fwd, -2, rotationUnits::rev, 50, velocityUnits::pct, false);
+  vex::task::sleep(3000);
+  drive(2);
+}
 
 void RM()
 {

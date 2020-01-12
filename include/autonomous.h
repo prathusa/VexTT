@@ -19,6 +19,9 @@ void autonomous(void)
 	else if (OS.getValues(AUTON_TYPE) == SKILLS) {
 		autonSkills();
 	}
+  else if (OS.getValues(AUTON_TYPE) == AMBI) {
+		autonAmbi();
+	}
 
 	//Auton end. Prints auton end on the controller + vibrate controller
 	OS.notificationHUD("Auton: DONE");
