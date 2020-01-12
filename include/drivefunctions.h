@@ -416,12 +416,6 @@ void stack(void)
   while (error > 0) 
   {
     controls();
-    if(tilt.value(pct) <= 38)
-    {
-      intake.spin(directionType::rev, 30, percentUnits::pct);
-    }
-    else
-      intake.stop();
     error = target - tilt.value(percentUnits::pct);
     double volts = .3 * error + 2.25; //.15 * error + 2;
     Tilt.spin(directionType::fwd, volts, voltageUnits::volt);

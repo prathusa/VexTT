@@ -27,7 +27,7 @@ vex::brain Brain;
 vex::motor Lift (vex::PORT6, vex::gearSetting::ratio36_1,true);
 vex::motor Tilt (vex::PORT5, vex::gearSetting::ratio36_1,false);
 vex::motor LeftIntake (vex::PORT11, vex::gearSetting::ratio18_1,true);
-vex::motor RightIntake (vex::PORT12, vex::gearSetting::ratio18_1,false);
+vex::motor RightIntake (vex::PORT13, vex::gearSetting::ratio18_1,false);
 vex::motor RightRearMotor (vex::PORT9, vex::gearSetting::ratio18_1,true);
 vex::motor RightFrontMotor (vex::PORT10, vex::gearSetting::ratio18_1,true);
 vex::motor LeftFrontMotor (vex::PORT1, vex::gearSetting::ratio18_1,false);
