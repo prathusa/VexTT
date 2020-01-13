@@ -24,19 +24,19 @@
 
 using namespace vex;
 vex::brain Brain;
-vex::motor Lift (vex::PORT6, vex::gearSetting::ratio36_1,true);
+vex::motor Lift (vex::PORT16, vex::gearSetting::ratio36_1,true);
 vex::motor Tilt (vex::PORT5, vex::gearSetting::ratio36_1,false);
 vex::motor LeftIntake (vex::PORT11, vex::gearSetting::ratio18_1,true);
-vex::motor RightIntake (vex::PORT15, vex::gearSetting::ratio18_1,false);
-vex::motor RightRearMotor (vex::PORT9, vex::gearSetting::ratio18_1,true);
-vex::motor RightFrontMotor (vex::PORT10, vex::gearSetting::ratio18_1,true);
+vex::motor RightIntake (vex::PORT20, vex::gearSetting::ratio18_1,false);
+vex::motor RightRearMotor (vex::PORT6, vex::gearSetting::ratio18_1,true);
+vex::motor RightFrontMotor (vex::PORT7, vex::gearSetting::ratio18_1,true);
 vex::motor LeftFrontMotor (vex::PORT1, vex::gearSetting::ratio18_1,false);
 vex::motor LeftRearMotor (vex::PORT2, vex::gearSetting::ratio18_1,false);
 vex::motor_group intake(LeftIntake, RightIntake);
 vex::motor_group l(LeftFrontMotor, LeftRearMotor);
 vex::motor_group r(RightFrontMotor, RightRearMotor);
 vex::motor_group d(LeftFrontMotor, LeftRearMotor, RightFrontMotor, RightRearMotor);
-vex::inertial Inertial(vex::PORT7);
+vex::inertial Inertial(vex::PORT17);
 vex::gyro Gyro (Brain.ThreeWirePort.G);
 vex::pot tilt(Brain.ThreeWirePort.H);
 vex::pot lift(Brain.ThreeWirePort.F);
