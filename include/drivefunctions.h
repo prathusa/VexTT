@@ -402,7 +402,7 @@ void liftFor(int potentiometerPCT)
 
 void flipOut() 
 {
-  liftTo(liftMin+10, 12);
+  liftTo(liftMin+12, 12);
   liftTo(liftMin, 12);
   //intake.spin(vex::forward, 100, pct);
   // drive(-.1, 60, false, false, false);
@@ -415,6 +415,8 @@ void stack(void)
 {
   double target = tiltStack; // In revolutions
   double error = target - tilt.value(percentUnits::pct);
+  LeftIntake.setBrake(coast);
+  RightIntake.setBrake(coast);
   while (error > 0) 
   {
     controls();
