@@ -436,7 +436,7 @@ void tower(void)
 
 void fadeAway()
 {
-  intake.spinFor(directionType::rev, -2, rotationUnits::rev, 55, velocityUnits::pct, false);
+  intake.spinFor(directionType::rev, -2, rotationUnits::rev, 65, velocityUnits::pct, false);
   d.spinFor(-.75, rotationUnits::rev, 30, velocityUnits::pct);
 }
 

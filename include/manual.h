@@ -65,46 +65,37 @@ void autonFrontRow()
 
 void autonBackRow()
 {
-    Brain.Timer.reset();
-    double t1;
-    double t2;
+	  Brain.Timer.reset();
+    double driveFwdDistance = 4;
     resetEncoders();
     Inertial.resetRotation();
     vex::task::sleep(50);
     //d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 50, velocityUnits::pct, true);
     //d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 50, velocityUnits::pct, false);
     flipOut();
-    t1 = Brain.Timer.time();
-    liftTo(liftMin);
-    Lift.stop();
     //d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 50, velocityUnits::pct, false);
     //vex::task::sleep(200);
-    //turnTo(0, true, 50);
+    //turnTo(0, true, 10);
     intake.spin(directionType::rev, 100, velocityUnits::pct);
-    d.rotateFor(directionType::fwd, 3.6, rotationUnits::rev, 50, velocityUnits::pct, true);
-    t2 = Brain.Timer.time();
-    turn(30, true, 10);
+    d.rotateFor(directionType::fwd, 3.3, rotationUnits::rev, 37, velocityUnits::pct, true);
+    intake.stop();
     intake.spin(directionType::rev, 40, velocityUnits::pct);
-    d.rotateFor(directionType::fwd, -2.4, rotationUnits::rev, 80, velocityUnits::pct, true);
-    turn(0, true, 10);
+    //drive((-1.0/3)*driveFwdDistance);
+    d.rotateFor(directionType::fwd, -2.5/3, rotationUnits::rev, 65, velocityUnits::pct, true);
+    turn(140, true, 10);
     intake.spin(directionType::rev, 100, velocityUnits::pct);
-    d.rotateFor(directionType::fwd, 1.5, rotationUnits::rev, 50, velocityUnits::pct, true);
-    turn(130, true, 10);
-    intake.spin(directionType::rev, 20, velocityUnits::pct);
-    d.rotateFor(directionType::fwd, 2.8, rotationUnits::rev, 70, velocityUnits::pct, true);
-    intake.spin(directionType::rev, 50, velocityUnits::pct);
+    d.rotateFor(directionType::fwd, 1.5, rotationUnits::rev, 60, velocityUnits::pct, true);
+    //intake.spin(directionType::fwd, 35, velocityUnits::pct);
+    d.rotateFor(directionType::fwd, .6, rotationUnits::rev, 60, velocityUnits::pct, false);
+    vex::task::sleep(450);
     stack();
     d.rotateFor(directionType::fwd, .075, rotationUnits::rev, 25, velocityUnits::pct, true);
-    vex::task::sleep(200); //might need to be increased
+    vex::task::sleep(275); //might need to be increased
     fadeAway();
     intake.stop();
-    //Controller1.Screen.clearLine(3);
+    Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
-    Controller1.Screen.print("Flipout: %d ", t1);
-    Controller1.Screen.setCursor(2, 1);
-    Controller1.Screen.print("Line 1: %d ", t2);    
-    Controller1.Screen.setCursor(1, 1);
-    Controller1.Screen.print("Run Time: %d ", Brain.Timer.time());  
+    Controller1.Screen.print("%d ", Brain.Timer.time());  
 }
 
 void autonSkills()
@@ -260,38 +251,49 @@ void autonBackRow()
     Controller1.Screen.print("%d ", Brain.Timer.time());  
 }
 
+//8pnt
 void autonBackRow()
 {
-	  Brain.Timer.reset();
-    double driveFwdDistance = 4;
+    Brain.Timer.reset();
+    double t1;
+    double t2;
     resetEncoders();
     Inertial.resetRotation();
     vex::task::sleep(50);
     //d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 50, velocityUnits::pct, true);
     //d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 50, velocityUnits::pct, false);
     flipOut();
+    t1 = Brain.Timer.time();
+    liftTo(liftMin);
+    Lift.stop();
     //d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 50, velocityUnits::pct, false);
     //vex::task::sleep(200);
-    //turnTo(0, true, 10);
+    //turnTo(0, true, 50);
     intake.spin(directionType::rev, 100, velocityUnits::pct);
-    d.rotateFor(directionType::fwd, 3.7, rotationUnits::rev, 40, velocityUnits::pct, true);
-    intake.stop();
+    d.rotateFor(directionType::fwd, 3.6, rotationUnits::rev, 50, velocityUnits::pct, true);
+    t2 = Brain.Timer.time();
+    turn(32, true, 10);
     intake.spin(directionType::rev, 40, velocityUnits::pct);
-    //drive((-1.0/3)*driveFwdDistance);
-    d.rotateFor(directionType::fwd, -2.5/3, rotationUnits::rev, 65, velocityUnits::pct, true);
-    turn(150, true, 10);
+    d.rotateFor(directionType::fwd, -2.9, rotationUnits::rev, 80, velocityUnits::pct, true);
+    turn(0, true, 10);
     intake.spin(directionType::rev, 100, velocityUnits::pct);
-    d.rotateFor(directionType::fwd, 1.7, rotationUnits::rev, 60, velocityUnits::pct, true);
-    intake.spin(directionType::fwd, 15, velocityUnits::pct);
-    d.rotateFor(directionType::fwd, .4, rotationUnits::rev, 60, velocityUnits::pct, true);
+    d.rotateFor(directionType::fwd, 2.1, rotationUnits::rev, 50, velocityUnits::pct, true);
+    turn(125, true, 10);
+    intake.spin(directionType::rev, 20, velocityUnits::pct);
+    d.rotateFor(directionType::fwd, 3.4, rotationUnits::rev, 70, velocityUnits::pct, true);
+    intake.spin(directionType::rev, 50, velocityUnits::pct);
     stack();
     d.rotateFor(directionType::fwd, .075, rotationUnits::rev, 25, velocityUnits::pct, true);
     vex::task::sleep(200); //might need to be increased
     fadeAway();
     intake.stop();
-    Controller1.Screen.clearLine(3);
+    //Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
-    Controller1.Screen.print("%d ", Brain.Timer.time());  
+    Controller1.Screen.print("Flipout: %d ", t1);
+    Controller1.Screen.setCursor(2, 1);
+    Controller1.Screen.print("Line 1: %d ", t2);    
+    Controller1.Screen.setCursor(1, 1);
+    Controller1.Screen.print("Run Time: %d ", Brain.Timer.time());  
 }
 */
 
