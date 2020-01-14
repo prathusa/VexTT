@@ -26,13 +26,17 @@ void autonFrontRow()
     intake.spin(directionType::rev, 100, velocityUnits::pct);
     d.rotateFor(directionType::fwd, 1.3, rotationUnits::rev, 65, velocityUnits::pct, true);
     turn(-37.5, true, 10); //100 (timeout) can be reduced
-    d.rotateFor(directionType::fwd, .7, rotationUnits::rev, 50, velocityUnits::pct, true);
-    d.rotateFor(directionType::fwd, -.7, rotationUnits::rev, 50, velocityUnits::pct, true);
+    intake.spin(directionType::rev, 100, velocityUnits::pct);
+    d.rotateFor(directionType::fwd, .7, rotationUnits::rev, 45, velocityUnits::pct, true);
+    d.rotateFor(directionType::fwd, -.7, rotationUnits::rev, 65, velocityUnits::pct, true);
     turn(-195, true, 10);
+    intake.spin(directionType::rev, 100, velocityUnits::pct);
     d.rotateFor(directionType::fwd, 1.8, rotationUnits::rev, 50, velocityUnits::pct, true);
     turn(-90, true, 10);
+    intake.spin(directionType::rev, 100, velocityUnits::pct);
     d.rotateFor(directionType::fwd, 1.2, rotationUnits::rev, 50, velocityUnits::pct, true);
     turn(-100, true, 10);
+    intake.spin(directionType::fwd, 10, velocityUnits::pct);
     d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 50, velocityUnits::pct, true);
 	/*
     turn(-120, true, 10); //100 (timeout) can be reduced
@@ -43,7 +47,7 @@ void autonFrontRow()
     d.rotateFor(directionType::fwd, .3, rotationUnits::rev, 65, velocityUnits::pct, false); //possibly can reduce this number or removeable
     vex::task::sleep(250); //possibly can reduce this number or removeable
     */
-    intake.spin(directionType::fwd, 10, velocityUnits::pct); //can run this to lower cubes
+     //can run this to lower cubes
     intake.stop();
     stack();
     d.rotateFor(directionType::fwd, .075, rotationUnits::rev, 25, velocityUnits::pct, true); //untested I believe may need to be removed
