@@ -38,7 +38,7 @@ void autonFrontRow()
     intake.spin(directionType::rev, 100, velocityUnits::pct);
     d.rotateFor(directionType::fwd, 1.4, rotationUnits::rev, 50, velocityUnits::pct, true);
     turn(-135, true, 10);
-    intake.spin(directionType::fwd, 10, velocityUnits::pct);
+    intake.spin(directionType::rev, 50, velocityUnits::pct);
     d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 50, velocityUnits::pct, true);
 	/*
     turn(-120, true, 10); //100 (timeout) can be reduced
@@ -92,7 +92,7 @@ void autonBackRow()
     turn(130, true, 10);
     intake.spin(directionType::rev, 20, velocityUnits::pct);
     d.rotateFor(directionType::fwd, 2.8, rotationUnits::rev, 70, velocityUnits::pct, true);
-    intake.spin(directionType::fwd, 10, velocityUnits::pct);
+    intake.spin(directionType::rev, 50, velocityUnits::pct);
     stack();
     d.rotateFor(directionType::fwd, .075, rotationUnits::rev, 25, velocityUnits::pct, true);
     vex::task::sleep(200); //might need to be increased
