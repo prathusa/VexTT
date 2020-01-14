@@ -20,24 +20,24 @@ void autonFrontRow()
     d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 50, velocityUnits::pct, false);
     vex::task::sleep(200);
     //turnTo(0, true, 50);
-    d.rotateFor(directionType::fwd, driveFwdDistance, rotationUnits::rev, 75, velocityUnits::pct, true);
+    d.rotateFor(directionType::fwd, 3.2, rotationUnits::rev, 75, velocityUnits::pct, true);
     //drive((-1.0/3)*driveFwdDistance);
     //d.rotateFor(directionType::fwd, (-1.0/3)*driveFwdDistance, rotationUnits::rev, 50, velocityUnits::pct, true);
-    intake.spin(directionType::rev, 100, velocityUnits::pct);
-    turn(-45, true, 10); //100 (timeout) can be reduced
-    intake.spin(directionType::rev, 100, velocityUnits::pct);
-    d.rotateFor(directionType::fwd, 1.3, rotationUnits::rev, 65, velocityUnits::pct, true);
-    turn(-37.5, true, 10); //100 (timeout) can be reduced
+    turn(-90, true, 10); //100 (timeout) can be reduced
     intake.spin(directionType::rev, 100, velocityUnits::pct);
     d.rotateFor(directionType::fwd, .7, rotationUnits::rev, 45, velocityUnits::pct, true);
-    d.rotateFor(directionType::fwd, -.7, rotationUnits::rev, 65, velocityUnits::pct, true);
-    turn(-195, true, 10);
+    d.rotateFor(directionType::fwd, -.6, rotationUnits::rev, 55, velocityUnits::pct, true);
+    turn(0, true, 10);
+    d.rotateFor(directionType::fwd, 1.3, rotationUnits::rev, 55, velocityUnits::pct, true);
+    d.rotateFor(directionType::fwd, -1.3, rotationUnits::rev, 65, velocityUnits::pct, true);
+    turn(-180, true, 10); //100 (timeout) can be reduced
     intake.spin(directionType::rev, 100, velocityUnits::pct);
-    d.rotateFor(directionType::fwd, 1.8, rotationUnits::rev, 50, velocityUnits::pct, true);
+    d.rotateFor(directionType::fwd, 3, rotationUnits::rev, 45, velocityUnits::pct, true);
+    d.rotateFor(directionType::fwd, -.65, rotationUnits::rev, 65, velocityUnits::pct, true);
     turn(-90, true, 10);
     intake.spin(directionType::rev, 100, velocityUnits::pct);
-    d.rotateFor(directionType::fwd, 1.2, rotationUnits::rev, 50, velocityUnits::pct, true);
-    turn(-100, true, 10);
+    d.rotateFor(directionType::fwd, 1.4, rotationUnits::rev, 50, velocityUnits::pct, true);
+    turn(-135, true, 10);
     intake.spin(directionType::fwd, 10, velocityUnits::pct);
     d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 50, velocityUnits::pct, true);
 	/*
