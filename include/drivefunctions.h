@@ -292,11 +292,11 @@ void liftTiltCheck()
   // -----------------------------Avoids Lift-Tilter conflict
   Lift.setBrake(hold);
   Tilt.setBrake(hold);
-  if (lift.value(pct) > 32 && tilt.value(percentUnits::pct) < 32) 
+  if (lift.value(pct) > liftTilter && tilt.value(percentUnits::pct) < tilterLift) 
   {
-    tiltTo(32, 12);
+    tiltTo(tilterLift, 12);
   } 
-  else if (lift.value(pct) <= 32 && tilt.value(percentUnits::pct) >= 32) 
+  else if (lift.value(pct) <= liftTilter && tilt.value(percentUnits::pct) != tiltMin) 
   {
     tiltTo(tiltMin, 12);
   }
@@ -436,8 +436,10 @@ void tower(void)
 
 void fadeAway()
 {
+  driveSpeedFactor = 1.5;
   intake.spinFor(directionType::rev, -2, rotationUnits::rev, 55, velocityUnits::pct, false);
   d.spinFor(-.75, rotationUnits::rev, 30, velocityUnits::pct);
+  driveSpeedFactor = 1;
 }
 
 // Added Controller and Brain feedback when autonomous is selected.
