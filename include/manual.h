@@ -8,6 +8,7 @@ int speed = 80;
 void autonFrontRow()
 {
     Brain.Timer.reset();
+    //Controller1.Screen.clearScreen();
     double driveFwdDistance = 2;
     resetEncoders();
     Inertial.resetRotation();
@@ -57,20 +58,23 @@ void autonFrontRow()
     //vex::task::sleep(200);
     fadeAway();
     intake.stop();
-    Controller1.Screen.clearLine(3);
-    Controller1.Screen.setCursor(3, 1);
-    Controller1.Screen.print("%d ", Brain.Timer.time());
+    Controller1.Screen.clearLine(1);
+    Controller1.Screen.setCursor(1, 1);
+    Controller1.Screen.print("Total Time: %d ", Brain.Timer.time());  
 }
 
 void autonBackRow()
 {
-	  Brain.Timer.reset();
+    Brain.Timer.reset();
+    double t1;
+    double t2;
     resetEncoders();
     Inertial.resetRotation();
     vex::task::sleep(50);
     //d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 50, velocityUnits::pct, true);
     //d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 50, velocityUnits::pct, false);
     flipOut();
+    t1 = Brain.Timer.time();
     liftTo(liftMin);
     Lift.stop();
     //d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 50, velocityUnits::pct, false);
@@ -78,6 +82,7 @@ void autonBackRow()
     //turnTo(0, true, 50);
     intake.spin(directionType::rev, 100, velocityUnits::pct);
     d.rotateFor(directionType::fwd, 3.6, rotationUnits::rev, 50, velocityUnits::pct, true);
+    t2 = Brain.Timer.time();
     turn(30, true, 10);
     intake.spin(directionType::rev, 40, velocityUnits::pct);
     d.rotateFor(directionType::fwd, -2.4, rotationUnits::rev, 80, velocityUnits::pct, true);
@@ -93,9 +98,13 @@ void autonBackRow()
     vex::task::sleep(200); //might need to be increased
     fadeAway();
     intake.stop();
-    Controller1.Screen.clearLine(3);
+    //Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
-    Controller1.Screen.print("%d ", Brain.Timer.time());  
+    Controller1.Screen.print("Flipout: %d ", t1);
+    Controller1.Screen.setCursor(2, 1);
+    Controller1.Screen.print("Line 1: %d ", t2);    
+    Controller1.Screen.setCursor(1, 1);
+    Controller1.Screen.print("Run Time: %d ", Brain.Timer.time());  
 }
 
 void autonSkills()
@@ -125,9 +134,9 @@ void autonSkills()
     vex::task::sleep(200);
     fadeAway();
     intake.stop();
-    Controller1.Screen.clearLine(3);
-    Controller1.Screen.setCursor(3, 1);
-    Controller1.Screen.print("%d ", Brain.Timer.time());  
+    Controller1.Screen.clearLine(1);
+    Controller1.Screen.setCursor(1, 1);
+    Controller1.Screen.print("Total Time: %d ", Brain.Timer.time());  
 }
 
 void autonAmbi()
