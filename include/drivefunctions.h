@@ -73,9 +73,9 @@ void turnTo(double raw, bool timeout = false, int time = 250)
 {
   if (Inertial.installed()) 
   {
-    double kP = 0.6;    //.5
-    double kI = 0.0000; //.0035
-    double kD = 0.006;   // 0.3
+    double kP = 0.55;    //.5
+    double kI = 0.00006; //.0035
+    double kD = 0.4;   // 0.3
     double target = raw;
     double error = target - Inertial.rotation(rotationUnits::deg);
     double integral = error;
@@ -292,11 +292,11 @@ void liftTiltCheck()
   // -----------------------------Avoids Lift-Tilter conflict
   Lift.setBrake(hold);
   Tilt.setBrake(hold);
-  if (lift.value(pct) > 32 && tilt.value(percentUnits::pct) < 32) 
+  if (lift.value(pct) > 32 && tilt.value(percentUnits::pct) < 31) 
   {
-    tiltTo(32, 12);
+    tiltTo(31, 12);
   } 
-  else if (lift.value(pct) <= 32 && tilt.value(percentUnits::pct) >= 32) 
+  else if (lift.value(pct) <= 32 && tilt.value(percentUnits::pct) >= 31) 
   {
     tiltTo(tiltMin, 12);
   }
