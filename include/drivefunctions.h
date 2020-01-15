@@ -421,7 +421,7 @@ void stack(void)
   {
     controls();
     error = target - tilt.value(percentUnits::pct);
-    double volts = .5 * error + 2.25; //.15 * error + 2;
+    double volts = .4 * error + 2; //.15 * error + 2;
     Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
     vex::task::sleep(20);
   }
