@@ -36,7 +36,7 @@ void controls()
         // -----------------------------Intake Control
         if(Controller1.ButtonL1.pressing())
         {
-            intake.spin(directionType::fwd, 7, voltageUnits::volt);
+            intake.spin(directionType::fwd, 4, voltageUnits::volt);
         }
         else if(Controller1.ButtonL2.pressing() && lift.value(pct) < liftTower)
         {
