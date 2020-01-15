@@ -36,18 +36,16 @@ void controls()
         // -----------------------------Intake Control
         if(Controller1.ButtonL1.pressing())
         {
-            LeftIntake.spin(directionType::fwd, 100, velocityUnits::pct);
-            RightIntake.spin(directionType::fwd, 100, velocityUnits::pct);
+            intake.spin(directionType::fwd, 4, voltageUnits::volt);
         }
         else if(Controller1.ButtonL2.pressing() && lift.value(pct) < liftTower)
         {
-            LeftIntake.spin(directionType::rev, 100, velocityUnits::pct);
-            RightIntake.spin(directionType::rev, 100, velocityUnits::pct);
+            intake.spin(directionType::rev, 13, voltageUnits::volt);
         }
         else
         {
-          LeftIntake.stop(brakeType::brake);
-          RightIntake.stop(brakeType::brake);
+          LeftIntake.stop(brakeType::coast);
+          RightIntake.stop(brakeType::coast);
         }
 
         // -----------------------------Tilt Control
@@ -58,7 +56,7 @@ void controls()
           if(error > 0)
           {
             error = target - tilt.value(percentUnits::pct);
-            double volts = .1*error+2.5;
+            double volts = .15*error+2.5;
             Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
             vex::task::sleep(20);
           }
