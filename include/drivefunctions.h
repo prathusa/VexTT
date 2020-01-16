@@ -23,8 +23,8 @@ void driveTo(double positionRev)
   double prevError = error;
   double derivative = error - prevError;
   double kP = 4;    // 0.15
-  double kI = .04; // 0.03
-  double kD = 1.1;    // 0.1
+  double kI = .03; // 0.03
+  double kD = 3;    // 0.1
   if (error > 0) 
   {
     while (error > 0) 
@@ -415,13 +415,21 @@ void stack(void)
 {
   double target = tiltStack; // In revolutions
   double error = target - tilt.value(percentUnits::pct);
-  LeftIntake.setBrake(coast);
-  RightIntake.setBrake(coast);
   while (error > 0) 
   {
     controls();
+    if(tilt.value(pct) >= 38)
+    {
+      LeftIntake.setBrake(coast);
+      RightIntake.setBrake(coast);
+    }
+    else
+    {
+      LeftIntake.setBrake(brake);
+      RightIntake.setBrake(brake);
+    }
     error = target - tilt.value(percentUnits::pct);
-    double volts = .4 * error + 2; //.15 * error + 2;
+    double volts = .2 * error + 2; //.15 * error + 2;
     Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
     vex::task::sleep(20);
   }
@@ -535,13 +543,13 @@ void resetEncoders(void)
 
 void odom(double inches, int timeout = 0) 
 {
-  double eVal = TRACKING_WHEEL_CIRCUMFERENCE * (le.position(degrees) / 360);
+  double eVal = TRACKING_WHEEL_CIRCUMFERENCE * le.position(rotationUnits::rev);
   double error = inches - eVal;
   double integral = error;
   double prevError = error;
   double derivative = error - prevError;
   double kP = 4;    // 0.15
-  double kI = .04; // 0.03
+  double kI = .3; // 0.03
   double kD = 1.1;    // 0.1
   int motionless = 0;
   while (std::abs(error) > 0 && (motionless <= timeout)) 
