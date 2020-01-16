@@ -44,8 +44,8 @@ void controls()
         }
         else
         {
-          LeftIntake.stop(brakeType::coast);
-          RightIntake.stop(brakeType::coast);
+          LeftIntake.stop(brakeType::brake);
+          RightIntake.stop(brakeType::brake);
         }
 
         // -----------------------------Tilt Control
