@@ -10,11 +10,17 @@ using namespace vex;
 void controls()
 {       
         //Arcade Control
-        LeftFrontMotor.spin(directionType::fwd, (Controller1.Axis3.value() + Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct); //(Axis3+Axis4)/2;
-        LeftRearMotor.spin(directionType::fwd, (Controller1.Axis3.value() + Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct); //(Axis3+Axis4)/2;
-	      RightFrontMotor.spin(directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct);//(Axis3-Axis4)/2;
-	      RightRearMotor.spin(directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct);//(Axis3-Axis4)/2;
+        LeftFrontMotor.spin(directionType::fwd, (Controller1.Axis4.value() + Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct); //(Axis3+Axis4)/2;
+        LeftRearMotor.spin(directionType::fwd, (Controller1.Axis4.value() + Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct); //(Axis3+Axis4)/2;
+	      RightFrontMotor.spin(directionType::fwd, (Controller1.Axis4.value() - Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct);//(Axis3-Axis4)/2;
+	      RightRearMotor.spin(directionType::fwd, (Controller1.Axis4.value() - Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct);//(Axis3-Axis4)/2;
 
+        //Tank Control
+        LeftFrontMotor.spin(vex::directionType::fwd, Controller1.Axis3.value()/driveSpeedFactor, vex::velocityUnits::pct);
+        RightFrontMotor.spin(vex::directionType::fwd, Controller1.Axis2.value()/driveSpeedFactor, vex::velocityUnits::pct);
+        RightRearMotor.spin(vex::directionType::fwd, Controller1.Axis2.value()/driveSpeedFactor, vex::velocityUnits::pct);
+        LeftRearMotor.spin(vex::directionType::fwd, Controller1.Axis3.value()/driveSpeedFactor, vex::velocityUnits::pct); 
+        
         //------------------------------DriveSpeed Control
         if(Controller1.ButtonB.pressing())
         {
@@ -36,11 +42,11 @@ void controls()
         // -----------------------------Intake Control
         if(Controller1.ButtonL1.pressing())
         {
-            intake.spin(directionType::fwd, 4, voltageUnits::volt);
+            intake.spin(directionType::fwd, 50, pct);
         }
         else if(Controller1.ButtonL2.pressing() && lift.value(pct) < liftTower)
         {
-            intake.spin(directionType::rev, 13, voltageUnits::volt);
+            intake.spin(directionType::rev, 100, pct);
         }
         else
         {

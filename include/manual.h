@@ -11,31 +11,21 @@ void autonFrontRow()
     double driveFwdDistance = 3.2;
     resetEncoders();
     Inertial.resetRotation();
-    //d.rotateFor(directionType::fwd, 1, rotationUnits::rev, 50, velocityUnits::pct, true);
-    //d.rotateFor(directionType::fwd, -1, rotationUnits::rev, 50, velocityUnits::pct, true);
     flipOut();
     Lift.stop();
     d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 50, velocityUnits::pct, false);
     vex::task::sleep(200);
-    //turnTo(0, true, 50);
     intake.spin(directionType::rev, 100, velocityUnits::pct);
     d.rotateFor(directionType::fwd, driveFwdDistance, rotationUnits::rev, 75, velocityUnits::pct, true);
-    //drive((-1.0/3)*driveFwdDistance);
-    //d.rotateFor(directionType::fwd, (-1.0/3)*driveFwdDistance, rotationUnits::rev, 50, velocityUnits::pct, true);
-    turn(-120, true, 100); //100 (timeout) can be reduced
+    turn(-135, true, 10); //100 (timeout) can be reduced
     intake.spin(directionType::rev, 100, velocityUnits::pct);
-    d.rotateFor(directionType::fwd, 2.0, rotationUnits::rev, 65, velocityUnits::pct, true);
-    turn(-135, true, 100); //100 (timeout) can be reduced
-    d.rotateFor(directionType::fwd, .9, rotationUnits::rev, 65, velocityUnits::pct, true);
+    d.rotateFor(directionType::fwd, 2.8, rotationUnits::rev, 65, velocityUnits::pct, true);
     d.rotateFor(directionType::fwd, .3, rotationUnits::rev, 65, velocityUnits::pct, false); //possibly can reduce this number or removeable
     vex::task::sleep(400); //possibly can reduce this number or removeable
-    //intake.spin(directionType::fwd, 10, velocityUnits::pct); //can run this to lower cubes
-    //vex::task::sleep(200); //can run this to lower cubes
     stack();
-    d.rotateFor(directionType::fwd, .075, rotationUnits::rev, 25, velocityUnits::pct, true); //untested I believe may need to be removed
-    vex::task::sleep(270); //untested I believe may need to be removed
+    d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false);
+    vex::task::sleep(270);
     intake.stop();
-    //vex::task::sleep(200);
     d.spinFor(-.75, rotationUnits::rev, 30, velocityUnits::pct);
     intake.stop();
     Controller1.Screen.clearLine(3);
