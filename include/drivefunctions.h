@@ -109,7 +109,7 @@ end:
   vex::task::sleep(20);
 }
 
-void turn(double raw, bool timeout = false, int time = 250)
+void turn(double raw, bool timeout = false, int time = 14)
 {
 	ROBOT.timeOut(2.5);
 	ROBOT.reset();
@@ -531,6 +531,41 @@ void resetEncoders(void)
   RightRearMotor.resetPosition();
   le.setPosition(0, rotationUnits::rev);
   re.setPosition(0, rotationUnits::rev);
+}
+
+void odom(double inches, int timeout = 0) 
+{
+  double eVal = TRACKING_WHEEL_CIRCUMFERENCE * (le.position(degrees) / 360);
+  double error = inches - eVal;
+  double integral = error;
+  double prevError = error;
+  double derivative = error - prevError;
+  double kP = 4;    // 0.15
+  double kI = .04; // 0.03
+  double kD = 1.1;    // 0.1
+  int motionless = 0;
+  while (std::abs(error) > 0 && (motionless <= timeout)) 
+  {
+    controls();
+    error = inches - eVal;
+    integral += error;
+    derivative = error - prevError;
+    prevError = error;
+    double volts = error * kP + integral * kI + derivative * kD;
+    d.spin(fwd, volts, voltageUnits::volt);
+    if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=15;
+    if(dt.velocity(percentUnits::pct) != 0)
+        motionless+=0;
+    vex::task::sleep(15);
+  }
+}
+
+void driveFor(double inches, int timeout = 0)
+{
+  double eVal = TRACKING_WHEEL_CIRCUMFERENCE * (le.position(degrees) / 360);
+  double target = inches + eVal;
+  driveTo(target);
 }
 
 /*
