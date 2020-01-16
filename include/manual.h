@@ -13,21 +13,21 @@ void autonFrontRow()
     Inertial.resetRotation();
     flipOut();
     Lift.stop();
-    d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 50, velocityUnits::pct, false);
-    vex::task::sleep(200);
     intake.spin(directionType::rev, 100, velocityUnits::pct);
     d.rotateFor(directionType::fwd, driveFwdDistance, rotationUnits::rev, 75, velocityUnits::pct, true);
-    turn(-135, true, 10); //100 (timeout) can be reduced
+    turn(-120, true, 10); //100 (timeout) can be reduced
     intake.spin(directionType::rev, 100, velocityUnits::pct);
-    d.rotateFor(directionType::fwd, 2.8, rotationUnits::rev, 65, velocityUnits::pct, true);
+    d.rotateFor(directionType::fwd, 2.0, rotationUnits::rev, 65, velocityUnits::pct, true);
+    vex::task::sleep(400);
+    turn(-135, true, 10); //100 (timeout) can be reduced
+    d.rotateFor(directionType::fwd, .8, rotationUnits::rev, 65, velocityUnits::pct, true);
     d.rotateFor(directionType::fwd, .3, rotationUnits::rev, 65, velocityUnits::pct, false); //possibly can reduce this number or removeable
+    intake.spin(directionType::rev, 25, velocityUnits::pct);
     vex::task::sleep(400); //possibly can reduce this number or removeable
     stack();
-    d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false);
-    vex::task::sleep(270);
-    intake.stop();
+    d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false); //untested I believe may need to be removed
+    vex::task::sleep(270); //untested I believe may need to be removed
     d.spinFor(-.75, rotationUnits::rev, 30, velocityUnits::pct);
-    intake.stop();
     Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%d ", Brain.Timer.time());
@@ -40,17 +40,11 @@ void autonBackRow()
     resetEncoders();
     Inertial.resetRotation();
     vex::task::sleep(50);
-    //d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 50, velocityUnits::pct, true);
-    //d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 50, velocityUnits::pct, false);
     flipOut();
-    //d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 50, velocityUnits::pct, false);
-    //vex::task::sleep(200);
-    //turnTo(0, true, 50);
     intake.spin(directionType::rev, 100, velocityUnits::pct);
     d.rotateFor(directionType::fwd, driveFwdDistance+.2, rotationUnits::rev, 40, velocityUnits::pct, true);
     intake.stop();
     intake.spin(directionType::rev, 40, velocityUnits::pct);
-    //drive((-1.0/3)*driveFwdDistance);
     d.rotateFor(directionType::fwd, (-1.0/3)*driveFwdDistance, rotationUnits::rev, 60, velocityUnits::pct, true);
     turn(150, true, 50);
     intake.spin(directionType::rev, 100, velocityUnits::pct);
