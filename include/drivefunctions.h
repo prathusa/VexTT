@@ -516,15 +516,83 @@ void driveTo(double inches, int timeout = 10)
   }
 }
 
-void drive(double inches, int timeout = 0)
+void drive(double inches, int timeout = 10)
 {
-  double eVal = TRACKING_WHEEL_CIRCUMFERENCE * (le.position(degrees) / 360);
+  double eVal = TRACKING_WHEEL_CIRCUMFERENCE * getEncoderPosition();
   double target = inches + eVal;
-  driveTo(target);
+  driveTo(target, timeout);
+}
+
+void driveTo(double inches, int speed, int timeout = 10) 
+{
+  double eVal = TRACKING_WHEEL_CIRCUMFERENCE * le.position(rotationUnits::rev);
+  double error = inches - eVal;
+  int motionless = 0;
+  while (inches > 0 && std::abs(error) > 0.75 && (motionless <= timeout)) 
+  {
+    controls();
+    error = inches - eVal;
+    d.spin(fwd, speed, percentUnits::pct);
+    if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=15;
+    if(dt.velocity(percentUnits::pct) != 0)
+        motionless+=0;
+    vex::task::sleep(15);
+  }
+  while (inches < 0 && std::abs(error) > 0.75 && (motionless <= timeout)) 
+  {
+    controls();
+    error = inches - eVal;
+    d.spin(fwd, speed, percentUnits::pct);
+    if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=15;
+    if(dt.velocity(percentUnits::pct) != 0)
+        motionless+=0;
+    vex::task::sleep(15);
+  }
 }
 
 /*
+//Collision detection
+void driveTo(double inches, int timeout = 10) 
+{
+  double eVal = TRACKING_WHEEL_CIRCUMFERENCE * le.position(rotationUnits::rev);
+  double error = inches - eVal;
+  double integral = error;
+  double prevError = error;
+  double derivative = error - prevError;
+  double kP = 4;    // 0.15
+  double kI = .3; // 0.03
+  double kD = 1.1;    // 0.1
+  double x1 = le.position(rotationUnits::rev);
+  int motionless = 0;
+  while (std::abs(error) > 0 && (motionless <= timeout)) 
+  {
+    controls();
+    error = inches - eVal;
+    integral += error;
+    derivative = error - prevError;
+    prevError = error;
+    double volts = error * kP + integral * kI + derivative * kD;
+    d.spin(fwd, volts, voltageUnits::volt);
+    if(dt.velocity(percentUnits::pct) == 0 && motionless < 15)
+    {
+        motionless+=15;
+        x1 = le.position(rotationUnits::rev);
+    }
+    if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=15;
+    if(dt.velocity(percentUnits::pct) != 0)
+        motionless+=0;
+    if(motionless < = )
+    {
 
+    }
+    vex::task::sleep(15);
+  }
+}
+
+//Non tracking wheel PID
 void driveTo(double positionRev) 
 {
   double error = positionRev - d.position(rotationUnits::rev);
