@@ -5,7 +5,7 @@
 #include "drivefunctions.h"
 
 int speed = 80;
-void autonFrontRow()
+void motorAFR()
 {
 	  Brain.Timer.reset();
     double driveFwdDistance = 3.2;
@@ -31,6 +31,37 @@ void autonFrontRow()
     Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%d ", Brain.Timer.time());
+}
+
+void encoderAFR()
+{
+	  Brain.Timer.reset();
+    double fwd1 = 37.5;
+    double fwd2 = 36;
+    resetEncoders();
+    Inertial.resetRotation();
+    flipOut();
+    Lift.stop();
+    intake.spin(directionType::rev, 100, velocityUnits::pct);
+    drive(fwd1);
+    turn(-130, true, 10); //100 (timeout) can be reduced
+    drive(fwd2);
+    d.rotateFor(directionType::fwd, .3, rotationUnits::rev, 65, velocityUnits::pct, false); //possibly can reduce this number or removeable
+    intake.spin(directionType::rev, 100, velocityUnits::pct);
+    vex::task::sleep(400); //possibly can reduce this number or removeable
+    intake.spinFor(fwd, .5, rotationUnits::rev);
+    stack();
+    d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false); //untested I believe may need to be removed
+    vex::task::sleep(270); //untested I believe may need to be removed
+    d.spinFor(-.75, rotationUnits::rev, 30, velocityUnits::pct);
+    Controller1.Screen.clearLine(3);
+    Controller1.Screen.setCursor(3, 1);
+    Controller1.Screen.print("%d ", Brain.Timer.time());
+}
+
+void autonFrontRow()
+{
+	  encoderAFR();
 }
 
 void autonBackRow()

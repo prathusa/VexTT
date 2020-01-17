@@ -16,59 +16,6 @@ double getEncoderPosition()
   return -(le.position(rotationUnits::rev));
 }
 
-void driveTo(double positionRev) 
-{
-  double error = positionRev - d.position(rotationUnits::rev);
-  double integral = error;
-  double prevError = error;
-  double derivative = error - prevError;
-  double kP = 4;    // 0.15
-  double kI = .03; // 0.03
-  double kD = 3;    // 0.1
-  if (error > 0) 
-  {
-    while (error > 0) 
-    {
-      controls();
-      error = positionRev - d.position(rotationUnits::rev);
-      integral += error;
-      if (error <= 0) 
-      {
-        integral = 0;
-      }
-      derivative = error - prevError;
-      prevError = error;
-      double volts = error * kP + integral * kI + derivative * kD;
-      d.spin(fwd, volts, voltageUnits::volt);
-      vex::task::sleep(15);
-    }
-  }
-  else if (error < 0) 
-  {
-    while (error < 0) 
-    {
-      controls();
-      error = positionRev - d.position(rotationUnits::rev);
-      integral += error;
-      if (error >= 0) 
-      {
-        integral = 0;
-      }
-      derivative = error - prevError;
-      prevError = error;
-      double volts = error * kP + integral * kI + derivative * kD;
-      d.spin(fwd, volts, voltageUnits::volt);
-      vex::task::sleep(15);
-    }
-  }
-}
-
-void drive(double revolutions) 
-{
-  double target = revolutions + d.position(rotationUnits::rev);
-  driveTo(target);
-}
-
 void turnTo(double raw, bool timeout = false, int time = 250) 
 {
   if (Inertial.installed()) 
@@ -541,7 +488,7 @@ void resetEncoders(void)
   re.setPosition(0, rotationUnits::rev);
 }
 
-void odom(double inches, int timeout = 0) 
+void driveTo(double inches, int timeout = 10) 
 {
   double eVal = TRACKING_WHEEL_CIRCUMFERENCE * le.position(rotationUnits::rev);
   double error = inches - eVal;
@@ -569,7 +516,7 @@ void odom(double inches, int timeout = 0)
   }
 }
 
-void driveFor(double inches, int timeout = 0)
+void drive(double inches, int timeout = 0)
 {
   double eVal = TRACKING_WHEEL_CIRCUMFERENCE * (le.position(degrees) / 360);
   double target = inches + eVal;
@@ -577,6 +524,61 @@ void driveFor(double inches, int timeout = 0)
 }
 
 /*
+
+void driveTo(double positionRev) 
+{
+  double error = positionRev - d.position(rotationUnits::rev);
+  double integral = error;
+  double prevError = error;
+  double derivative = error - prevError;
+  double kP = 4;    // 0.15
+  double kI = .03; // 0.03
+  double kD = 3;    // 0.1
+  if (error > 0) 
+  {
+    while (error > 0) 
+    {
+      controls();
+      error = positionRev - d.position(rotationUnits::rev);
+      integral += error;
+      if (error <= 0) 
+      {
+        integral = 0;
+      }
+      derivative = error - prevError;
+      prevError = error;
+      double volts = error * kP + integral * kI + derivative * kD;
+      d.spin(fwd, volts, voltageUnits::volt);
+      vex::task::sleep(15);
+    }
+  }
+  else if (error < 0) 
+  {
+    while (error < 0) 
+    {
+      controls();
+      error = positionRev - d.position(rotationUnits::rev);
+      integral += error;
+      if (error >= 0) 
+      {
+        integral = 0;
+      }
+      derivative = error - prevError;
+      prevError = error;
+      double volts = error * kP + integral * kI + derivative * kD;
+      d.spin(fwd, volts, voltageUnits::volt);
+      vex::task::sleep(15);
+    }
+  }
+}
+
+void drive(double revolutions) 
+{
+  double target = revolutions + d.position(rotationUnits::rev);
+  driveTo(target);
+}
+
+
 void cGUI ()
 {
   start:
