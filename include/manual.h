@@ -97,13 +97,10 @@ void encoderABR()
     resetEncoders();
     Inertial.resetRotation();
     flipOut();
-    intake.spin(directionType::rev, 100, velocityUnits::pct);
-    drive(3.2);//39);
-    intake.spin(directionType::rev, 12, voltageUnits::volt);
-    drive(-.4);//5);
+    drive(3.2, 100, 100);//39);
+    drive(-.4, 100, 100);//5);
     turn(150, true, 1000);
-    intake.spin(directionType::rev, 100, velocityUnits::pct);
-    drive(2.1);//27);
+    drive(2.1, 100, 100);//27);
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
     vex::task::sleep(270); //might need to be increased
