@@ -494,9 +494,9 @@ void driveTo(double positionRev, int timeout = 100)
   double integral = error;
   double prevError = error;
   double derivative = error - prevError;
-  double kP = 2;    // 0.15
-  double kI = 0; // 0.03
-  double kD = 0;    // 0.1
+  double kP = 4;    // 0.15
+  double kI = .04; // 0.03
+  double kD = 2;    // 0.1
   int motionless = 0;
   if (error > 0) 
   {
