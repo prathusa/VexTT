@@ -101,7 +101,7 @@ void encoderABR()
     drive(3.2);//39);
     intake.spin(directionType::rev, 12, voltageUnits::volt);
     drive(-.4);//5);
-    turn(150, true, 10);
+    turn(150, true, 1000);
     intake.spin(directionType::rev, 100, velocityUnits::pct);
     drive(2.1);//27);
     stack();
