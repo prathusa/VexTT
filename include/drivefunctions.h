@@ -503,7 +503,7 @@ void driveTo(double positionRev, int timeout = 100)
     while (error > 0 && motionless <= timeout) 
     {
       intake.spin(directionType::rev, 100, percentUnits::pct);
-      controls();
+      //controls();
       error = positionRev - d.position(rotationUnits::rev);
       integral += error;
       if (error <= 0) 
@@ -526,7 +526,7 @@ void driveTo(double positionRev, int timeout = 100)
     while (error < 0 && motionless <= timeout) 
     {
       intake.spin(directionType::rev, 100, percentUnits::pct);
-      controls();
+      //controls();
       error = positionRev - d.position(rotationUnits::rev);
       integral += error;
       if (error >= 0) 

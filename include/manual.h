@@ -97,14 +97,9 @@ void encoderABR()
     resetEncoders();
     Inertial.resetRotation();
     flipOut();
-    Lift.stop();
-    intake.spin(directionType::rev, 100, percentUnits::pct);
     drive(3.2, 100, true);//39);
-    intake.spin(directionType::rev, 100, percentUnits::pct);
     drive(-.4, 100, true);//5);
-    intake.spin(directionType::rev, 100, percentUnits::pct);
     turn(150, true, 100);
-    intake.spin(directionType::rev, 100, percentUnits::pct);
     drive(2.1, 100, true);//27);
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
