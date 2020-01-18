@@ -16,6 +16,11 @@ double getEncoderPosition()
   return -(le.position(rotationUnits::rev));
 }
 
+double getDistance()
+{
+  return TRACKING_WHEEL_CIRCUMFERENCE * getEncoderPosition();
+}
+
 void turnTo(double raw, int timeout = 14)
 {
   if (Inertial.installed()) 
@@ -548,6 +553,71 @@ void driveTo(double positionRev, int intakeSpeed = 0, int timeout = 50)
 void drive(double revolutions, int intakeSpeed = 0, int timeout = 50) 
 {
   double target = revolutions + d.position(rotationUnits::rev);
+  driveTo(target, intakeSpeed, timeout);
+}
+
+//ODOM DRIVE
+void trackTo(double distance, int intakeSpeed = 0, int timeout = 50) 
+{
+  double error = distance - getDistance();
+  double integral = error;
+  double prevError = error;
+  double derivative = error - prevError;
+  double kP = 4/12;    // 0.15
+  double kI = .15/12; // 0.03
+  double kD = 3/12;    // 0.1
+  int motionless = 0;
+  if (error > 0) 
+  {
+    while (error > 0 && motionless <= timeout) 
+    {
+      intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      error = distance - getDistance();
+      integral += error;
+      if (error <= 0) 
+      {
+        integral = 0;
+      }
+      derivative = error - prevError;
+      prevError = error;
+      double volts = error * kP + integral * kI + derivative * kD;
+      d.spin(fwd, volts, voltageUnits::volt);
+      if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=15;
+      if(dt.velocity(percentUnits::pct) != 0)
+        motionless=0;
+      vex::task::sleep(15);
+    }
+  }
+  else if (error < 0) 
+  {
+    while (error < 0 && motionless <= timeout) 
+    {
+      intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      error = distance - getDistance();
+      integral += error;
+      if (error >= 0) 
+      {
+        integral = 0;
+      }
+      derivative = error - prevError;
+      prevError = error;
+      double volts = error * kP + integral * kI + derivative * kD;
+      d.spin(fwd, volts, voltageUnits::volt);
+      if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=15;
+      if(dt.velocity(percentUnits::pct) != 0)
+        motionless=0;
+      vex::task::sleep(15);
+    }
+  }
+  intake.stop();
+}
+
+void trackFor(double distance, int intakeSpeed = 0, int timeout = 50) 
+{
+  double S = TRACKING_WHEEL_CIRCUMFERENCE * getEncoderPosition();
+  double target = distance + S;
   driveTo(target, intakeSpeed, timeout);
 }
 

@@ -39,8 +39,8 @@ void usercontrol(void)
 
         //Fade away
         if(Controller1.ButtonX.pressing()){
-          //fadeAway();
-          autonomous();
+          fadeAway();
+          //autonomous();
         }
         
         // -----------------------------Lift Control

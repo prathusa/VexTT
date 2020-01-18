@@ -66,7 +66,7 @@ bool bm = false;
 bool manual = false;
 double driveSpeedFactor = 1;
 double tileInch = 23.6;
-double TRACKING_WHEEL_RADIUS = 3.25/2;
-double TRACKING_WHEEL_CIRCUMFERENCE = 2 * M_PI * TRACKING_WHEEL_RADIUS;
+double TRACKING_WHEEL_DIAMETER = 3.25;
+double TRACKING_WHEEL_CIRCUMFERENCE = M_PI * TRACKING_WHEEL_DIAMETER;
 int tempStatus = 0;
 #endif

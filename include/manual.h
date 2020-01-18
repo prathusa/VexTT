@@ -33,7 +33,7 @@ void motorAFR()
     Controller1.Screen.print("%d ", Brain.Timer.time());
 }
 
-void encoderAFR()
+void AFR()
 {
 	  Brain.Timer.reset();
     double fwd1 = 37.5;
@@ -56,7 +56,7 @@ void encoderAFR()
     Controller1.Screen.print("%d ", Brain.Timer.time());
 }
 
-void encoderAFR1()
+void AFR1()
 {
 	  Brain.Timer.reset();
     double fwd1 = 37.5;
@@ -79,11 +79,6 @@ void encoderAFR1()
     Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%d ", Brain.Timer.time());
-}
-
-void autonFrontRow()
-{
-	  encoderAFR();
 }
 
 void motorABR()
@@ -112,7 +107,7 @@ void motorABR()
     Controller1.Screen.print("%d ", Brain.Timer.time());  
 }
 
-void encoderABR()
+void ABR()
 {
 	  Brain.Timer.reset();
     double driveFwdDistance = 4;
@@ -133,9 +128,37 @@ void encoderABR()
     Controller1.Screen.print("%d ", Brain.Timer.time());  
 }
 
+void encoderABR()
+{
+	  Brain.Timer.reset();
+    double driveFwdDistance = 4;
+    resetEncoders();
+    Inertial.resetRotation();
+    flipOut();
+    intake.spin(directionType::rev, 100, velocityUnits::pct);
+    trackFor(39);
+    intake.spin(directionType::rev, 12, voltageUnits::volt);
+    trackFor(-5);
+    turn(150);
+    intake.spin(directionType::rev, 100, velocityUnits::pct);
+    trackFor(27);
+    stack();
+    d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
+    vex::task::sleep(270); //might need to be increased
+    d.spinFor(-.75, rotationUnits::rev, 25, velocityUnits::pct);
+    intake.stop();
+    Controller1.Screen.clearLine(3);
+    Controller1.Screen.setCursor(3, 1);
+    Controller1.Screen.print("%d ", Brain.Timer.time());  
+}
+
+void autonFrontRow()
+{
+	  AFR();
+}
 void autonBackRow()
 {
-	  encoderABR();
+	  ABR();
 }
 
 //8pnt
