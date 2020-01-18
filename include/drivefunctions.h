@@ -495,16 +495,15 @@ void driveTo(double positionRev, int timeout = 100, bool intakeOn = false)
   double prevError = error;
   double derivative = error - prevError;
   double kP = 4;    // 0.15
-  double kI = .04; // 0.03
-  double kD = 2.4;    // 0.1
+  double kI = .15; // 0.03
+  double kD = 3;    // 0.1
   int motionless = 0;
-  if(intakeOn)
-    LeftIntake.spin(directionType::rev, 100, pct);
-    RightIntake.spin(directionType::rev, 100, pct);
   if (error > 0) 
   {
     while (error > 0 && motionless <= timeout) 
     {
+      LeftIntake.spin(directionType::rev, 100, pct);
+      RightIntake.spin(directionType::rev, 100, pct);
       controls();
       error = positionRev - d.position(rotationUnits::rev);
       integral += error;
@@ -527,6 +526,8 @@ void driveTo(double positionRev, int timeout = 100, bool intakeOn = false)
   {
     while (error < 0 && motionless <= timeout) 
     {
+      LeftIntake.spin(directionType::rev, 100, pct);
+      RightIntake.spin(directionType::rev, 100, pct);
       controls();
       error = positionRev - d.position(rotationUnits::rev);
       integral += error;
