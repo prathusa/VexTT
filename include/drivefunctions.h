@@ -488,7 +488,7 @@ void resetEncoders(void)
   re.setPosition(0, rotationUnits::rev);
 }
 
-void driveTo(double positionRev, int timeout = 100, int intakeSpeed = 0) 
+void driveTo(double positionRev, int timeout = 100, bool intakeOn = false) 
 {
   double error = positionRev - d.position(rotationUnits::rev);
   double integral = error;
@@ -498,7 +498,8 @@ void driveTo(double positionRev, int timeout = 100, int intakeSpeed = 0)
   double kI = .1; // 0.03
   double kD = 2.4;    // 0.1
   int motionless = 0;
-  intake.spin(directionType::rev, intakeSpeed, pct);
+  if(intakeOn)
+    intake.spin(directionType::rev, 100, pct);
   if (error > 0) 
   {
     while (error > 0 && motionless <= timeout) 
@@ -525,7 +526,6 @@ void driveTo(double positionRev, int timeout = 100, int intakeSpeed = 0)
   {
     while (error < 0 && motionless <= timeout) 
     {
-      intake.spin(fwd, intakeSpeed, pct);
       controls();
       error = positionRev - d.position(rotationUnits::rev);
       integral += error;
@@ -547,10 +547,10 @@ void driveTo(double positionRev, int timeout = 100, int intakeSpeed = 0)
   intake.stop();
 }
 
-void drive(double revolutions, int timeout = 100, int intakeSpeed = 0) 
+void drive(double revolutions, int timeout = 100, bool intakeOn = false) 
 {
   double target = revolutions + d.position(rotationUnits::rev);
-  driveTo(target, timeout, intakeSpeed);
+  driveTo(target, timeout, intakeOn);
 }
 
 
