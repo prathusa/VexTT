@@ -498,11 +498,11 @@ void driveTo(double positionRev, int timeout = 100, int intakeSpeed = 0)
   double kI = .1; // 0.03
   double kD = 2.4;    // 0.1
   int motionless = 0;
+  intake.spin(directionType::rev, intakeSpeed, pct);
   if (error > 0) 
   {
     while (error > 0 && motionless <= timeout) 
     {
-      intake.spin(directionType::rev, intakeSpeed, pct);
       controls();
       error = positionRev - d.position(rotationUnits::rev);
       integral += error;
@@ -544,6 +544,7 @@ void driveTo(double positionRev, int timeout = 100, int intakeSpeed = 0)
       vex::task::sleep(15);
     }
   }
+  intake.stop();
 }
 
 void drive(double revolutions, int timeout = 100, int intakeSpeed = 0) 
