@@ -494,12 +494,13 @@ void driveTo(double positionRev, int timeout = 100, bool intakeOn = false)
   double integral = error;
   double prevError = error;
   double derivative = error - prevError;
-  double kP = 3;    // 0.15
-  double kI = .1; // 0.03
+  double kP = 4;    // 0.15
+  double kI = .04; // 0.03
   double kD = 2.4;    // 0.1
   int motionless = 0;
   if(intakeOn)
-    intake.spin(directionType::rev, 100, pct);
+    LeftIntake.spin(directionType::rev, 100, pct);
+    RightIntake.spin(directionType::rev, 100, pct);
   if (error > 0) 
   {
     while (error > 0 && motionless <= timeout) 
