@@ -556,7 +556,21 @@ void drive(double revolutions, int intakeSpeed = 0, int timeout = 50)
   driveTo(target, intakeSpeed, timeout);
 }
 
-//void driveFor(double revolutions, int driveSpeed int intakeSpeed = 0, int timeout = 50)
+/*
+void driveFor(double revolutions, int driveSpeed, int intakeSpeed = 0, int timeout = 50){
+  double target = revolutions + d.position(rotationUnits::rev);
+  double error = target - d.position(rotationUnits::rev);
+  while(std::abs(revolutions) > 0.5){
+    error = target - d.position(rotationUnits::rev);
+    double volts = .2 * error + 10; //.15 * error + 2;
+    d.spin(directionType::fwd, volts, voltageUnits::volt);
+    vex::task::sleep(20);
+  }
+}
+
+THIS MEME MADE BY ARUSH GANG
+
+*/ 
 
 //ODOM DRIVE
 void trackTo(double distance, int intakeSpeed = 0, int timeout = 50) 
