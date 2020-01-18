@@ -16,7 +16,7 @@ double getEncoderPosition()
   return -(le.position(rotationUnits::rev));
 }
 
-void turnTo(double raw, bool timeout = false, int time = 250) 
+void turnTo(double raw, int timeout = 14)
 {
   if (Inertial.installed()) 
   {
@@ -29,7 +29,7 @@ void turnTo(double raw, bool timeout = false, int time = 250)
     double prevError = error;
     double derivative = error - prevError;
     int motionless = 0;
-    while (std::abs(error) > 0 && (motionless < time || !timeout))
+    while (std::abs(error) > 0 && (motionless <= timeout))
     {
       controls();
       //intake.spin(directionType::rev, 100, velocityUnits::pct);
@@ -56,7 +56,7 @@ end:
   vex::task::sleep(20);
 }
 
-void turn(double raw, bool timeout = false, int time = 14)
+void turn(double raw, int timeout = 14)
 {
 	ROBOT.timeOut(2.5);
 	ROBOT.reset();
@@ -66,7 +66,7 @@ void turn(double raw, bool timeout = false, int time = 14)
 		raw = -raw;
 	}
 
-	turnTo(raw, timeout, time);
+	turnTo(raw, timeout);
 }
 
 void turnFor(double raw, bool timeout = false, int time = 250) 
@@ -109,7 +109,7 @@ end:
 }
 
 //Left turning is broken
-void turnToHeading(double target, bool timeout = false, int time = 250) 
+void turnToHeading(double target, int timeout = 250) 
 {
   double rotation = Inertial.rotation(rotationUnits::deg);
   while(rotation >= 360)
@@ -122,7 +122,7 @@ void turnToHeading(double target, bool timeout = false, int time = 250)
     target -= 360;
     rotation += 360;
   }
-  turnTo(target, timeout, time);
+  turnTo(target, timeout);
 }
 
 void tiltTo(int potentiometerPCT, double volts, bool slowDown = false) 
@@ -488,7 +488,7 @@ void resetEncoders(void)
   re.setPosition(0, rotationUnits::rev);
 }
 
-void driveTo(double positionRev, int timeout = 100, int intakeSpeed = 0) 
+void driveTo(double positionRev, int intakeSpeed = 0, int timeout = 50) 
 {
   double error = positionRev - d.position(rotationUnits::rev);
   double integral = error;
@@ -515,8 +515,8 @@ void driveTo(double positionRev, int timeout = 100, int intakeSpeed = 0)
       d.spin(fwd, volts, voltageUnits::volt);
       if(dt.velocity(percentUnits::pct) == 0)
         motionless+=15;
-    if(dt.velocity(percentUnits::pct) != 0)
-        motionless+=0;
+      if(dt.velocity(percentUnits::pct) != 0)
+        motionless=0;
       vex::task::sleep(15);
     }
   }
@@ -538,17 +538,17 @@ void driveTo(double positionRev, int timeout = 100, int intakeSpeed = 0)
       if(dt.velocity(percentUnits::pct) == 0)
         motionless+=15;
       if(dt.velocity(percentUnits::pct) != 0)
-        motionless+=0;
+        motionless=0;
       vex::task::sleep(15);
     }
   }
   intake.stop();
 }
 
-void drive(double revolutions, int timeout = 100, int intakeSpeed = 0) 
+void drive(double revolutions, int intakeSpeed = 0, int timeout = 50) 
 {
   double target = revolutions + d.position(rotationUnits::rev);
-  driveTo(target, timeout, intakeSpeed);
+  driveTo(target, intakeSpeed, timeout);
 }
 
 

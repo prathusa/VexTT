@@ -15,11 +15,11 @@ void motorAFR()
     Lift.stop();
     intake.spin(directionType::rev, 100, velocityUnits::pct);
     d.rotateFor(directionType::fwd, driveFwdDistance, rotationUnits::rev, 75, velocityUnits::pct, true);
-    turn(-120, true, 10); //100 (timeout) can be reduced
+    turn(-120, 10); //100 (timeout) can be reduced
     intake.spin(directionType::rev, 100, velocityUnits::pct);
     d.rotateFor(directionType::fwd, 2.0, rotationUnits::rev, 65, velocityUnits::pct, true);
     vex::task::sleep(400);
-    turn(-135, true, 10); //100 (timeout) can be reduced
+    turn(-135, 10); //100 (timeout) can be reduced
     d.rotateFor(directionType::fwd, .8, rotationUnits::rev, 65, velocityUnits::pct, true);
     d.rotateFor(directionType::fwd, .3, rotationUnits::rev, 65, velocityUnits::pct, false); //possibly can reduce this number or removeable
     intake.spin(directionType::rev, 25, velocityUnits::pct);
@@ -43,9 +43,34 @@ void encoderAFR()
     flipOut();
     Lift.stop();
     intake.spin(directionType::rev, 100, velocityUnits::pct);
-    drive(3.2, 100, 100);
-    turn(-130, true, 10); //100 (timeout) can be reduced
-    drive(3.5, 100, 100);
+    drive(3.2, 100);
+    turn(-130, 10); //100 (timeout) can be reduced
+    drive(3.5, 100);
+    intake.spinFor(fwd, .5, rotationUnits::rev);
+    stack();
+    d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false); //untested I believe may need to be removed
+    vex::task::sleep(270); //untested I believe may need to be removed
+    d.spinFor(-.75, rotationUnits::rev, 30, velocityUnits::pct);
+    Controller1.Screen.clearLine(3);
+    Controller1.Screen.setCursor(3, 1);
+    Controller1.Screen.print("%d ", Brain.Timer.time());
+}
+
+void encoderAFR1()
+{
+	  Brain.Timer.reset();
+    double fwd1 = 37.5;
+    double fwd2 = 36;
+    resetEncoders();
+    Inertial.resetRotation();
+    flipOut();
+    Lift.stop();
+    intake.spin(directionType::rev, 100, velocityUnits::pct);
+    drive(3.2, 100);
+    turn(-130); //100 (timeout) can be reduced
+    drive(2, 100);
+    turn(-135);
+    drive(1.1);
     intake.spinFor(fwd, .5, rotationUnits::rev);
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false); //untested I believe may need to be removed
@@ -74,7 +99,7 @@ void motorABR()
     d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 20, velocityUnits::pct, true);
     intake.spin(directionType::rev, 40, velocityUnits::pct);
     d.rotateFor(directionType::fwd, (-1.0/3)*driveFwdDistance, rotationUnits::rev, 45, velocityUnits::pct, true); //
-    turn(150, true, 10);
+    turn(150, 10);
     intake.spin(directionType::rev, 100, velocityUnits::pct);
     d.rotateFor(directionType::fwd, 2.1, rotationUnits::rev, 60, velocityUnits::pct, true);
     stack();
@@ -94,10 +119,10 @@ void encoderABR()
     resetEncoders();
     Inertial.resetRotation();
     flipOut();
-    drive(3.2, 100, 100);//39);
-    drive(-.4, 100, 100);//5);
-    turn(150, true, 100);
-    drive(2.1, 100, 100);//27);
+    drive(3.2, 100);//39);
+    drive(-.4, 100);//5);
+    turn(150, 100);
+    drive(2.1, 100);//27);
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
     vex::task::sleep(270); //might need to be increased
@@ -291,7 +316,7 @@ void autonSkills()
     intake.spin(directionType::rev, 40, velocityUnits::pct);
     //drive((-1.0/3)*driveFwdDistance);
     d.rotateFor(directionType::fwd, -1.2, rotationUnits::rev, 60, velocityUnits::pct, true);
-    turn(45, true, 50);
+    turn(45, 50);
     intake.spin(directionType::rev, 100, velocityUnits::pct);
     d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 60, velocityUnits::pct, true);
     d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 40, velocityUnits::pct, false);
@@ -307,8 +332,7 @@ void autonSkills()
 
 void autonAmbi()
 {
-	d.rotateFor(directionType::fwd, -2, rotationUnits::rev, 50, velocityUnits::pct, false);
-  vex::task::sleep(3000);
+	drive(-2);
   drive(2);
   flipOut();
 }
@@ -554,7 +578,7 @@ void RM()
     intake.spin(directionType::rev, 20, velocityUnits::pct);
     //drive((-1.0/3)*driveFwdDistance);
     d.rotateFor(directionType::fwd, (-1.0/3)*driveFwdDistance, rotationUnits::rev, 50, velocityUnits::pct, true);
-    turnTo(155, true, 100);
+    turnTo(155, 100);
     d.rotateFor(directionType::fwd, (2.0/3)*driveFwdDistance, rotationUnits::rev, 50, velocityUnits::pct, true);
     stack();
     //vex::task::sleep(200);
@@ -586,7 +610,7 @@ void BM()
     d.spin(reverse);
     vex::task::sleep(250);
     d.stop();
-    turnTo(-155, true, 70);
+    turnTo(-155, 70);
     drive((2.0/3)*driveFwdDistance);
     stack();
     //vex::task::sleep(200);
