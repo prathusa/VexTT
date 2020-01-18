@@ -97,10 +97,10 @@ void encoderABR()
     resetEncoders();
     Inertial.resetRotation();
     flipOut();
-    drive(3.2, 100, true);//39);
-    drive(-.4, 100, true);//5);
+    drive(3.2, 100, 100);//39);
+    drive(-.4, 100, 100);//5);
     turn(150, true, 100);
-    drive(2.1, 100, true);//27);
+    drive(2.1, 100, 100);//27);
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
     vex::task::sleep(270); //might need to be increased
