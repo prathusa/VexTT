@@ -43,9 +43,9 @@ void encoderAFR()
     flipOut();
     Lift.stop();
     intake.spin(directionType::rev, 100, velocityUnits::pct);
-    drive(fwd1);
+    drive(3.2, 100, 100);
     turn(-130, true, 10); //100 (timeout) can be reduced
-    drive(fwd2);
+    drive(3, 100, 100);
     d.rotateFor(directionType::fwd, .3, rotationUnits::rev, 65, velocityUnits::pct, false); //possibly can reduce this number or removeable
     intake.spin(directionType::rev, 100, velocityUnits::pct);
     vex::task::sleep(400); //possibly can reduce this number or removeable
