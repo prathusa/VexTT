@@ -539,7 +539,7 @@ void driveTo(double positionRev, int timeout = 100, int intakeSpeed = 0)
       d.spin(fwd, volts, voltageUnits::volt);
       if(dt.velocity(percentUnits::pct) == 0)
         motionless+=15;
-    if(dt.velocity(percentUnits::pct) != 0)
+      if(dt.velocity(percentUnits::pct) != 0)
         motionless+=0;
       vex::task::sleep(15);
     }

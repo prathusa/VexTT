@@ -99,7 +99,7 @@ void encoderABR()
     flipOut();
     drive(3.2, 100, 100);//39);
     drive(-.4, 100, 100);//5);
-    turn(150, true, 1000);
+    turn(150, true, 100);
     drive(2.1, 100, 100);//27);
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
