@@ -73,9 +73,9 @@ void turnFor(double raw, bool timeout = false, int time = 250)
 {
   if (Inertial.installed()) 
   {
-    double kP = 0.1;    //.5
-    double kI = 0.00065; //.0035
-    double kD = 0.022;   // 0.3
+      double kP = 0.1;    //.5
+      double kI = 0.00065; //.0035
+      double kD = 0.022;   // 0.3
       double target = Inertial.rotation(rotationUnits::deg) + raw;
       double error = target - Inertial.rotation(rotationUnits::deg);
       double integral = error;

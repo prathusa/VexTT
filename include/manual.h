@@ -45,10 +45,7 @@ void encoderAFR()
     intake.spin(directionType::rev, 100, velocityUnits::pct);
     drive(3.2, 100, 100);
     turn(-130, true, 10); //100 (timeout) can be reduced
-    drive(3, 100, 100);
-    d.rotateFor(directionType::fwd, .3, rotationUnits::rev, 65, velocityUnits::pct, false); //possibly can reduce this number or removeable
-    intake.spin(directionType::rev, 100, velocityUnits::pct);
-    vex::task::sleep(400); //possibly can reduce this number or removeable
+    drive(3.5, 100, 100);
     intake.spinFor(fwd, .5, rotationUnits::rev);
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false); //untested I believe may need to be removed
