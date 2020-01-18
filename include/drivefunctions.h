@@ -556,6 +556,8 @@ void drive(double revolutions, int intakeSpeed = 0, int timeout = 50)
   driveTo(target, intakeSpeed, timeout);
 }
 
+//void driveFor(double revolutions, int driveSpeed int intakeSpeed = 0, int timeout = 50)
+
 //ODOM DRIVE
 void trackTo(double distance, int intakeSpeed = 0, int timeout = 50) 
 {
