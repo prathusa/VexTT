@@ -488,6 +488,70 @@ void resetEncoders(void)
   re.setPosition(0, rotationUnits::rev);
 }
 
+void driveTo(double positionRev, int timeout = 100) 
+{
+  double error = positionRev - d.position(rotationUnits::rev);
+  double integral = error;
+  double prevError = error;
+  double derivative = error - prevError;
+  double kP = 4;    // 0.15
+  double kI = .03; // 0.03
+  double kD = 3;    // 0.1
+  int motionless = 0;
+  if (error > 0) 
+  {
+    while (error > 0 && motionless <= timeout) 
+    {
+      controls();
+      error = positionRev - d.position(rotationUnits::rev);
+      integral += error;
+      if (error <= 0) 
+      {
+        integral = 0;
+      }
+      derivative = error - prevError;
+      prevError = error;
+      double volts = error * kP + integral * kI + derivative * kD;
+      d.spin(fwd, volts, voltageUnits::volt);
+      if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=15;
+    if(dt.velocity(percentUnits::pct) != 0)
+        motionless+=0;
+      vex::task::sleep(15);
+    }
+  }
+  else if (error < 0) 
+  {
+    while (error < 0 && motionless <= timeout) 
+    {
+      controls();
+      error = positionRev - d.position(rotationUnits::rev);
+      integral += error;
+      if (error >= 0) 
+      {
+        integral = 0;
+      }
+      derivative = error - prevError;
+      prevError = error;
+      double volts = error * kP + integral * kI + derivative * kD;
+      d.spin(fwd, volts, voltageUnits::volt);
+      if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=15;
+    if(dt.velocity(percentUnits::pct) != 0)
+        motionless+=0;
+      vex::task::sleep(15);
+    }
+  }
+}
+
+void drive(double revolutions) 
+{
+  double target = revolutions + d.position(rotationUnits::rev);
+  driveTo(target);
+}
+
+
+/*
 void driveTo(double inches, int timeout = 10) 
 {
   double eVal = TRACKING_WHEEL_CIRCUMFERENCE * le.position(rotationUnits::rev);
