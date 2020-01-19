@@ -119,7 +119,7 @@ void ABR()
    // drive(-.4, 100. 10);//5);
     turn(140, 100, 10);
     drive(2.1, 100, 30, 3, 0.015, 4);//27);
-    intake.spin(directionType::fwd, 15, percentUnits::pct);
+    intake.spinFor(fwd, .5, rotationUnits::rev);
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
     vex::task::sleep(270); //might need to be increased
@@ -340,7 +340,7 @@ void autonSkills()
    // drive(-.4, 100. 10);//5);
     turn(45, 100, 40);
     drive(2.1, 100, 10, 3, 0.015, 4);//27);
-    intake.spin(directionType::fwd, 15, percentUnits::pct);
+    intake.spinFor(fwd, .5, rotationUnits::rev);
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
     vex::task::sleep(270); //might need to be increased

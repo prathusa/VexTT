@@ -548,27 +548,49 @@ void driveTo(double positionRev, int intakeSpeed = 0, int timeout = 50, double k
   intake.stop();
 }
 
+void driveFor(double positionRev, int driveSpeed = 50, int intakeSpeed = 0, int timeout = 50) 
+{
+  double error = positionRev - d.position(rotationUnits::rev);
+  double kP = driveSpeed/28.57;
+  int motionless = 0;
+  if (error > 0) 
+  {
+    while (error > 0 && motionless <= timeout) 
+    {
+      intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      error = positionRev - d.position(rotationUnits::rev);
+      double volts = (error * kP) + 2;
+      d.spin(fwd, volts, voltageUnits::volt);
+      if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=15;
+      if(dt.velocity(percentUnits::pct) != 0)
+        motionless=0;
+      vex::task::sleep(15);
+    }
+  }
+  else if (error < 0) 
+  {
+    while (error < 0 && motionless <= timeout) 
+    {
+      intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      error = positionRev - d.position(rotationUnits::rev);
+      double volts = (error * kP) - 2;
+      d.spin(fwd, volts, voltageUnits::volt);
+      if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=15;
+      if(dt.velocity(percentUnits::pct) != 0)
+        motionless=0;
+      vex::task::sleep(15);
+    }
+  }
+  intake.stop();
+}
+
 void drive(double revolutions, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0075, double kD = 6) 
 {
   double target = revolutions + d.position(rotationUnits::rev);
   driveTo(target, intakeSpeed, timeout, kP, kI, kD);
 }
-
-
-void driveFor(double revolutions, int driveSpeed, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0075, double kD = 6){
-  double target = revolutions + d.position(rotationUnits::rev);
-  double error = target - d.position(rotationUnits::rev);
-  while(std::abs(revolutions) > 0.5){
-    error = target - d.position(rotationUnits::rev);
-    double volts = 3.5 * error + 10; //.15 * error + 2;
-    d.spin(directionType::fwd, volts, voltageUnits::volt);
-    vex::task::sleep(20);
-  }
-}
-
-//THIS MEME MADE BY ARUSH GANG
-
-
 
 //ODOM DRIVE
 void trackTo(double distance, int intakeSpeed = 0, int timeout = 50) 
