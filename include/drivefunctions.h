@@ -21,7 +21,7 @@ double getDistance()
   return TRACKING_WHEEL_CIRCUMFERENCE * getEncoderPosition();
 }
 
-void turnTo(double raw, int timeout = 14)
+void turnTo(double raw, int intakeSpeed, int timeout = 14)
 {
   if (Inertial.installed()) 
   {
@@ -36,7 +36,8 @@ void turnTo(double raw, int timeout = 14)
     int motionless = 0;
     while (std::abs(error) > 0 && (motionless <= timeout))
     {
-      controls();
+      intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      //controls();
       //intake.spin(directionType::rev, 100, velocityUnits::pct);
       error = target - Inertial.rotation(rotationUnits::deg);
       integral += error;
@@ -61,7 +62,7 @@ end:
   vex::task::sleep(20);
 }
 
-void turn(double raw, int timeout = 14)
+void turn(double raw, int intakeSpeed = 0, int timeout = 14)
 {
 	ROBOT.timeOut(2.5);
 	ROBOT.reset();
@@ -71,7 +72,7 @@ void turn(double raw, int timeout = 14)
 		raw = -raw;
 	}
 
-	turnTo(raw, timeout);
+	turnTo(raw, intakeSpeed, timeout);
 }
 
 void turnFor(double raw, bool timeout = false, int time = 250) 
@@ -493,15 +494,12 @@ void resetEncoders(void)
   re.setPosition(0, rotationUnits::rev);
 }
 
-void driveTo(double positionRev, int intakeSpeed = 0, int timeout = 50) 
+void driveTo(double positionRev, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0075, double kD = 6) 
 {
   double error = positionRev - d.position(rotationUnits::rev);
   double integral = error;
   double prevError = error;
   double derivative = error - prevError;
-  double kP = 4;    // 0.15
-  double kI = .15; // 0.03
-  double kD = 3;    // 0.1
   int motionless = 0;
   if (error > 0) 
   {
@@ -550,27 +548,27 @@ void driveTo(double positionRev, int intakeSpeed = 0, int timeout = 50)
   intake.stop();
 }
 
-void drive(double revolutions, int intakeSpeed = 0, int timeout = 50) 
+void drive(double revolutions, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0075, double kD = 6) 
 {
   double target = revolutions + d.position(rotationUnits::rev);
-  driveTo(target, intakeSpeed, timeout);
+  driveTo(target, intakeSpeed, timeout, kP, kI, kD);
 }
 
-/*
-void driveFor(double revolutions, int driveSpeed, int intakeSpeed = 0, int timeout = 50){
+
+void driveFor(double revolutions, int driveSpeed, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0075, double kD = 6){
   double target = revolutions + d.position(rotationUnits::rev);
   double error = target - d.position(rotationUnits::rev);
   while(std::abs(revolutions) > 0.5){
     error = target - d.position(rotationUnits::rev);
-    double volts = .2 * error + 10; //.15 * error + 2;
+    double volts = 3.5 * error + 10; //.15 * error + 2;
     d.spin(directionType::fwd, volts, voltageUnits::volt);
     vex::task::sleep(20);
   }
 }
 
-THIS MEME MADE BY ARUSH GANG
+//THIS MEME MADE BY ARUSH GANG
 
-*/ 
+
 
 //ODOM DRIVE
 void trackTo(double distance, int intakeSpeed = 0, int timeout = 50) 

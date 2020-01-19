@@ -43,17 +43,17 @@ void AFR()
     flipOut();
     Lift.stop();
     intake.spin(directionType::rev, 100, velocityUnits::pct);
-    drive(3.2, 100);
-    turn(-130, 10); //100 (timeout) can be reduced
-    drive(3.5, 100);
+    drive(3.3, 100);
+    turn(-130, 100, 10); //100 (timeout) can be reduced
+    drive(3.5, 100, 10, 3, 0.015, 4);
     intake.spinFor(fwd, .5, rotationUnits::rev);
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false); //untested I believe may need to be removed
     vex::task::sleep(270); //untested I believe may need to be removed
-    d.spinFor(-.75, rotationUnits::rev, 30, velocityUnits::pct);
+    d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
-    Controller1.Screen.print("%d ", Brain.Timer.time());
+    Controller1.Screen.print("%d ", Brain.Timer.time()); 
 }
 
 void AFR1()
@@ -114,14 +114,16 @@ void ABR()
     resetEncoders();
     Inertial.resetRotation();
     flipOut();
-    drive(3.2, 100);//39);
-    drive(-.4, 100);//5);
-    turn(150, 100);
-    drive(2.1, 100);//27);
+    drive(3.3, 100);//39);
+    d.rotateFor(directionType::fwd, -1.2, rotationUnits::rev, 50, velocityUnits::pct, true);
+   // drive(-.4, 100. 10);//5);
+    turn(140, 100, 10);
+    drive(2.1, 100, 30, 3, 0.015, 4);//27);
+    intake.spin(directionType::fwd, 15, percentUnits::pct);
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
     vex::task::sleep(270); //might need to be increased
-    d.spinFor(-.75, rotationUnits::rev, 25, velocityUnits::pct);
+    d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     intake.stop();
     Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
@@ -328,29 +330,24 @@ void autonBackRow()
 void autonSkills()
 {
 	  Brain.Timer.reset();
-    double driveFwdDistance = 8.2;
+    double driveFwdDistance = 4;
     resetEncoders();
     Inertial.resetRotation();
-    vex::task::sleep(50);
     flipOut();
-    intake.spin(directionType::rev, 100, velocityUnits::pct);
-    d.rotateFor(directionType::fwd, driveFwdDistance, rotationUnits::rev, 40, velocityUnits::pct, true);
-    intake.stop();
-    intake.spin(directionType::rev, 40, velocityUnits::pct);
-    //drive((-1.0/3)*driveFwdDistance);
-    d.rotateFor(directionType::fwd, -1.2, rotationUnits::rev, 60, velocityUnits::pct, true);
-    turn(45, 50);
-    intake.spin(directionType::rev, 100, velocityUnits::pct);
-    d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 60, velocityUnits::pct, true);
-    d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 40, velocityUnits::pct, false);
-    vex::task::sleep(500);
+    drive(3.3, 100);//39);
+    d.rotateFor(directionType::fwd, -1.2, rotationUnits::rev, 50, velocityUnits::pct, true);
+   // drive(-.4, 100. 10);//5);
+    turn(140, 100, 40);
+    drive(2.1, 100, 10, 3, 0.015, 4);//27);
+    intake.spin(directionType::fwd, 15, percentUnits::pct);
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
-    vex::task::sleep(200);
-    d.spinFor(-.75, rotationUnits::rev, 30, velocityUnits::pct);
+    vex::task::sleep(270); //might need to be increased
+    d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
+    intake.stop();
     Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
-    Controller1.Screen.print("%d ", Brain.Timer.time());
+    Controller1.Screen.print("%d ", Brain.Timer.time()); 
 }
 
 void autonAmbi()
