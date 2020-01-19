@@ -371,7 +371,6 @@ void experimentalSkills()
     vex::task::sleep(270); //might need to be increased
     d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     intake.stop();
-    
     turn(90);
     drive(3, 100);
     drive(-.5, -10);
@@ -386,8 +385,18 @@ void experimentalSkills()
     tower();
     fadeAway();
     turn(-25);
-    drive(2.1, 100);
-
+    drive(2.1, 100, 10);
+    drive(-.5, -10);
+    tower();
+    fadeAway();
+    turn(0);
+    drive(4, 100);
+    turn(45, 100, 40);
+    stack();
+    d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
+    vex::task::sleep(270); //might need to be increased
+    d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
+    intake.stop();
     Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%d ", Brain.Timer.time()); 
