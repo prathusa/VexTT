@@ -45,11 +45,11 @@ void autonomous(void)
     /*else if(OS.getValues(AUTON_PNTS) == SEVEN)
     {
       u7();
-    }
+    }*/
     else if(OS.getValues(AUTON_PNTS) == EIGHT)
     {
       u8();
-    }*/
+    }
 	}
 	else if (OS.getValues(AUTON_POS) == SKILLS) 
   {

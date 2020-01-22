@@ -168,6 +168,69 @@ void encoderABR()
     Controller1.Screen.print("%d ", Brain.Timer.time());  
 }
 
+void u8()
+{
+	  Brain.Timer.reset();
+    double driveFwdDistance = 4;
+    resetEncoders();
+    Inertial.resetRotation();
+    flipOut();
+    drive(3, 100, 10);
+    turn(30, 100, 30);
+    drive(-3.2, 40, 10, 3, 0.015, 4);
+    turn(0, 100, 10);
+    drive(3.3, 100, 10);
+    turn(140, 100, 30);
+    drive(3, 100, 30, 3, 0.015, 4);//27);
+    intake.spinFor(fwd, .5, rotationUnits::rev);
+    stack();
+    d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
+    vex::task::sleep(270); //might need to be increased
+    d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
+    intake.stop();
+    Controller1.Screen.clearLine(3);
+    Controller1.Screen.setCursor(3, 1);
+    Controller1.Screen.print("%d ", Brain.Timer.time());  
+}
+
+/*
+void p8()
+{
+    Brain.Timer.reset();
+    double t1;
+    double t2;
+    resetEncoders();
+    Inertial.resetRotation();
+    //vex::task::sleep(50);
+    flipOut();
+    Lift.stop();
+    drive(2.1, 100, 30);
+    turn(-30, 100, 10);
+    drive(-1.8, 100, 30, 3, 0.015, 4);
+    drive(2.6, 100, 30);
+    //drive(-.9, 100, 30, 3, 0.015, 4);
+    turn(-130, true, 100); //100 (timeout) can be reduced
+    intake.spin(directionType::rev, 100, velocityUnits::pct);
+    d.rotateFor(directionType::fwd, 2.0, rotationUnits::rev, 40, velocityUnits::pct, true);
+    turn(-135, true, 100); //100 (timeout) can be reduced
+    d.rotateFor(directionType::fwd, 1, rotationUnits::rev, 40, velocityUnits::pct, true);
+    vex::task::sleep(400);
+    intake.spin(directionType::fwd, 25, velocityUnits::pct);
+    d.rotateFor(directionType::fwd, .25, rotationUnits::rev, 65, velocityUnits::pct, false); //possibly can reduce this number or removeable
+    vex::task::sleep(400); //possibly can reduce this number or removeable
+    //intake.spin(directionType::fwd, 10, velocityUnits::pct); //can run this to lower cubes
+    //vex::task::sleep(200); //can run this to lower cubes
+    stack();
+    d.rotateFor(directionType::fwd, .08, rotationUnits::rev, 25, velocityUnits::pct, true); //untested I believe may need to be removed
+    vex::task::sleep(275); //untested I believe may need to be removed
+    intake.stop();
+    //vex::task::sleep(200);
+    d.spinFor(-.75, rotationUnits::rev, 30, velocityUnits::pct);    intake.stop();
+    Controller1.Screen.clearLine(3);
+    Controller1.Screen.setCursor(3, 1);
+    Controller1.Screen.print("%d ", Brain.Timer.time());
+}
+
 //8pnt
 /*
 void autonFrontRow()

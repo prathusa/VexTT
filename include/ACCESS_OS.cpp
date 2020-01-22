@@ -30,11 +30,11 @@ Link to website: https://dev.azure.com/roboVEX/_git/ACCESS_OS
 [GLOBAL] Variables for ACCESS_OS > Constant vars that won't change during program run
 ------------------------------------------------------------------------------------------------------*/
 //Define buttons for easy coding
-#define btnNONE				0
+#define btnNONE			0
 #define btnUP				1
-#define btnDOWN				2
-#define btnLEFT				3
-#define btnRIGHT			4
+#define btnDOWN			2
+#define btnLEFT			3
+#define btnRIGHT		4
 #define btnA				5
 #define btnB				6
 #define btnX				7
@@ -67,14 +67,15 @@ Link to website: https://dev.azure.com/roboVEX/_git/ACCESS_OS
 #define RED							1
 #define FRONT						0
 #define BACK						1
-#define SKILLS		  				2
+#define SKILLS		  		2
 #define AMBI						3
 #define FOUR						0
 #define FIVE						1
 #define SIX							2
-#define AUTON_COLOR					0
-#define AUTON_POS					1
-#define AUTON_PNTS			  		2
+#define EIGHT						3
+#define AUTON_COLOR			0
+#define AUTON_POS				1
+#define AUTON_PNTS			2
 
 
 /*------------------------------------------------------------------------------------------------------
@@ -102,7 +103,7 @@ private:
 	{
 		3,
 		4,
-		3
+		4
 	};
 
 	//1D Array for default selected options.
@@ -127,7 +128,7 @@ private:
 	{
 		{ "Blue",	"Red",		"" }, //If "" doesn't work, try "NULL"
 		{ "Front",	"Back",		"Skills",		"Ambi" },
-		{ "4",		"5",		"6" }
+		{ "4",		"5",		"6", 		"8" }
 	};
 public:
 	ACCESS_OS();											//???

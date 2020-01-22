@@ -24,19 +24,19 @@
 
 using namespace vex;
 vex::brain Brain;
-vex::motor Lift (vex::PORT6, vex::gearSetting::ratio36_1,true);
+vex::motor Lift (vex::PORT16, vex::gearSetting::ratio36_1,true);
 vex::motor Tilt (vex::PORT5, vex::gearSetting::ratio36_1,false);
 vex::motor LeftIntake (vex::PORT11, vex::gearSetting::ratio18_1,true);
-vex::motor RightIntake (vex::PORT12, vex::gearSetting::ratio18_1,false);
-vex::motor RightRearMotor (vex::PORT9, vex::gearSetting::ratio18_1,true);
-vex::motor RightFrontMotor (vex::PORT10, vex::gearSetting::ratio18_1,true);
+vex::motor RightIntake (vex::PORT4, vex::gearSetting::ratio18_1,false);
+vex::motor RightRearMotor (vex::PORT6, vex::gearSetting::ratio18_1,true);
+vex::motor RightFrontMotor (vex::PORT7, vex::gearSetting::ratio18_1,true);
 vex::motor LeftFrontMotor (vex::PORT1, vex::gearSetting::ratio18_1,false);
 vex::motor LeftRearMotor (vex::PORT2, vex::gearSetting::ratio18_1,false);
 vex::motor_group intake(LeftIntake, RightIntake);
 vex::motor_group l(LeftFrontMotor, LeftRearMotor);
 vex::motor_group r(RightFrontMotor, RightRearMotor);
 vex::motor_group d(LeftFrontMotor, LeftRearMotor, RightFrontMotor, RightRearMotor);
-vex::inertial Inertial(vex::PORT7);
+vex::inertial Inertial(vex::PORT17);
 vex::gyro Gyro (Brain.ThreeWirePort.G);
 vex::pot tilt(Brain.ThreeWirePort.H);
 vex::pot lift(Brain.ThreeWirePort.F);
@@ -49,10 +49,10 @@ vex::competition Competition;
 vex::encoder le(Brain.ThreeWirePort.A);
 vex::encoder re(Brain.ThreeWirePort.C);
 
-int mode = 1;
-int liftMax = 65;
-int liftTower = 55;
-int liftMin = 20;
+int liftMax = 55;
+int liftTower = 59;
+int liftTilter = 31;
+int liftMin = 23;
 int tiltMax = 77;
 int tiltStack = 59;
 int tiltMin = 25; 
@@ -65,5 +65,8 @@ bool rm = false;
 bool bm = false;
 bool manual = false;
 double driveSpeedFactor = 1;
+double tileInch = 23.6;
+double TRACKING_WHEEL_DIAMETER = 3.25;
+double TRACKING_WHEEL_CIRCUMFERENCE = M_PI * TRACKING_WHEEL_DIAMETER;
 int tempStatus = 0;
 #endif

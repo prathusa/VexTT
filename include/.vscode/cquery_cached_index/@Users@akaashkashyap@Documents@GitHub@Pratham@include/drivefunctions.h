@@ -1,7 +1,11 @@
-#ifndef DRIVER_FUNCTIONS_H
-#define DRIVER_FUNCTIONS_H
+#ifndef DRIVERFUNCTIONS_H
+#define DRIVERFUNCTIONS_H
 
 #include "vex.h"
+#ifndef CONTROLS1_H
+#define CONTROLS1_H
+#include "controls.h"
+#endif
 using namespace vex;
 ROBOT_BASE ROBOT;
 ACCESS_OS OS;
@@ -12,184 +16,29 @@ double getEncoderPosition()
   return -(le.position(rotationUnits::rev));
 }
 
-void driveTo(double positionRev) 
+double getDistance()
 {
-  double error = positionRev - d.position(rotationUnits::rev);
-  double integral = error;
-  double prevError = error;
-  double derivative = error - prevError;
-  double kP = 4;    // 0.15
-  double kI = .04; // 0.03
-  double kD = 1.1;    // 0.1
-  if (error > 0) 
-  {
-    while (error > 0) 
-    {
-      error = positionRev - d.position(rotationUnits::rev);
-      integral += error;
-      if (error <= 0) 
-      {
-        integral = 0;
-      }
-      derivative = error - prevError;
-      prevError = error;
-      double volts = error * kP + integral * kI + derivative * kD;
-      d.spin(fwd, volts, voltageUnits::volt);
-      vex::task::sleep(15);
-    }
-  }
-  else if (error < 0) 
-  {
-    while (error < 0) 
-    {
-      error = positionRev - d.position(rotationUnits::rev);
-      integral += error;
-      if (error >= 0) 
-      {
-        integral = 0;
-      }
-      derivative = error - prevError;
-      prevError = error;
-      double volts = error * kP + integral * kI + derivative * kD;
-      d.spin(fwd, volts, voltageUnits::volt);
-      vex::task::sleep(15);
-    }
-  }
+  return TRACKING_WHEEL_CIRCUMFERENCE * getEncoderPosition();
 }
 
-void drive(double revolutions) 
-{
-  double target = revolutions + d.position(rotationUnits::rev);
-  driveTo(target);
-}
-
-/*
-void driveTo(double positionRev) 
-{
-  double error = positionRev - getEncoderPosition();
-  double integral = error;
-  double prevError = error;
-  double derivative = error - prevError;
-  double kP = 4;    // 0.15
-  double kI = .035; // 0.03
-  double kD = 1;    // 0.1
-  if (error > 0) 
-  {
-    while (error > 0) 
-    {
-      error = positionRev - getEncoderPosition();
-      integral += error;
-      if (error <= 0) 
-      {
-        integral = 0;
-      }
-      derivative = error - prevError;
-      prevError = error;
-      double volts = error * kP + integral * kI + derivative * kD;
-      d.spin(fwd, volts, voltageUnits::volt);
-      vex::task::sleep(15);
-    }
-  }
-  else if (error < 0) 
-  {
-    while (error < 0) 
-    {
-      error = positionRev - getEncoderPosition();
-      integral += error;
-      if (error >= 0) 
-      {
-        integral = 0;
-      }
-      derivative = error - prevError;
-      prevError = error;
-      double volts = error * kP + integral * kI + derivative * kD;
-      d.spin(fwd, volts, voltageUnits::volt);
-      vex::task::sleep(15);
-    }
-  }
-}
-
-void drive(double revolutions) {
-  double target = revolutions + getEncoderPosition();
-  driveTo(target);
-}
-*/
-
-// BROKEN
-/*
-void turnTo(double raw)
-{
-  double kP = 0.1; //.5
-  double kI = 0.001; //.0035
-  double kD = 0.1; //0.3
-  if(raw > 0)
-  {
-    double target = raw;
-    double error = target - Gyro.value(rotationUnits::deg);
-    double integral = error;
-    double prevError = error;
-    double derivative = error - prevError;
-    while(std::abs(error) > 0)
-    {
-      error = target - Gyro.value(rotationUnits::deg);
-      integral += error;
-      if(error <= 0)
-      {
-        integral = 0;
-      }
-      derivative = error - prevError;
-      prevError = error;
-      double volts = error*kP + integral*kI + derivative*kD;
-      l.spin(fwd, volts, voltageUnits::volt);
-      r.spin(reverse, volts, voltageUnits::volt);
-      vex::task::sleep(15);
-    }
-    goto end;
-  }
-  else if (raw < 0)
-  {
-    double target = raw;
-    double error = target + Gyro.value(rotationUnits::deg);
-    double integral = error;
-    double prevError = error;
-    double derivative = error - prevError;
-    while(std::abs(error) > 0)
-    {
-      error = target + Gyro.value(rotationUnits::deg);
-      integral += error;
-      if(error <= 0)
-      {
-        integral = 0;
-      }
-      derivative = error - prevError;
-      prevError = error;
-      double volts = error*kP + integral*kI + derivative*kD;
-      l.spin(reverse, volts, voltageUnits::volt);
-      r.spin(fwd, volts, voltageUnits::volt);
-      vex::task::sleep(15);
-    }
-    goto end;
-  }
-  end:
-  vex::task::sleep(20);
-}
-*/
-
-void turnTo(double raw, bool timeout = false, int time = 250) 
+void turnTo(double raw, int intakeSpeed, int timeout = 14)
 {
   if (Inertial.installed()) 
   {
-    double kP = 0.1;    //.5
-    double kI = 0.00065; //.0035
-    double kD = 0.022;   // 0.3
+    double kP = 0.55;    //.5
+    double kI = 0.00006; //.0035
+    double kD = 0.4;   // 0.3
     double target = raw;
     double error = target - Inertial.rotation(rotationUnits::deg);
     double integral = error;
     double prevError = error;
     double derivative = error - prevError;
     int motionless = 0;
-    while (std::abs(error) > 0 && (motionless < time || !timeout))
+    while (std::abs(error) > 0 && (motionless <= timeout))
     {
+      intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      //controls();
+      //intake.spin(directionType::rev, 100, velocityUnits::pct);
       error = target - Inertial.rotation(rotationUnits::deg);
       integral += error;
       if (error == 0) 
@@ -213,26 +62,26 @@ end:
   vex::task::sleep(20);
 }
 
-void turn(double x) 
+void turn(double raw, int intakeSpeed = 0, int timeout = 14)
 {
 	ROBOT.timeOut(2.5);
 	ROBOT.reset();
 
 	if (OS.getValues(AUTON_COLOR) == BLUE) //If color is 0 (BLUE) flip the values 
 	{
-		x = -x;
+		raw = -raw;
 	}
 
-	turnTo(x);
+	turnTo(raw, intakeSpeed, timeout);
 }
 
 void turnFor(double raw, bool timeout = false, int time = 250) 
 {
   if (Inertial.installed()) 
   {
-    double kP = 0.1;    //.5
-    double kI = 0.00065; //.0035
-    double kD = 0.022;   // 0.3
+      double kP = 0.1;    //.5
+      double kI = 0.00065; //.0035
+      double kD = 0.022;   // 0.3
       double target = Inertial.rotation(rotationUnits::deg) + raw;
       double error = target - Inertial.rotation(rotationUnits::deg);
       double integral = error;
@@ -241,6 +90,7 @@ void turnFor(double raw, bool timeout = false, int time = 250)
       int motionless = 0;
       while (std::abs(error) > 0 && (motionless < time || !timeout))
       {
+        controls();
         error = target - Inertial.rotation(rotationUnits::deg);
         integral += error;
         if (error == 0) 
@@ -265,203 +115,21 @@ end:
 }
 
 //Left turning is broken
-void turnToHeading(double target, bool timeout = false, int time = 250) 
+void turnToHeading(double target, int timeout = 250) 
 {
-  if (Inertial.installed()) 
+  double rotation = Inertial.rotation(rotationUnits::deg);
+  while(rotation >= 360)
   {
-    double kP = 0.4;    //.5
-    double kI = 0.001; //.0035
-    double kD = 2.3;   // 0.3 
-    
-    if(target < 0)
-    {
-      target += 360;
-    }
-    
-    double error = target - Inertial.heading();
-    int motionless = 0;
-    if (error  <= 180) 
-    {
-      double error = target - Inertial.heading();
-      double integral = error;
-      double prevError = error;
-      double derivative = error - prevError;
-      while (std::abs(error) > 0 && (motionless < time || !timeout))
-      {
-        error = target - Inertial.heading();
-        integral += error;
-        if (error <= 0) 
-        {
-          integral = 0;
-        }
-        derivative = error - prevError;
-        prevError = error;
-        double volts = error * kP + integral * kI + derivative * kD;
-        l.spin(fwd, volts, voltageUnits::volt);
-        r.spin(reverse, volts, voltageUnits::volt);
-        if(dt.velocity(percentUnits::pct) == 0)
-        {
-          motionless+=15;
-        }
-        vex::task::sleep(15);
-      }
-      goto end;
-    } 
-    else if (error > 180) 
-    {
-      double error = target - Inertial.heading();
-      double integral = error;
-      double prevError = error;
-      double derivative = error - prevError;
-      while (std::abs(error) > 0 && (motionless < time || !timeout))
-      {
-        error = error = target - Inertial.heading();
-        integral += error;
-        if (error <= 0) 
-        {
-          integral = 0;
-        }
-        derivative = error - prevError;
-        prevError = error;
-        double volts = error * kP + integral * kI + derivative * kD;
-        l.spin(reverse, volts, voltageUnits::volt);
-        r.spin(fwd, volts, voltageUnits::volt);
-        if(dt.velocity(percentUnits::pct) == 0)
-        {
-          motionless+=15;
-        }
-        vex::task::sleep(15);
-      }
-      goto end;
-    }
+    target += 360;
+    rotation -= 360;
   }
-end:
-  vex::task::sleep(20);
-}
-
-
-/*
-void turnFor(double raw, bool timeout = false, int time = 250) 
-{
-  if (Inertial.installed()) 
+  while(rotation <= 0)
   {
-    double kP = 0.1;    //.5
-    double kI = 0.0006; //.0035
-    double kD = 0.022;   // 0.3
-    if (raw > 0) 
-    {
-      double target = Inertial.rotation(rotationUnits::deg) + raw;
-      double error = target - Inertial.rotation(rotationUnits::deg);
-      double integral = error;
-      double prevError = error;
-      double derivative = error - prevError;
-      int motionless = 0;
-      while (std::abs(error) > 0 && (motionless < time || !timeout))
-      {
-        error = target - Inertial.rotation(rotationUnits::deg);
-        integral += error;
-        if (error <= 0) 
-        {
-          integral = 0;
-        }
-        derivative = error - prevError;
-        prevError = error;
-        double volts = error * kP + integral * kI + derivative * kD;
-        l.spin(fwd, volts, voltageUnits::volt);
-        r.spin(reverse, volts, voltageUnits::volt);
-        if(dt.velocity(percentUnits::pct) == 0)
-        {
-          motionless+=15;
-        }
-        vex::task::sleep(15);
-      }
-      goto end;
-    } 
-    else if (raw < 0) 
-    {
-      double target = Inertial.rotation(rotationUnits::deg) + raw; //might not work
-      double error = target - Inertial.rotation(rotationUnits::deg); //might not work
-      double integral = error;
-      double prevError = error;
-      double derivative = error - prevError;
-      int motionless = 0;
-      while (std::abs(error) > 0 && (motionless < time || !timeout))
-      {
-        error = target - Inertial.rotation(rotationUnits::deg);
-        integral += error;
-        if (error >= 0) 
-        {
-          integral = 0;
-        }
-        derivative = error - prevError;
-        prevError = error;
-        double volts = std::abs(error * kP) + std::abs(integral * kI) - std::abs(derivative * kD);
-        l.spin(reverse, volts, voltageUnits::volt);
-        r.spin(fwd, volts, voltageUnits::volt);
-        if(dt.velocity(percentUnits::pct) == 0)
-        {
-          motionless+=15;
-        }
-        vex::task::sleep(15);
-      }
-      goto end;
-    }
+    target -= 360;
+    rotation += 360;
   }
-end:
-  vex::task::sleep(20);
+  turnTo(target, timeout);
 }
-*/
-// Finding kP, kI, kD notes:
-/*
-
-//-------------------------Method 1 (Guess and Check):
-
-First of all, set all three constants (kP, kI, kD) to zero. This “disables
-them”. Tune them one by one, rather than jumping straight in. Generally tune in
-the order of Proportional, Derivative, Integral, that is, tune in the order of
-kP, kD and finally kI. This entire process relies on making a prediction for the
-constant (“trial”), and then adjusting it when it doesn’t go to plan (“error”).
-//Scientific Method, isolate one independent variable and observe dependant
-variables to It’s important to be prepared to stop your robot (both by disabling
-it from your program or a switch, and by physically catching it if necessary),
-as you’ll likely make a prediction that is far off an appropriate value. So long
-as you’re ready, there typically isn’t too much harm in just experimenting.
-
-1. Increase kP until the robot oscillates just slightly, once or twice.
-  We’re interested in achieving a fast motion to the target here, but not too
-violent – it needs to settle, and in a reasonable amount of time!
-2.  Start adding kD until the steady-state error starts to decrease until
-something suitable. This will allow us to maintain the fast motion from the
-Proportional component, whilst minimising the overshoot. You may need to go back
-to adjusting kP a little.
-3. Start adding kI until any minor steady-state error and disturbances are
-accounted for. You may need to adjust kD when doing this.
-4. Using the knowledge from the table on the previous page, keep adjusting the
-constants until you end up with a nice, quick but smooth motion that you’re
-happy with.
-
-//-------------------------Method 2 (Ziegler-Nichols Mathematical Model):
-
-Begin by disabling all three constants (set them to zero).
-1. Increase kP until you get steady continuous oscillations.
-  These need to be stable and consistent. Record this value as “kU” (ultimate or
-critical gain).
-2. Measure the period of the oscillations caused by step 1.
-  That is, the time it takes to do a full cycle from a point back to itself. You
-can measure this with a bit of programming, or with a stopwatch. It’s a good
-idea to measure many oscillations and then divide the time by the number of
-oscillations to get a good average. Record this number as “pU” (period for
-ultimate or critical gain).
-3. Calculate the approximate constant values from the following table:
-
-       kP        kI         kD
-PID  0.6*kU  1.2*kU/pU  0.075*kU*pU
-
-*/
-
-// Makes the bot accelerate smoothly, leading to less jerk and more accurate
-// movements. Possibly make the drive command use the gyro to make sure that the
-// robot is not turning or not going in a straight line
 
 void tiltTo(int potentiometerPCT, double volts, bool slowDown = false) 
 {
@@ -471,6 +139,7 @@ void tiltTo(int potentiometerPCT, double volts, bool slowDown = false)
     goto end;
   while (std::abs(error) > 0 && !slowDown) 
   {
+    controls();
     if (error > 0) 
     {
       error = target - tilt.value(percentUnits::pct);
@@ -489,6 +158,7 @@ void tiltTo(int potentiometerPCT, double volts, bool slowDown = false)
   // Not completed yet don't use!
   while (std::abs(error) > 0 && slowDown) 
   {
+    controls();
     if (tilt.value(percentUnits::pct) < tiltStack) 
     {
       error = target - tilt.value(percentUnits::pct);
@@ -528,6 +198,7 @@ void tiltTo(int potentiometerPCT)
   {
     while (std::abs(error) > 0) 
     {
+      controls();
       error = potentiometerPCT - tilt.value(pct);
       integral += error;
       if (error <= 0) 
@@ -545,6 +216,7 @@ void tiltTo(int potentiometerPCT)
   {
     while (std::abs(error) > 0) 
     {
+      controls();
       error = potentiometerPCT - tilt.value(pct);
       integral += error;
       if (error >= 0) 
@@ -573,13 +245,13 @@ void liftTiltCheck()
   // -----------------------------Avoids Lift-Tilter conflict
   Lift.setBrake(hold);
   Tilt.setBrake(hold);
-  if (lift.value(pct) > 32 && tilt.value(percentUnits::pct) < 34) 
+  if (lift.value(pct) > 32 && tilt.value(percentUnits::pct) < 31) 
   {
-    tiltTo(34, 5);
+    tiltTo(31, 12);
   } 
-  else if (lift.value(pct) <= 32 && tilt.value(percentUnits::pct) >= 34) 
+  else if (lift.value(pct) <= 32 && tilt.value(percentUnits::pct) >= 31) 
   {
-    tiltTo(tiltMin, 4);
+    tiltTo(tiltMin, 12);
   }
 }
 
@@ -591,6 +263,7 @@ void liftTo(int potentiometerPCT, double volts)
     goto end;
   while (std::abs(error) > 0) 
   {
+    controls();
     liftTiltCheck();
     if (error > 0) 
     {
@@ -622,7 +295,7 @@ void liftFor(int potentiometerPCT, double volts)
 void liftTo(int potentiometerPCT) 
 {
   bool timeout = true;
-  int time = 75;
+  int time = 14; //if no movement in 15ms after no movement then task breaks
   double error = potentiometerPCT - lift.value(pct);
   double integral = error;
   double prevError = error;
@@ -635,6 +308,7 @@ void liftTo(int potentiometerPCT)
   {
     while (std::abs(error) > 0 && (motionless < time || !timeout)) 
     {
+      controls();
       liftTiltCheck();
       error = potentiometerPCT - lift.value(pct);
       integral += error;
@@ -653,6 +327,7 @@ void liftTo(int potentiometerPCT)
   {
     while (std::abs(error) > 0 && (motionless < time || !timeout)) 
     {
+      controls();
       liftTiltCheck();
       error = potentiometerPCT - lift.value(pct);
       integral += error;
@@ -681,8 +356,8 @@ void liftFor(int potentiometerPCT)
 void flipOut() 
 {
   liftTo(liftMin+12, 12);
-  intake.spin(vex::forward, 100, pct);
-  liftTo(liftMin);
+  liftTo(liftMin, 12);
+  //intake.spin(vex::forward, 100, pct);
   // drive(-.1, 60, false, false, false);
   //tiltTo(tiltMax, 12);
   //tiltTo(tiltMin, 12);
@@ -695,14 +370,19 @@ void stack(void)
   double error = target - tilt.value(percentUnits::pct);
   while (error > 0) 
   {
-    if(tilt.value(pct) <= 38)
+    controls();
+    if(tilt.value(pct) >= 38)
     {
-      intake.spin(directionType::rev, 30, percentUnits::pct);
+      LeftIntake.setBrake(coast);
+      RightIntake.setBrake(coast);
     }
     else
-      intake.stop();
+    {
+      LeftIntake.setBrake(brake);
+      RightIntake.setBrake(brake);
+    }
     error = target - tilt.value(percentUnits::pct);
-    double volts = .15 * error + 2;
+    double volts = .2 * error + 2; //.15 * error + 2;
     Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
     vex::task::sleep(20);
   }
@@ -717,7 +397,7 @@ void tower(void)
 
 void fadeAway()
 {
-  intake.spinFor(directionType::rev, -2, rotationUnits::rev, 35, velocityUnits::pct, false);
+  intake.spinFor(directionType::rev, -2, rotationUnits::rev, 65, velocityUnits::pct, false);
   d.spinFor(-.75, rotationUnits::rev, 30, velocityUnits::pct);
 }
 
@@ -813,7 +493,331 @@ void resetEncoders(void)
   le.setPosition(0, rotationUnits::rev);
   re.setPosition(0, rotationUnits::rev);
 }
+
+void driveTo(double positionRev, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0075, double kD = 6) 
+{
+  double error = positionRev - d.position(rotationUnits::rev);
+  double integral = error;
+  double prevError = error;
+  double derivative = error - prevError;
+  int motionless = 0;
+  if (error > 0) 
+  {
+    while (error > 0 && motionless <= timeout) 
+    {
+      intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      error = positionRev - d.position(rotationUnits::rev);
+      integral += error;
+      if (error <= 0) 
+      {
+        integral = 0;
+      }
+      derivative = error - prevError;
+      prevError = error;
+      double volts = error * kP + integral * kI + derivative * kD;
+      d.spin(fwd, volts, voltageUnits::volt);
+      if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=15;
+      if(dt.velocity(percentUnits::pct) != 0)
+        motionless=0;
+      vex::task::sleep(15);
+    }
+  }
+  else if (error < 0) 
+  {
+    while (error < 0 && motionless <= timeout) 
+    {
+      intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      error = positionRev - d.position(rotationUnits::rev);
+      integral += error;
+      if (error >= 0) 
+      {
+        integral = 0;
+      }
+      derivative = error - prevError;
+      prevError = error;
+      double volts = error * kP + integral * kI + derivative * kD;
+      d.spin(fwd, volts, voltageUnits::volt);
+      if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=15;
+      if(dt.velocity(percentUnits::pct) != 0)
+        motionless=0;
+      vex::task::sleep(15);
+    }
+  }
+  intake.stop();
+}
+
+void driveFor(double positionRev, int driveSpeed = 50, int intakeSpeed = 0, int timeout = 50) 
+{
+  double error = positionRev - d.position(rotationUnits::rev);
+  double kP = driveSpeed/28.57;
+  int motionless = 0;
+  if (error > 0) 
+  {
+    while (error > 0 && motionless <= timeout) 
+    {
+      intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      error = positionRev - d.position(rotationUnits::rev);
+      double volts = (error * kP) + 2;
+      d.spin(fwd, volts, voltageUnits::volt);
+      if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=15;
+      if(dt.velocity(percentUnits::pct) != 0)
+        motionless=0;
+      vex::task::sleep(15);
+    }
+  }
+  else if (error < 0) 
+  {
+    while (error < 0 && motionless <= timeout) 
+    {
+      intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      error = positionRev - d.position(rotationUnits::rev);
+      double volts = (error * kP) - 2;
+      d.spin(fwd, volts, voltageUnits::volt);
+      if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=15;
+      if(dt.velocity(percentUnits::pct) != 0)
+        motionless=0;
+      vex::task::sleep(15);
+    }
+  }
+  intake.stop();
+}
+
+void drive(double revolutions, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0075, double kD = 6) 
+{
+  double target = revolutions + d.position(rotationUnits::rev);
+  driveTo(target, intakeSpeed, timeout, kP, kI, kD);
+}
+
+//ODOM DRIVE
+void trackTo(double distance, int intakeSpeed = 0, int timeout = 50) 
+{
+  double error = distance - getDistance();
+  double integral = error;
+  double prevError = error;
+  double derivative = error - prevError;
+  double kP = 4/12;    // 0.15
+  double kI = .15/12; // 0.03
+  double kD = 3/12;    // 0.1
+  int motionless = 0;
+  if (error > 0) 
+  {
+    while (error > 0 && motionless <= timeout) 
+    {
+      intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      error = distance - getDistance();
+      integral += error;
+      if (error <= 0) 
+      {
+        integral = 0;
+      }
+      derivative = error - prevError;
+      prevError = error;
+      double volts = error * kP + integral * kI + derivative * kD;
+      d.spin(fwd, volts, voltageUnits::volt);
+      if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=15;
+      if(dt.velocity(percentUnits::pct) != 0)
+        motionless=0;
+      vex::task::sleep(15);
+    }
+  }
+  else if (error < 0) 
+  {
+    while (error < 0 && motionless <= timeout) 
+    {
+      intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      error = distance - getDistance();
+      integral += error;
+      if (error >= 0) 
+      {
+        integral = 0;
+      }
+      derivative = error - prevError;
+      prevError = error;
+      double volts = error * kP + integral * kI + derivative * kD;
+      d.spin(fwd, volts, voltageUnits::volt);
+      if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=15;
+      if(dt.velocity(percentUnits::pct) != 0)
+        motionless=0;
+      vex::task::sleep(15);
+    }
+  }
+  intake.stop();
+}
+
+void trackFor(double distance, int intakeSpeed = 0, int timeout = 50) 
+{
+  double S = TRACKING_WHEEL_CIRCUMFERENCE * getEncoderPosition();
+  double target = distance + S;
+  driveTo(target, intakeSpeed, timeout);
+}
+
+
 /*
+void driveTo(double inches, int timeout = 10) 
+{
+  double eVal = TRACKING_WHEEL_CIRCUMFERENCE * le.position(rotationUnits::rev);
+  double error = inches - eVal;
+  double integral = error;
+  double prevError = error;
+  double derivative = error - prevError;
+  double kP = 4;    // 0.15
+  double kI = .3; // 0.03
+  double kD = 1.1;    // 0.1
+  int motionless = 0;
+  while (std::abs(error) > 0 && (motionless <= timeout)) 
+  {
+    controls();
+    error = inches - eVal;
+    integral += error;
+    derivative = error - prevError;
+    prevError = error;
+    double volts = error * kP + integral * kI + derivative * kD;
+    d.spin(fwd, volts, voltageUnits::volt);
+    if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=15;
+    if(dt.velocity(percentUnits::pct) != 0)
+        motionless+=0;
+    vex::task::sleep(15);
+  }
+}
+
+void drive(double inches, int timeout = 10)
+{
+  double eVal = TRACKING_WHEEL_CIRCUMFERENCE * getEncoderPosition();
+  double target = inches + eVal;
+  driveTo(target, timeout);
+}
+
+void driveTo(double inches, int speed, int timeout = 10) 
+{
+  double eVal = TRACKING_WHEEL_CIRCUMFERENCE * le.position(rotationUnits::rev);
+  double error = inches - eVal;
+  int motionless = 0;
+  while (inches > 0 && std::abs(error) > 0.75 && (motionless <= timeout)) 
+  {
+    controls();
+    error = inches - eVal;
+    d.spin(fwd, speed, percentUnits::pct);
+    if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=15;
+    if(dt.velocity(percentUnits::pct) != 0)
+        motionless+=0;
+    vex::task::sleep(15);
+  }
+  while (inches < 0 && std::abs(error) > 0.75 && (motionless <= timeout)) 
+  {
+    controls();
+    error = inches - eVal;
+    d.spin(fwd, speed, percentUnits::pct);
+    if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=15;
+    if(dt.velocity(percentUnits::pct) != 0)
+        motionless+=0;
+    vex::task::sleep(15);
+  }
+}
+
+/*
+//Collision detection
+void driveTo(double inches, int timeout = 10) 
+{
+  double eVal = TRACKING_WHEEL_CIRCUMFERENCE * le.position(rotationUnits::rev);
+  double error = inches - eVal;
+  double integral = error;
+  double prevError = error;
+  double derivative = error - prevError;
+  double kP = 4;    // 0.15
+  double kI = .3; // 0.03
+  double kD = 1.1;    // 0.1
+  double x1 = le.position(rotationUnits::rev);
+  int motionless = 0;
+  while (std::abs(error) > 0 && (motionless <= timeout)) 
+  {
+    controls();
+    error = inches - eVal;
+    integral += error;
+    derivative = error - prevError;
+    prevError = error;
+    double volts = error * kP + integral * kI + derivative * kD;
+    d.spin(fwd, volts, voltageUnits::volt);
+    if(dt.velocity(percentUnits::pct) == 0 && motionless < 15)
+    {
+        motionless+=15;
+        x1 = le.position(rotationUnits::rev);
+    }
+    if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=15;
+    if(dt.velocity(percentUnits::pct) != 0)
+        motionless+=0;
+    if(motionless < = )
+    {
+
+    }
+    vex::task::sleep(15);
+  }
+}
+
+//Non tracking wheel PID
+void driveTo(double positionRev) 
+{
+  double error = positionRev - d.position(rotationUnits::rev);
+  double integral = error;
+  double prevError = error;
+  double derivative = error - prevError;
+  double kP = 4;    // 0.15
+  double kI = .03; // 0.03
+  double kD = 3;    // 0.1
+  if (error > 0) 
+  {
+    while (error > 0) 
+    {
+      controls();
+      error = positionRev - d.position(rotationUnits::rev);
+      integral += error;
+      if (error <= 0) 
+      {
+        integral = 0;
+      }
+      derivative = error - prevError;
+      prevError = error;
+      double volts = error * kP + integral * kI + derivative * kD;
+      d.spin(fwd, volts, voltageUnits::volt);
+      vex::task::sleep(15);
+    }
+  }
+  else if (error < 0) 
+  {
+    while (error < 0) 
+    {
+      controls();
+      error = positionRev - d.position(rotationUnits::rev);
+      integral += error;
+      if (error >= 0) 
+      {
+        integral = 0;
+      }
+      derivative = error - prevError;
+      prevError = error;
+      double volts = error * kP + integral * kI + derivative * kD;
+      d.spin(fwd, volts, voltageUnits::volt);
+      vex::task::sleep(15);
+    }
+  }
+}
+
+void drive(double revolutions) 
+{
+  double target = revolutions + d.position(rotationUnits::rev);
+  driveTo(target);
+}
+
+
 void cGUI ()
 {
   start:
@@ -871,151 +875,55 @@ cursor >= 3)
   }
 }
 */
-// ----------------------Reference PID Loop
+
 /*
+//-------------------------Method 1 (Guess and Check):
 
-void drivePID(double target) {
-target *= 360 / (3.25 * M_PI);
-DLB.resetRotation();
+First of all, set all three constants (kP, kI, kD) to zero. This “disables
+them”. Tune them one by one, rather than jumping straight in. Generally tune in
+the order of Proportional, Derivative, Integral, that is, tune in the order of
+kP, kD and finally kI. This entire process relies on making a prediction for the
+constant (“trial”), and then adjusting it when it doesn’t go to plan (“error”).
+//Scientific Method, isolate one independent variable and observe dependant
+variables to It’s important to be prepared to stop your robot (both by disabling
+it from your program or a switch, and by physically catching it if necessary),
+as you’ll likely make a prediction that is far off an appropriate value. So long
+as you’re ready, there typically isn’t too much harm in just experimenting.
 
-double kp = 0.33;
-double ki = 0.0005;
-double kd = 0.2;
+1. Increase kP until the robot oscillates just slightly, once or twice.
+  We’re interested in achieving a fast motion to the target here, but not too
+violent – it needs to settle, and in a reasonable amount of time!
+2.  Start adding kD until the steady-state error starts to decrease until
+something suitable. This will allow us to maintain the fast motion from the
+Proportional component, whilst minimising the overshoot. You may need to go back
+to adjusting kP a little.
+3. Start adding kI until any minor steady-state error and disturbances are
+accounted for. You may need to adjust kD when doing this.
+4. Using the knowledge from the table on the previous page, keep adjusting the
+constants until you end up with a nice, quick but smooth motion that you’re
+happy with.
 
-double proportion;
-double integralRaw;
-double integral;
-double integralActiveZone = 360 / (3.25 * M_PI);
-double integralPowerLimit = 50 / ki;
-double derivative;
-double finalPower;
+//-------------------------Method 2 (Ziegler-Nichols Mathematical Model):
 
-double error = target;
-double lastError = target;
-sleepMs(50);
-while(abs(error) > 75){
-    error = target - DLB.rotation(rotationUnits::deg);
-    if(error == 0){
-        break;
-    }
-    proportion = kp * error;
+Begin by disabling all three constants (set them to zero).
+1. Increase kP until you get steady continuous oscillations.
+  These need to be stable and consistent. Record this value as “kU” (ultimate or
+critical gain).
+2. Measure the period of the oscillations caused by step 1.
+  That is, the time it takes to do a full cycle from a point back to itself. You
+can measure this with a bit of programming, or with a stopwatch. It’s a good
+idea to measure many oscillations and then divide the time by the number of
+oscillations to get a good average. Record this number as “pU” (period for
+ultimate or critical gain).
+3. Calculate the approximate constant values from the following table:
 
-    if(abs(error) < integralActiveZone && error != 0){
-    integralRaw += error;
-    }
-    else integralRaw = 0.0;
-
-    if(integralRaw > integralPowerLimit){
-        integralRaw = integralPowerLimit;
-    }
-    if(integralRaw < -integralPowerLimit){
-        integralRaw = integralPowerLimit;
-    }
-
-    integral = ki * integralRaw;
-
-    derivative = kd * (error - lastError);
-    lastError = error;
-
-    if(error == 0){
-        derivative = 0;
-
-    }
-    finalPower = 0.5 * (proportion + integral + derivative);
-    driveForward(finalPower);
-    sleepMs(20);
-}
-DLF.stop(brakeType::coast);
-DLB.stop(brakeType::coast);
-DRF.stop(brakeType::coast);
-DRB.stop(brakeType::coast);
-}
+       kP        kI         kD
+PID  0.6*kU  1.2*kU/pU  0.075*kU*pU
 
 */
 
-// Sine drive
-/*
-void drive(double rev, int maxVel = 80, bool pidOn = true, bool correct = true,
-bool waitForCompletion = false)
-{
-    if(waitForCompletion)
-    {
-      pidOn = false;
-    }
-    if(!pidOn)
-    {
-      d.spinFor(directionType::fwd, rev, rotationUnits::rev, maxVel,
-velocityUnits::pct, waitForCompletion); goto end;
-    }
-    if(rev > 0)
-    {
-      double vInitial = maxVel*.3;
-      maxVel -= vInitial;
-      d.resetPosition();
-      double error = rev - d.rotation(rotationUnits::rev);
-      while(error > 0)
-      {
-        error = rev - d.rotation(rotationUnits::rev);
-        double x = (error)/rev;
-        double vel = (sin(M_PI*x)*maxVel)+vInitial;
-        d.spin(directionType::fwd, vel, percentUnits::pct);
-        vex::task::sleep(20);
-      }
-      if(!correct)
-      {
-        goto end;
-      }
-      if(error == 0)
-      {
-        goto end;
-      }
-      //Corrects overshoot
-      while(error < 0)
-      {
-        error = rev - d.rotation(rotationUnits::rev);
-        double x = (error)/rev;
-        double vel = vInitial;
-        dt.drive(directionType::rev, vel, velocityUnits::pct);
-        vex::task::sleep(20);
-      }
-      dt.stop();
-    }
-    else if(rev < 0)
-    {
-      double vInitial = maxVel*.3;
-      maxVel -= vInitial;
-      d.resetPosition();
-      double error = rev - d.rotation(rotationUnits::rev);
-      while(error < 0)
-      {
-        error = rev - d.rotation(rotationUnits::rev);
-        double x = (error)/rev;
-        double vel = (sin(M_PI*x)*maxVel)+vInitial;
-        dt.drive(directionType::rev, vel, velocityUnits::pct);
-        vex::task::sleep(20);
-      }
-      if(!correct)
-      {
-        goto end;
-      }
-      if(error == 0)
-      {
-        goto end;
-      }
-      //Corrects overshoot
-      while(error > 0)
-      {
-        error = rev - d.rotation(rotationUnits::rev);
-        double x = (error)/rev;
-        double vel = vInitial;
-        dt.drive(directionType::fwd, vel, velocityUnits::pct);
-        vex::task::sleep(20);
-      }
-      dt.stop();
-    }
-    end:
-    vex::task::sleep(10);
-}
-*/
+// Makes the bot accelerate smoothly, leading to less jerk and more accurate
+// movements. Possibly make the drive command use the gyro to make sure that the
+// robot is not turning or not going in a straight line
 
 #endif
