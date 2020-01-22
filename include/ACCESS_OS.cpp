@@ -69,11 +69,12 @@ Link to website: https://dev.azure.com/roboVEX/_git/ACCESS_OS
 #define BACK						1
 #define SKILLS		  				2
 #define AMBI						3
-#define RC							0
-#define TANK						1
+#define FOUR						0
+#define FIVE						1
+#define SIX							2
 #define AUTON_COLOR					0
-#define AUTON_TYPE					1
-#define AUTON_DRIVE			  		2
+#define AUTON_POS					1
+#define AUTON_PNTS			  		2
 
 
 /*------------------------------------------------------------------------------------------------------
@@ -110,7 +111,7 @@ private:
 	{
 		0,
 		0,
-		0
+		1
 	};
 
 	//1D array for displaying the menu types
@@ -118,7 +119,7 @@ private:
 	{
 		"Color: ",
 		"Pos: ",
-		"Chunk: "
+		"Pnts: "
 	};
 
 	//2D array for displaying the menu options
@@ -126,7 +127,7 @@ private:
 	{
 		{ "Blue",	"Red",		"" }, //If "" doesn't work, try "NULL"
 		{ "Front",	"Back",		"Skills",		"Ambi" },
-		{ "--",		"---",		"----" }
+		{ "4",		"5",		"6" }
 	};
 public:
 	ACCESS_OS();											//???

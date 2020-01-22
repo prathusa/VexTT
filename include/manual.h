@@ -5,35 +5,7 @@
 #include "drivefunctions.h"
 
 int speed = 80;
-void motorAFR()
-{
-	  Brain.Timer.reset();
-    double driveFwdDistance = 3.2;
-    resetEncoders();
-    Inertial.resetRotation();
-    flipOut();
-    Lift.stop();
-    intake.spin(directionType::rev, 100, velocityUnits::pct);
-    d.rotateFor(directionType::fwd, driveFwdDistance, rotationUnits::rev, 75, velocityUnits::pct, true);
-    turn(-120, 10); //100 (timeout) can be reduced
-    intake.spin(directionType::rev, 100, velocityUnits::pct);
-    d.rotateFor(directionType::fwd, 2.0, rotationUnits::rev, 65, velocityUnits::pct, true);
-    vex::task::sleep(400);
-    turn(-135, 10); //100 (timeout) can be reduced
-    d.rotateFor(directionType::fwd, .8, rotationUnits::rev, 65, velocityUnits::pct, true);
-    d.rotateFor(directionType::fwd, .3, rotationUnits::rev, 65, velocityUnits::pct, false); //possibly can reduce this number or removeable
-    intake.spin(directionType::rev, 25, velocityUnits::pct);
-    vex::task::sleep(400); //possibly can reduce this number or removeable
-    stack();
-    d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false); //untested I believe may need to be removed
-    vex::task::sleep(270); //untested I believe may need to be removed
-    d.spinFor(-.75, rotationUnits::rev, 30, velocityUnits::pct);
-    Controller1.Screen.clearLine(3);
-    Controller1.Screen.setCursor(3, 1);
-    Controller1.Screen.print("%d ", Brain.Timer.time());
-}
-
-void AFR()
+void p4()
 {
 	  Brain.Timer.reset();
     double fwd1 = 37.5;
@@ -56,7 +28,7 @@ void AFR()
     Controller1.Screen.print("%d ", Brain.Timer.time()); 
 }
 
-void AFR1()
+void p5()
 {
 	  Brain.Timer.reset();
     double fwd1 = 37.5;
@@ -66,48 +38,67 @@ void AFR1()
     flipOut();
     Lift.stop();
     intake.spin(directionType::rev, 100, velocityUnits::pct);
-    drive(3.2, 100);
-    turn(-130); //100 (timeout) can be reduced
-    drive(2, 100);
-    turn(-135);
-    drive(1.1);
+    drive(3.3, 100, 10, 3, 0.015, 4);
+    turn(-90, 100, 10);
+    drive(.5, 100, 10);
+    turn(-130, 100, 10); //100 (timeout) can be reduced
+    drive(3.5, 100, 10, 3, 0.015, 4);
     intake.spinFor(fwd, .5, rotationUnits::rev);
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false); //untested I believe may need to be removed
     vex::task::sleep(270); //untested I believe may need to be removed
-    d.spinFor(-.75, rotationUnits::rev, 30, velocityUnits::pct);
+    d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
-    Controller1.Screen.print("%d ", Brain.Timer.time());
+    Controller1.Screen.print("%d ", Brain.Timer.time()); 
 }
 
-void motorABR()
+void p6()
 {
 	  Brain.Timer.reset();
-    double driveFwdDistance = 4;
+    double fwd1 = 37.5;
+    double fwd2 = 36;
     resetEncoders();
     Inertial.resetRotation();
     flipOut();
+    Lift.stop();
     intake.spin(directionType::rev, 100, velocityUnits::pct);
-    d.rotateFor(directionType::fwd, driveFwdDistance-.3, rotationUnits::rev, 45, velocityUnits::pct, true); //3.2
-    intake.spin(directionType::rev, 12, voltageUnits::volt);
-    d.rotateFor(directionType::fwd, .5, rotationUnits::rev, 20, velocityUnits::pct, true);
-    intake.spin(directionType::rev, 40, velocityUnits::pct);
-    d.rotateFor(directionType::fwd, (-1.0/3)*driveFwdDistance, rotationUnits::rev, 45, velocityUnits::pct, true); //
-    turn(150, 10);
-    intake.spin(directionType::rev, 100, velocityUnits::pct);
-    d.rotateFor(directionType::fwd, 2.1, rotationUnits::rev, 60, velocityUnits::pct, true);
+    drive(3.3, 100, 10, 3, 0.015, 4);
+    turn(-90, 100, 10);
+    drive(.5, 100, 10);
+    turn(-180, 100, 10);
+    drive(3, 100, 10, 3, 0.015, 4);
+    turn(-90, 100, 10);
+    drive(3, 100, 10, 3, 0.015, 4);
+    intake.spinFor(fwd, .5, rotationUnits::rev);
+    stack();
+    d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false); //untested I believe may need to be removed
+    vex::task::sleep(270); //untested I believe may need to be removed
+    d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
+    Controller1.Screen.clearLine(3);
+    Controller1.Screen.setCursor(3, 1);
+    Controller1.Screen.print("%d ", Brain.Timer.time()); 
+}
+
+void u4()
+{
+	  Brain.Timer.reset();
+    resetEncoders();
+    Inertial.resetRotation();
+    flipOut();
+    // --> drive command stuffs here <--
+    intake.spinFor(fwd, .5, rotationUnits::rev);
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
     vex::task::sleep(270); //might need to be increased
-    d.spinFor(-.75, rotationUnits::rev, 25, velocityUnits::pct);
+    d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     intake.stop();
     Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%d ", Brain.Timer.time());  
 }
 
-void ABR()
+void u5()
 {
 	  Brain.Timer.reset();
     double driveFwdDistance = 4;
@@ -116,6 +107,29 @@ void ABR()
     flipOut();
     drive(3.3, 100);//39);
     d.rotateFor(directionType::fwd, -1.2, rotationUnits::rev, 50, velocityUnits::pct, true);
+   // drive(-.4, 100. 10);//5);
+    turn(140, 100, 10);
+    drive(2.1, 100, 30, 3, 0.015, 4);//27);
+    intake.spinFor(fwd, .5, rotationUnits::rev);
+    stack();
+    d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
+    vex::task::sleep(270); //might need to be increased
+    d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
+    intake.stop();
+    Controller1.Screen.clearLine(3);
+    Controller1.Screen.setCursor(3, 1);
+    Controller1.Screen.print("%d ", Brain.Timer.time());  
+}
+
+void u6()
+{
+	  Brain.Timer.reset();
+    double driveFwdDistance = 4;
+    resetEncoders();
+    Inertial.resetRotation();
+    flipOut();
+    drive(3.8, 100);//39);
+    d.rotateFor(directionType::fwd, -1.9, rotationUnits::rev, 50, velocityUnits::pct, true);
    // drive(-.4, 100. 10);//5);
     turn(140, 100, 10);
     drive(2.1, 100, 30, 3, 0.015, 4);//27);
@@ -152,15 +166,6 @@ void encoderABR()
     Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%d ", Brain.Timer.time());  
-}
-
-void autonFrontRow()
-{
-	  AFR();
-}
-void autonBackRow()
-{
-	  ABR();
 }
 
 //8pnt
@@ -408,6 +413,7 @@ void autonAmbi()
   drive(2);
   flipOut();
 }
+
 /*
 void autonFrontRow()
 {
