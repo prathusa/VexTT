@@ -371,16 +371,6 @@ void stack(void)
   while (error > 0) 
   {
     controls();
-    if(tilt.value(pct) >= 38)
-    {
-      LeftIntake.setBrake(coast);
-      RightIntake.setBrake(coast);
-    }
-    else
-    {
-      LeftIntake.setBrake(brake);
-      RightIntake.setBrake(brake);
-    }
     error = target - tilt.value(percentUnits::pct);
     double volts = .2 * error + 2; //.15 * error + 2; //.2 * error + 2 (2.550s)
     Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
@@ -397,7 +387,7 @@ void tower(void)
 
 void fadeAway()
 {
-  intake.spinFor(directionType::rev, -2, rotationUnits::rev, 65, velocityUnits::pct, false);
+  intake.spinFor(directionType::rev, -2, rotationUnits::rev, 65, velocityUnits::pct, false); //possible reduction needed
   d.spinFor(-.75, rotationUnits::rev, 30, velocityUnits::pct);
 }
 
