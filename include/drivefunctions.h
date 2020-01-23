@@ -382,7 +382,7 @@ void stack(void)
       RightIntake.setBrake(brake);
     }
     error = target - tilt.value(percentUnits::pct);
-    double volts = .2 * error + 2; //.15 * error + 2;
+    double volts = .2 * error + 2; //.15 * error + 2; //.2 * error + 2 (2.550s)
     Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
     vex::task::sleep(20);
   }
