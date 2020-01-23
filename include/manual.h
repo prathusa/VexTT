@@ -22,6 +22,7 @@ void p4()
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false); //untested I believe may need to be removed
     vex::task::sleep(270); //untested I believe may need to be removed
+    //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     fadeAway();
     Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
@@ -47,6 +48,7 @@ void p5()
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false); //untested I believe may need to be removed
     vex::task::sleep(270); //untested I believe may need to be removed
+    //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     fadeAway();
     Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
@@ -74,6 +76,7 @@ void p6()
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false); //untested I believe may need to be removed
     vex::task::sleep(270); //untested I believe may need to be removed
+    //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     fadeAway();
     Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
@@ -91,6 +94,7 @@ void u4()
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
     vex::task::sleep(270); //might need to be increased
+    //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     fadeAway();
     intake.stop();
     Controller1.Screen.clearLine(3);
@@ -114,6 +118,7 @@ void u5()
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
     vex::task::sleep(270); //might need to be increased
+    //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     fadeAway();
     intake.stop();
     Controller1.Screen.clearLine(3);
@@ -137,6 +142,7 @@ void u6()
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
     vex::task::sleep(270); //might need to be increased
+    //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     fadeAway();
     intake.stop();
     Controller1.Screen.clearLine(3);
@@ -161,6 +167,7 @@ void encoderABR()
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
     vex::task::sleep(270); //might need to be increased
+    //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     fadeAway();
     intake.stop();
     Controller1.Screen.clearLine(3);
@@ -186,6 +193,7 @@ void u8()
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
     vex::task::sleep(270); //might need to be increased
+    //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     fadeAway();
     intake.stop();
     Controller1.Screen.clearLine(3);

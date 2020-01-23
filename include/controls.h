@@ -40,6 +40,11 @@ void controls()
         }
         
         // -----------------------------Intake Control
+        if(tilt.value(percentUnits::pct) - tiltStack > -3 && dt.velocity(percentUnits::pct) < 0)
+        {
+          intake.spin(directionType::rev, dt.velocity(percentUnits::pct), percentUnits::pct);
+        }
+        
         if(Controller1.ButtonL1.pressing())
         {
             intake.spin(directionType::fwd, 50, pct);
@@ -55,7 +60,7 @@ void controls()
         }
 
         // -----------------------------Tilt Control
-        if(Controller1.ButtonR2.pressing() && tilt.value(percentUnits::pct) < tiltMax)
+        if(Controller1.ButtonR2.pressing() && tilt.value(percentUnits::pct) < tiltMax && lift.value(pct) < liftTower)
         {
           double target = tiltStack; //In revolutions
           double error = target - tilt.value(percentUnits::pct);
@@ -73,7 +78,7 @@ void controls()
             Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
           }
         }
-        else if(Controller1.ButtonR1.pressing() && tilt.value(percentUnits::pct) > tiltMin)
+        else if(Controller1.ButtonR1.pressing() && tilt.value(percentUnits::pct) > tiltMin && lift.value(pct) < liftTower)
         {
           double target = tiltMax; //In revolutions
           double error = target - tilt.value(percentUnits::pct);
