@@ -39,12 +39,8 @@ void controls()
             Controller1.rumble(".");
         }
         
-        // -----------------------------Intake Control
-        if(tilt.value(percentUnits::pct) - tiltStack > -3 && dt.velocity(percentUnits::pct) < 0)
-        {
-          intake.spin(directionType::rev, dt.velocity(percentUnits::pct), percentUnits::pct);
-        }
-        
+        // -----------------------------Intake Control 
+        passive();
         if(Controller1.ButtonL1.pressing())
         {
             intake.spin(directionType::fwd, 50, pct);

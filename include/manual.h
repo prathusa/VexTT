@@ -5,6 +5,36 @@
 #include "drivefunctions.h"
 
 int speed = 80;
+
+//start lined up with 2 cubes in front 
+void p3()
+{
+	  Brain.Timer.reset();
+    double fwd1 = 37.5;
+    double fwd2 = 36;
+    resetEncoders();
+    Inertial.resetRotation();
+    flipOut();
+    Lift.stop();
+    intake.spin(directionType::rev, 100, velocityUnits::pct);
+    drive(1.65, 100);
+    turn(-90, 100, 10); //100 (timeout) can be reduced
+    drive(1.65, 100);
+    turn(-130, 100, 10); //100 (timeout) can be reduced
+    drive(.8, 100, 10);
+    intake.spinFor(fwd, .5, rotationUnits::rev);
+    stack();
+    d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false); //untested I believe may need to be removed
+    vex::task::sleep(270); //untested I believe may need to be removed
+    //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
+    //fadeAway();
+    drive(-.75, 0, 10, 3, 0.015, 4);
+    Controller1.Screen.clearLine(3);
+    Controller1.Screen.setCursor(3, 1);
+    Controller1.Screen.print("%d ", Brain.Timer.time()); 
+}
+
+//start lined up with 2 cubes in front 
 void p4()
 {
 	  Brain.Timer.reset();
@@ -23,12 +53,14 @@ void p4()
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false); //untested I believe may need to be removed
     vex::task::sleep(270); //untested I believe may need to be removed
     //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
-    fadeAway();
+    //fadeAway();
+    drive(-.75, 0, 10, 3, 0.015, 4);
     Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%d ", Brain.Timer.time()); 
 }
 
+//start lined up to the right of red / left of blue, pre load off to the side (not being used)
 void p5()
 {
 	  Brain.Timer.reset();
@@ -49,12 +81,14 @@ void p5()
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false); //untested I believe may need to be removed
     vex::task::sleep(270); //untested I believe may need to be removed
     //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
-    fadeAway();
+    //fadeAway();
+    drive(-.75, 0, 10, 3, 0.015, 4);
     Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%d ", Brain.Timer.time()); 
 }
 
+//start lined up to the right of red / left of blue, pre load off to the side (not being used)
 void p6()
 {
 	  Brain.Timer.reset();
@@ -77,7 +111,8 @@ void p6()
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false); //untested I believe may need to be removed
     vex::task::sleep(270); //untested I believe may need to be removed
     //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
-    fadeAway();
+    //fadeAway();
+    drive(-.75, 0, 10, 3, 0.015, 4);
     Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%d ", Brain.Timer.time()); 
@@ -95,8 +130,8 @@ void u4()
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
     vex::task::sleep(270); //might need to be increased
     //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
-    fadeAway();
-    intake.stop();
+    //fadeAway();
+    drive(-.75, 0, 10, 3, 0.015, 4);
     Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%d ", Brain.Timer.time());  

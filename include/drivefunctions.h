@@ -391,6 +391,14 @@ void fadeAway()
   d.spinFor(-.75, rotationUnits::rev, 30, velocityUnits::pct);
 }
 
+void passive()
+{
+  if(tilt.value(percentUnits::pct) - tiltStack > -3 && dt.velocity(percentUnits::pct) < 0)
+  {
+    intake.spin(directionType::rev, dt.velocity(percentUnits::pct), percentUnits::pct);
+  }
+}
+
 // Added Controller and Brain feedback when autonomous is selected.
 void autonController() 
 {
@@ -495,7 +503,10 @@ void driveTo(double positionRev, int intakeSpeed = 0, int timeout = 50, double k
   {
     while (error > 0 && motionless <= timeout) 
     {
-      intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      if(tilt.value(percentUnits::pct) - tiltStack > -3 && dt.velocity(percentUnits::pct) < 0)
+        intake.spin(directionType::rev, dt.velocity(percentUnits::pct), percentUnits::pct);
+      else
+        intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
       error = positionRev - d.position(rotationUnits::rev);
       integral += error;
       if (error <= 0) 
@@ -517,7 +528,10 @@ void driveTo(double positionRev, int intakeSpeed = 0, int timeout = 50, double k
   {
     while (error < 0 && motionless <= timeout) 
     {
-      intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      if(tilt.value(percentUnits::pct) - tiltStack > -3 && dt.velocity(percentUnits::pct) < 0)
+        intake.spin(directionType::rev, dt.velocity(percentUnits::pct), percentUnits::pct);
+      else
+        intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
       error = positionRev - d.position(rotationUnits::rev);
       integral += error;
       if (error >= 0) 
@@ -547,7 +561,10 @@ void driveFor(double positionRev, int driveSpeed = 50, int intakeSpeed = 0, int 
   {
     while (error > 0 && motionless <= timeout) 
     {
-      intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      if(tilt.value(percentUnits::pct) - tiltStack > -3 && dt.velocity(percentUnits::pct) < 0)
+        intake.spin(directionType::rev, dt.velocity(percentUnits::pct), percentUnits::pct);
+      else
+        intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
       error = positionRev - d.position(rotationUnits::rev);
       double volts = (error * kP) + 2;
       d.spin(fwd, volts, voltageUnits::volt);
@@ -562,7 +579,10 @@ void driveFor(double positionRev, int driveSpeed = 50, int intakeSpeed = 0, int 
   {
     while (error < 0 && motionless <= timeout) 
     {
-      intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      if(tilt.value(percentUnits::pct) - tiltStack > -3 && dt.velocity(percentUnits::pct) < 0)
+        intake.spin(directionType::rev, dt.velocity(percentUnits::pct), percentUnits::pct);
+      else
+        intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
       error = positionRev - d.position(rotationUnits::rev);
       double volts = (error * kP) - 2;
       d.spin(fwd, volts, voltageUnits::volt);
@@ -597,7 +617,10 @@ void trackTo(double distance, int intakeSpeed = 0, int timeout = 50)
   {
     while (error > 0 && motionless <= timeout) 
     {
-      intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      if(tilt.value(percentUnits::pct) - tiltStack > -3 && dt.velocity(percentUnits::pct) < 0)
+        intake.spin(directionType::rev, dt.velocity(percentUnits::pct), percentUnits::pct);
+      else
+        intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
       error = distance - getDistance();
       integral += error;
       if (error <= 0) 
@@ -619,7 +642,10 @@ void trackTo(double distance, int intakeSpeed = 0, int timeout = 50)
   {
     while (error < 0 && motionless <= timeout) 
     {
-      intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      if(tilt.value(percentUnits::pct) - tiltStack > -3 && dt.velocity(percentUnits::pct) < 0)
+        intake.spin(directionType::rev, dt.velocity(percentUnits::pct), percentUnits::pct);
+      else
+        intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
       error = distance - getDistance();
       integral += error;
       if (error >= 0) 

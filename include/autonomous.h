@@ -12,7 +12,15 @@ void autonomous(void)
     //If configuration[1] is 0 (Front row), 1 (Back row), or 2 (Skills), run the correct auton
 	if (OS.getValues(AUTON_POS) == FRONT) 
   {
-    if(OS.getValues(AUTON_PNTS) == FOUR)
+    if(OS.getValues(AUTON_PNTS) == ONE)
+    {
+      autonAmbi();
+    }
+    else if(OS.getValues(AUTON_PNTS) == THREE)
+    {
+      p3();
+    }
+    else if(OS.getValues(AUTON_PNTS) == FOUR)
     {
       p4();
     }
@@ -27,8 +35,11 @@ void autonomous(void)
 	}
 	else if (OS.getValues(AUTON_POS) == BACK) 
   {
-		
-    if(OS.getValues(AUTON_PNTS) == FOUR)
+		if(OS.getValues(AUTON_PNTS) == ONE)
+    {
+      autonAmbi();
+    }
+    else if(OS.getValues(AUTON_PNTS) == FOUR)
     {
       u5();
       //u4(); non existant rn
@@ -54,10 +65,6 @@ void autonomous(void)
 	else if (OS.getValues(AUTON_POS) == SKILLS) 
   {
 		autonSkills();
-	}
-  else if (OS.getValues(AUTON_POS) == AMBI) 
-  {
-		autonAmbi();
 	}
 
 	//Auton end. Prints auton end on the controller + vibrate controller
