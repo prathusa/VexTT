@@ -40,7 +40,6 @@ void controls()
         }
         
         // -----------------------------Intake Control 
-        passive();
         if(Controller1.ButtonL1.pressing())
         {
             intake.spin(directionType::fwd, 50, pct);

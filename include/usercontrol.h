@@ -11,7 +11,7 @@ void usercontrol(void)
     while(1) 
     {
         controls();
-        
+        passive();
         /*
         if(Controller1.ButtonB.pressing())
         {
