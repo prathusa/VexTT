@@ -32,12 +32,21 @@ void autonomous(void)
     {
       p6();
     }
+    else if(OS.getValues(AUTON_PNTS) == EIGHT)
+    {
+      //p8();
+      p6();
+    }
 	}
 	else if (OS.getValues(AUTON_POS) == BACK) 
   {
 		if(OS.getValues(AUTON_PNTS) == ONE)
     {
       autonAmbi();
+    }
+    else if(OS.getValues(AUTON_PNTS) == THREE)
+    {
+      u5();
     }
     else if(OS.getValues(AUTON_PNTS) == FOUR)
     {
