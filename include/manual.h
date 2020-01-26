@@ -18,14 +18,14 @@ void p3()
     Lift.stop();
     intake.spin(directionType::rev, 100, velocityUnits::pct);
     //drive(1.65, 100, 30, 3, 0.015, 4);
-    d.rotateFor(directionType::fwd, 1.4, rotationUnits::rev, 40, velocityUnits::pct, true);
-    turn(-90, 100, 30); //100 (timeout) can be reduced
+    d.rotateFor(directionType::fwd, 1.35, rotationUnits::rev, 40, velocityUnits::pct, true);
+    turn(-90, 100, 0); //100 (timeout) can be reduced
     //drive(1.65, 100, 30, 3, 0.015, 4);
     intake.stop();
     d.rotateFor(directionType::fwd, .6, rotationUnits::rev, 30, velocityUnits::pct, true);
     intake.spin(directionType::rev, 100, velocityUnits::pct);
     d.rotateFor(directionType::fwd, 1, rotationUnits::rev, 30, velocityUnits::pct, true);
-    turn(-130, 100, 30); //100 (timeout) can be reduced
+    turn(-130, 100, 0); //100 (timeout) can be reduced
     //drive(.8, 100, 30, 3, 0.015, 4);
     drive(.8, 100, 10, 4, 0.03, 2);
     intake.spinFor(fwd, .71, rotationUnits::rev);
@@ -55,7 +55,7 @@ void p4()
     Lift.stop();
     intake.spin(directionType::rev, 100, velocityUnits::pct);
     drive(3.3, 100);
-    turn(-130, 100, 10); //100 (timeout) can be reduced
+    turn(-130, 100, 0); //100 (timeout) can be reduced
     drive(3.5, 100, 10, 3, 0.015, 4);
     intake.spinFor(fwd, .5, rotationUnits::rev);
     stack();
@@ -81,9 +81,9 @@ void p5()
     Lift.stop();
     intake.spin(directionType::rev, 100, velocityUnits::pct);
     drive(3.3, 100, 30, 3, 0.015, 4);
-    turn(-90, 100, 10);
+    turn(-90, 100, 0);
     drive(.5, 100, 30, 3, 0.015, 4);
-    turn(-130, 100, 10); //100 (timeout) can be reduced
+    turn(-130, 100, 0); //100 (timeout) can be reduced
     drive(3.5, 100, 10, 3, 0.015, 4);
     intake.spinFor(fwd, .5, rotationUnits::rev);
     stack();
@@ -109,11 +109,11 @@ void p6()
     Lift.stop();
     intake.spin(directionType::rev, 100, velocityUnits::pct);
     drive(3.3, 100, 10, 3, 0.015, 4);
-    turn(-90, 100, 10);
+    turn(-90, 100, 0);
     drive(.5, 100, 10);
-    turn(-180, 100, 10);
+    turn(-180, 100, 0);
     drive(3, 100, 10, 3, 0.015, 4);
-    turn(-90, 100, 10);
+    turn(-90, 100, 0);
     drive(3, 100, 10, 3, 0.015, 4);
     intake.spinFor(fwd, .5, rotationUnits::rev);
     stack();
@@ -156,7 +156,7 @@ void u5()
     drive(3.3, 100);//39);
     d.rotateFor(directionType::fwd, -1.2, rotationUnits::rev, 50, velocityUnits::pct, true);
    // drive(-.4, 100. 10);//5);
-    turn(140, 100, 10);
+    turn(140, 100, 0);
     drive(1.9, 100, 10, 3, 0.015, 4);//27);
     d.rotateFor(directionType::fwd, -.085, rotationUnits::rev, 25, velocityUnits::pct, true);
     intake.spinFor(fwd, .7, rotationUnits::rev);
@@ -181,7 +181,7 @@ void u6()
     drive(3.8, 100);//39);
     d.rotateFor(directionType::fwd, -1.9, rotationUnits::rev, 50, velocityUnits::pct, true);
    // drive(-.4, 100. 10);//5);
-    turn(140, 100, 10);
+    turn(140, 100, 0);
     drive(2.1, 100, 30, 3, 0.015, 4);//27);
     intake.spinFor(fwd, .5, rotationUnits::rev);
     stack();
@@ -228,11 +228,11 @@ void u8()
     Inertial.resetRotation();
     flipOut();
     drive(3, 100, 10);
-    turn(30, 100, 30);
+    turn(30, 100, 0);
     drive(-3.2, 40, 30, 3, 0.015, 4);
-    turn(0, 100, 30);
+    turn(0, 100, 0);
     drive(3.3, 100, 10);
-    turn(140, 100, 30);
+    turn(140, 100, 0);
     drive(3, 100, 30, 3, 0.015, 4);//27);
     intake.spinFor(fwd, .5, rotationUnits::rev);
     stack();

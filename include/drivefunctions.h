@@ -62,17 +62,54 @@ end:
   vex::task::sleep(20);
 }
 
-void turn(double raw, int intakeSpeed = 0, int timeout = 14)
+void marginalTurnTo(double raw, int intakeSpeed, double marginOfError = 0.5)
 {
-	ROBOT.timeOut(2.5);
-	ROBOT.reset();
+  if (Inertial.installed()) 
+  {
+    double kP = 0.45;    //.5
+    double kI = 0.00006; //.0035
+    double kD = 0.5;   // 0.3
+    double target = raw;
+    double error = target - Inertial.rotation(rotationUnits::deg);
+    double integral = error;
+    double prevError = error;
+    double derivative = error - prevError;
+    while (std::abs(error) > marginOfError)
+    {
+      intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      //controls();
+      //intake.spin(directionType::rev, 100, velocityUnits::pct);
+      error = target - Inertial.rotation(rotationUnits::deg);
+      integral += error;
+      if (error == 0) 
+      {
+        integral = 0;
+      }
+      derivative = error - prevError;
+      prevError = error;
+      double volts = error * kP + integral * kI + derivative * kD;
+      l.spin(fwd, volts, voltageUnits::volt);
+      r.spin(reverse, volts, voltageUnits::volt);
+      vex::task::sleep(15);
+    }
+    goto end; 
+  }
+end:
+  vex::task::sleep(20);
+}
+
+void turn(double raw, int intakeSpeed = 0, int timeout = 1, double marginOfError = 0.5)
+{
+	//ROBOT.timeOut(2.5);
+	//ROBOT.reset();
 
 	if (OS.getValues(AUTON_COLOR) == BLUE) //If color is 0 (BLUE) flip the values 
-	{
 		raw = -raw;
-	}
 
-	turnTo(raw, intakeSpeed, timeout);
+  if(timeout == 0)
+    marginalTurnTo(raw, intakeSpeed, marginOfError);
+  else
+	  turnTo(raw, intakeSpeed, timeout);
 }
 
 void turnFor(double raw, bool timeout = false, int time = 250) 
@@ -571,7 +608,7 @@ void driveFor(double positionRev, int driveSpeed = 50, int intakeSpeed = 0, int 
       if(dt.velocity(percentUnits::pct) == 0)
         motionless+=15;
       if(dt.velocity(percentUnits::pct) != 0)
-        motionless=0;
+        motionless+=0;
       vex::task::sleep(15);
     }
   }
@@ -589,7 +626,7 @@ void driveFor(double positionRev, int driveSpeed = 50, int intakeSpeed = 0, int 
       if(dt.velocity(percentUnits::pct) == 0)
         motionless+=15;
       if(dt.velocity(percentUnits::pct) != 0)
-        motionless=0;
+        motionless+=0;
       vex::task::sleep(15);
     }
   }
@@ -634,7 +671,7 @@ void trackTo(double distance, int intakeSpeed = 0, int timeout = 50)
       if(dt.velocity(percentUnits::pct) == 0)
         motionless+=15;
       if(dt.velocity(percentUnits::pct) != 0)
-        motionless=0;
+        motionless+=0;
       vex::task::sleep(15);
     }
   }
@@ -659,7 +696,7 @@ void trackTo(double distance, int intakeSpeed = 0, int timeout = 50)
       if(dt.velocity(percentUnits::pct) == 0)
         motionless+=15;
       if(dt.velocity(percentUnits::pct) != 0)
-        motionless=0;
+        motionless+=0;
       vex::task::sleep(15);
     }
   }
