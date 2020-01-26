@@ -27,7 +27,7 @@ void turnTo(double raw, int intakeSpeed, int timeout = 14)
   {
     double kP = 0.55;    //.5
     double kI = 0.00006; //.0035
-    double kD = 0.4;   // 0.3
+    double kD = 0.45;   // 0.3
     double target = raw;
     double error = target - Inertial.rotation(rotationUnits::deg);
     double integral = error;

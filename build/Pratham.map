@@ -6823,16 +6823,16 @@ Linker script and memory map
  .text._Z7driveTodiiddd
                 0x03801fdc      0x394 build/src/main.o
                 0x03801fdc                driveTo(double, int, int, double, double, double)
- .text._Z2p3v   0x03802370      0x2e0 build/src/main.o
+ .text._Z2p3v   0x03802370      0x2c0 build/src/main.o
                 0x03802370                p3()
- .text._Z2p4v   0x03802650      0x260 build/src/main.o
-                0x03802650                p4()
- .text._Z2p5v   0x038028b0      0x2c8 build/src/main.o
-                0x038028b0                p5()
- .text._Z2p6v   0x03802b78      0x338 build/src/main.o
-                0x03802b78                p6()
- .text._Z2u5v   0x03802eb0      0x238 build/src/main.o
-                0x03802eb0                u5()
+ .text._Z2p4v   0x03802630      0x260 build/src/main.o
+                0x03802630                p4()
+ .text._Z2p5v   0x03802890      0x2a8 build/src/main.o
+                0x03802890                p5()
+ .text._Z2p6v   0x03802b38      0x338 build/src/main.o
+                0x03802b38                p6()
+ .text._Z2u5v   0x03802e70      0x278 build/src/main.o
+                0x03802e70                u5()
  .text._Z2u6v   0x038030e8      0x238 build/src/main.o
                 0x038030e8                u6()
  .text._Z2u8v   0x03803320      0x2c8 build/src/main.o

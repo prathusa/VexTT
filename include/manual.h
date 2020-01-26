@@ -17,18 +17,27 @@ void p3()
     flipOut();
     Lift.stop();
     intake.spin(directionType::rev, 100, velocityUnits::pct);
-    drive(1.65, 100);
-    turn(-90, 100, 10); //100 (timeout) can be reduced
-    drive(1.65, 100);
-    turn(-130, 100, 10); //100 (timeout) can be reduced
-    drive(.8, 100, 10);
-    intake.spinFor(fwd, .5, rotationUnits::rev);
+    //drive(1.65, 100, 30, 3, 0.015, 4);
+    d.rotateFor(directionType::fwd, 1.4, rotationUnits::rev, 40, velocityUnits::pct, true);
+    turn(-90, 100, 30); //100 (timeout) can be reduced
+    //drive(1.65, 100, 30, 3, 0.015, 4);
+    intake.stop();
+    d.rotateFor(directionType::fwd, .6, rotationUnits::rev, 30, velocityUnits::pct, true);
+    intake.spin(directionType::rev, 100, velocityUnits::pct);
+    d.rotateFor(directionType::fwd, 1, rotationUnits::rev, 30, velocityUnits::pct, true);
+    turn(-130, 100, 30); //100 (timeout) can be reduced
+    //drive(.8, 100, 30, 3, 0.015, 4);
+    drive(.8, 100, 10, 4, 0.03, 2);
+    intake.spinFor(fwd, .71, rotationUnits::rev);
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false); //untested I believe may need to be removed
-    vex::task::sleep(270); //untested I believe may need to be removed
+    vex::task::sleep(270);
+    fadeAway();
+     //untested I believe may need to be removed
+    //vex::task::sleep(270); //untested I believe may need to be removed
     //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     //fadeAway();
-    drive(-.75, 0, 10, 3, 0.015, 4);
+    //drive(-.1, 0, 10, 4, 0.015, 3);
     Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%d ", Brain.Timer.time()); 
@@ -71,9 +80,9 @@ void p5()
     flipOut();
     Lift.stop();
     intake.spin(directionType::rev, 100, velocityUnits::pct);
-    drive(3.3, 100, 10, 3, 0.015, 4);
+    drive(3.3, 100, 30, 3, 0.015, 4);
     turn(-90, 100, 10);
-    drive(.5, 100, 10);
+    drive(.5, 100, 30, 3, 0.015, 4);
     turn(-130, 100, 10); //100 (timeout) can be reduced
     drive(3.5, 100, 10, 3, 0.015, 4);
     intake.spinFor(fwd, .5, rotationUnits::rev);
@@ -148,8 +157,9 @@ void u5()
     d.rotateFor(directionType::fwd, -1.2, rotationUnits::rev, 50, velocityUnits::pct, true);
    // drive(-.4, 100. 10);//5);
     turn(140, 100, 10);
-    drive(2.1, 100, 30, 3, 0.015, 4);//27);
-    intake.spinFor(fwd, .5, rotationUnits::rev);
+    drive(1.9, 100, 10, 3, 0.015, 4);//27);
+    d.rotateFor(directionType::fwd, -.085, rotationUnits::rev, 25, velocityUnits::pct, true);
+    intake.spinFor(fwd, .7, rotationUnits::rev);
     stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
     vex::task::sleep(270); //might need to be increased
@@ -219,7 +229,7 @@ void u8()
     flipOut();
     drive(3, 100, 10);
     turn(30, 100, 30);
-    drive(-3.2, 40, 10, 3, 0.015, 4);
+    drive(-3.2, 40, 30, 3, 0.015, 4);
     turn(0, 100, 30);
     drive(3.3, 100, 10);
     turn(140, 100, 30);
