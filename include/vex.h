@@ -46,8 +46,6 @@ vex::smartdrive sdt(l, r, Inertial, 12.56, 16, 16, distanceUnits::in);
 vex::drivetrain dt(l, r);
 vex::controller Controller1;
 vex::competition Competition;
-vex::encoder le(Brain.ThreeWirePort.A);
-vex::encoder re(Brain.ThreeWirePort.C);
 
 int liftMax = 55;
 int liftTower = 59;
@@ -66,7 +64,5 @@ bool bm = false;
 bool manual = false;
 double driveSpeedFactor = 1;
 double tileInch = 23.6;
-double TRACKING_WHEEL_DIAMETER = 3.25;
-double TRACKING_WHEEL_CIRCUMFERENCE = M_PI * TRACKING_WHEEL_DIAMETER;
 int tempStatus = 0;
 #endif
