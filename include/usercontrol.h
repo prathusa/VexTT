@@ -99,7 +99,6 @@ void usercontrol(void)
           Brain.Screen.clearScreen();
           Brain.Screen.setCursor(1, 0);
           Brain.Screen.print("Recording data");
-          getData();
         }
 
         // -----------------------------Test Mode (gets drive data for pid control)
