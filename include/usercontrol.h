@@ -11,7 +11,6 @@ void usercontrol(void)
     while(1) 
     {
         controls();
-        passive();
         /*
         if(Controller1.ButtonB.pressing())
         {
@@ -36,11 +35,19 @@ void usercontrol(void)
           Controller1.Screen.setCursor(3, 1);
           Controller1.Screen.print("%d ", Brain.Timer.time()); 
         }
+        else if(Controller1.ButtonY.pressing() && tilt.value(percentUnits::pct) >= tiltStack)
+        {
+          tiltTo(tiltMin, 12);
+        }
 
         //Fade away
-        if(Controller1.ButtonX.pressing()){
+        if(Controller1.ButtonX.pressing() && lift.value(percentUnits::pct) <= liftTowerLow)
+        {
           fadeAway();
-          //autonomous();
+        }
+        else if(Controller1.ButtonX.pressing() && lift.value(percentUnits::pct) > liftTowerLow)
+        {
+          fadeAwayMid();
         }
         
         // -----------------------------Lift Control
@@ -55,16 +62,19 @@ void usercontrol(void)
             liftTiltCheck();
         }
         // -----------------------------Toggle Lift Positions
-        else if(Controller1.ButtonLeft.pressing())
+        else if(Controller1.ButtonLeft.pressing() && lift.value(percentUnits::pct) <= liftTowerLow)
         {
-          liftTo(liftTower, 12);
-          //turnTo(90, true, 10);
+          liftTo(liftTowerLow, 12);
         }
-        else if(Controller1.ButtonA.pressing())
+        else if(Controller1.ButtonLeft.pressing() && lift.value(percentUnits::pct) >= liftTowerLow && !(lift.value(percentUnits::pct) >= liftTowerMid))
+        {
+          liftTo(liftTowerMid, 12);
+        }
+        else if(Controller1.ButtonLeft.pressing() && lift.value(percentUnits::pct) >= liftTowerMid)
         {
           liftTo(liftMin);
         }
-        else 
+        else
         {
             Lift.setBrake(hold); //potentially make a custom hold function for the lift using potentiometer
             Lift.stop();

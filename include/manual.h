@@ -304,7 +304,7 @@ void experimentalSkills()
     turn(90);
     drive(3, 100);
     drive(-.5, -10);
-    tower();
+    towerMid();
     fadeAway();
     d.rotateFor(directionType::rev, .5, rotationUnits::rev, 50, velocityUnits::pct, true);
     liftTo(liftMin, 12);
@@ -312,12 +312,12 @@ void experimentalSkills()
     drive(0.5, 100, 10, 2, .5, 4);
     turn(90, 100);
     drive(3, -10);
-    tower();
+    towerLow();
     fadeAway();
     turn(-25);
     drive(2.1, 100, 10);
     drive(-.5, -10);
-    tower();
+    towerLow();
     fadeAway();
     turn(0);
     drive(4, 100);

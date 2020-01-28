@@ -406,23 +406,26 @@ void stack(void)
   Tilt.stop();
 }
 
-void tower(void) 
+void towerLow(void) 
 {
-  liftTo(liftTower);
+  liftTo(liftTowerLow, 12);
+}
+
+void towerMid(void) 
+{
+  liftTo(liftTowerMid, 12);
 }
 
 void fadeAway()
 {
-  intake.spinFor(directionType::rev, -2, rotationUnits::rev, 65, velocityUnits::pct, false); //possible reduction needed
+  intake.spinFor(directionType::rev, -2, rotationUnits::rev, 35, velocityUnits::pct, false); //possible reduction needed
   d.spinFor(-.75, rotationUnits::rev, 30, velocityUnits::pct);
 }
 
-void passive()
+void fadeAwayMid()
 {
-  if(tilt.value(percentUnits::pct) - tiltStack > -3 && dt.velocity(percentUnits::pct) < 0)
-  {
-    intake.spin(directionType::rev, dt.velocity(percentUnits::pct), percentUnits::pct);
-  }
+  intake.spinFor(directionType::rev, -2, rotationUnits::rev, 65, velocityUnits::pct, false); //possible reduction needed
+  d.spinFor(-.75, rotationUnits::rev, 30, velocityUnits::pct);
 }
 
 // Added Controller and Brain feedback when autonomous is selected.

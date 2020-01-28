@@ -48,7 +48,8 @@ vex::controller Controller1;
 vex::competition Competition;
 
 int liftMax = 55;
-int liftTower = 59;
+int liftTowerMid = 59;
+int liftTowerLow = 35;
 int liftTilter = 31;
 int liftMin = 23;
 int tiltMax = 76;
