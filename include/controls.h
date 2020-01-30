@@ -24,7 +24,7 @@ void controls()
         //------------------------------DriveSpeed Control
         if(Controller1.ButtonB.pressing())
         {
-            driveSpeedFactor = 1.75; //Makes robot slower
+            driveSpeedFactor = 2; //Makes robot slower
             Controller1.Screen.clearLine(1);
             Controller1.Screen.setCursor(1,1);
             Controller1.Screen.print("Slow Mode");
@@ -32,7 +32,7 @@ void controls()
         }
         else if(Controller1.ButtonA.pressing())
         {
-            driveSpeedFactor = 1; //Makes robot slower
+            driveSpeedFactor = 1; 
             Controller1.Screen.clearLine(1);
             Controller1.Screen.setCursor(1,1);
             Controller1.Screen.print("Full Speed");
