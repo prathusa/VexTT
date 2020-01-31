@@ -11,19 +11,7 @@ void usercontrol(void)
     while(1) 
     {
         controls();
-        /*
-        if(Controller1.ButtonB.pressing())
-        {
-            
-            /*
-            driveSpeedFactor = 1.5; //Makes robot slower
-            Controller1.Screen.clearLine(1);
-            Controller1.Screen.setCursor(1,1);
-            Controller1.Screen.print("Slow Mode");
-            Controller1.rumble("-");
-            */
-        //}
-
+        
         // -----------------------------Toggle Stacker Command
         if(Controller1.ButtonY.pressing() && lift.value(pct) < liftTilter)
         {
