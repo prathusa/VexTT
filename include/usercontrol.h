@@ -35,17 +35,17 @@ void usercontrol(void)
           Controller1.Screen.setCursor(3, 1);
           Controller1.Screen.print("%d ", Brain.Timer.time()); 
         }
-        else if(Controller1.ButtonY.pressing() && tilt.value(percentUnits::pct) >= tiltStack)
+        if(Controller1.ButtonY.pressing() && tilt.value(percentUnits::pct) >= tiltStack - 2 && lift.value(pct) < liftTilter)
         {
           tiltTo(tiltMin, 12);
         }
 
         //Fade away
-        if(Controller1.ButtonX.pressing() && lift.value(percentUnits::pct) <= liftTowerLow)
+        if(Controller1.ButtonX.pressing() && lift.value(percentUnits::pct) <= liftTowerLow+2)
         {
           fadeAway();
         }
-        else if(Controller1.ButtonX.pressing() && lift.value(percentUnits::pct) > liftTowerLow)
+        else if(Controller1.ButtonX.pressing() && std::abs(lift.value(percentUnits::pct) - liftTowerLow) <= 2)
         {
           fadeAwayMid();
         }
@@ -61,24 +61,26 @@ void usercontrol(void)
             Lift.spin(directionType::rev, 100, velocityUnits::pct);
             liftTiltCheck();
         }
-        // -----------------------------Toggle Lift Positions
-        else if(Controller1.ButtonLeft.pressing() && lift.value(percentUnits::pct) <= liftTowerLow)
-        {
-          liftTo(liftTowerLow, 12);
-        }
-        else if(Controller1.ButtonLeft.pressing() && lift.value(percentUnits::pct) >= liftTowerLow && !(lift.value(percentUnits::pct) >= liftTowerMid))
-        {
-          liftTo(liftTowerMid, 12);
-        }
-        else if(Controller1.ButtonLeft.pressing() && lift.value(percentUnits::pct) >= liftTowerMid)
-        {
-          liftTo(liftMin);
-        }
         else
         {
             Lift.setBrake(hold); //potentially make a custom hold function for the lift using potentiometer
             Lift.stop();
         }
+
+        // -----------------------------Toggle Lift Positions
+        if(Controller1.ButtonLeft.pressing() && lift.value(percentUnits::pct) < liftTowerLow)
+        {
+          liftTo(liftTowerLow, 12);
+        }
+        else if(Controller1.ButtonLeft.pressing() && std::abs(lift.value(percentUnits::pct) - liftTowerMid) <= 2)
+        {
+          liftTo(liftMin, 12);
+        }
+        else if(Controller1.ButtonLeft.pressing() && std::abs(lift.value(percentUnits::pct) - liftTowerLow) <= 2 && !(std::abs(lift.value(percentUnits::pct) - liftTowerMid) <= 2))
+        {
+          liftTo(liftTowerMid, 12);
+        }
+
         /*
       // -----------------------------Flip Out
       if(Controller1.ButtonRight.pressing())
@@ -103,25 +105,9 @@ void usercontrol(void)
           autonomous();
         }
 */
-        // -----------------------------Debug Mode (gets drive data for pid control)
-        if(Debug.pressing() == 1)
-        {
-          Brain.Screen.clearScreen();
-          Brain.Screen.setCursor(1, 0);
-          Brain.Screen.print("Recording data");
-        }
-
         // -----------------------------Test Mode (gets drive data for pid control)
         if(Test.pressing() == 1)
         {
-          Gyro.resetAngle();
-          turnFor(47);
-          vex::task::sleep(2000);
-          sdt.turnToHeading(0, rotationUnits::deg, 40, velocityUnits::pct);
-          vex::task::sleep(2000);
-          sdt.turnFor(90, rotationUnits::deg, 40, velocityUnits::pct);
-          vex::task::sleep(2000);
-          sdt.turnToHeading(0, rotationUnits::deg, 40, velocityUnits::pct);
           /*
           drive(2);
           vex::task::sleep(1000);

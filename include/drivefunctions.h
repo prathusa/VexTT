@@ -381,13 +381,10 @@ void liftFor(int potentiometerPCT)
 
 void flipOut() 
 {
-  liftTo(liftMin+12, 12);
+  liftTo(liftMin+14, 12);
+  vex::task::sleep(200);
   liftTo(liftMin, 12);
-  //intake.spin(vex::forward, 100, pct);
-  // drive(-.1, 60, false, false, false);
-  //tiltTo(tiltMax, 12);
-  //tiltTo(tiltMin, 12);
-  //intake.stop();
+  vex::task::sleep(500);
 }
 
 void stack(void) 
