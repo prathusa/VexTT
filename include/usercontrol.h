@@ -33,7 +33,7 @@ void usercontrol(void)
         {
           fadeAway();
         }
-        else if(Controller1.ButtonX.pressing() && std::abs(lift.value(percentUnits::pct) - liftTowerLow) <= 2)
+        if(Controller1.ButtonX.pressing() && std::abs(lift.value(percentUnits::pct) - liftTowerMid) <= 2)
         {
           fadeAwayMid();
         }

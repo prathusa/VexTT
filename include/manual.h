@@ -28,10 +28,11 @@ void p3()
     turn(-130, 100, 0); //100 (timeout) can be reduced
     //drive(.8, 100, 30, 3, 0.015, 4);
     drive(.8, 100, 10, 4, 0.03, 2);
-    intake.spinFor(fwd, .71, rotationUnits::rev);
-    stack();
-    d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false); //untested I believe may need to be removed
-    vex::task::sleep(270);
+    intake.spinFor(fwd, .75, rotationUnits::rev);
+    tiltTo(tiltStack, 5);
+    //d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false); //untested I believe may need to be removed
+    //vex::task::sleep(270);
+    intake.spinFor(fwd, .4, rotationUnits::rev, 30, velocityUnits::pct);
     fadeAway();
      //untested I believe may need to be removed
     //vex::task::sleep(270); //untested I believe may need to be removed
@@ -159,10 +160,11 @@ void u5()
     turn(140, 100, 0);
     drive(1.9, 100, 10, 3, 0.015, 4);//27);
     d.rotateFor(directionType::fwd, -.085, rotationUnits::rev, 25, velocityUnits::pct, true);
-    intake.spinFor(fwd, .7, rotationUnits::rev);
+    intake.spinFor(fwd, .75, rotationUnits::rev);
     stack();
-    d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
-    vex::task::sleep(270); //might need to be increased
+    //d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
+    //vex::task::sleep(270); //might need to be increased
+    intake.spinFor(fwd, .4, rotationUnits::rev, 30, velocityUnits::pct);
     //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     fadeAway();
     intake.stop();
@@ -185,8 +187,9 @@ void u6()
     drive(2.1, 100, 30, 3, 0.015, 4);//27);
     intake.spinFor(fwd, .5, rotationUnits::rev);
     stack();
-    d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
-    vex::task::sleep(270); //might need to be increased
+    //d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
+    //vex::task::sleep(270); //might need to be increased
+    intake.spinFor(fwd, .4, rotationUnits::rev, 30, velocityUnits::pct);
     //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     fadeAway();
     intake.stop();

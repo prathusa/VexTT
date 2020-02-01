@@ -50,8 +50,8 @@ void controls()
         }
         else
         {
-          LeftIntake.stop(brakeType::brake);
-          RightIntake.stop(brakeType::brake);
+          LeftIntake.stop(brakeType::hold);
+          RightIntake.stop(brakeType::hold);
         }
 
         // -----------------------------Tilt Control

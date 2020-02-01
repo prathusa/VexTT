@@ -382,17 +382,18 @@ void liftFor(int potentiometerPCT)
 void flipOut() 
 {
   liftTo(liftMin+14, 12);
-  vex::task::sleep(200);
+  //vex::task::sleep(200);
   liftTo(liftMin, 12);
-  vex::task::sleep(500);
+  //vex::task::sleep(500);
 }
 
-void stack(void) 
+void stack(int intakeSpeed = 0) 
 {
   double target = tiltStack; // In revolutions
   double error = target - tilt.value(percentUnits::pct);
   while (error > 0) 
   {
+    intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
     controls();
     error = target - tilt.value(percentUnits::pct);
     double volts = .2 * error + 2; //.15 * error + 2; //.2 * error + 2 (2.550s)
@@ -620,7 +621,7 @@ void driveFor(double positionRev, int driveSpeed = 50, int intakeSpeed = 0, int 
   intake.stop();
 }
 
-void drive(double revolutions, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0075, double kD = 6) 
+void drive(double revolutions, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0095, double kD = 6) 
 {
   double target = revolutions + d.position(rotationUnits::rev);
   driveTo(target, intakeSpeed, timeout, kP, kI, kD);
