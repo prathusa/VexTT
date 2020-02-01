@@ -150,7 +150,6 @@ void u4()
 void u5()
 {
 	  Brain.Timer.reset();
-    double driveFwdDistance = 4;
     resetEncoders();
     Inertial.resetRotation();
     flipOut();
@@ -176,7 +175,6 @@ void u5()
 void u6()
 {
 	  Brain.Timer.reset();
-    double driveFwdDistance = 4;
     resetEncoders();
     Inertial.resetRotation();
     flipOut();
