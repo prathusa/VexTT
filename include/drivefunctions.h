@@ -14,9 +14,9 @@ void turnTo(double raw, int intakeSpeed, int timeout = 14)
 {
   if (Inertial.installed()) 
   {
-    double kP = 0.55;    //.5
-    double kI = 0.00006; //.0035
-    double kD = 0.45;   // 0.3
+    double kP = 0.45;    // 0.55
+    double kI = 0.00006; // 0.00006
+    double kD = 0.45;    // 0.45
     double target = raw;
     double error = target - Inertial.rotation(rotationUnits::deg);
     double integral = error;
@@ -27,7 +27,6 @@ void turnTo(double raw, int intakeSpeed, int timeout = 14)
     {
       intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
       //controls();
-      //intake.spin(directionType::rev, 100, velocityUnits::pct);
       error = target - Inertial.rotation(rotationUnits::deg);
       integral += error;
       if (error == 0) 
@@ -51,7 +50,7 @@ end:
   vex::task::sleep(20);
 }
 
-void marginalTurnTo(double raw, int intakeSpeed, double marginOfError = 0.5)
+void marginalTurnTo(double raw, int intakeSpeed, double marginOfError = 1.0)
 {
   if (Inertial.installed()) 
   {
@@ -87,7 +86,7 @@ end:
   vex::task::sleep(20);
 }
 
-void turn(double raw, int intakeSpeed = 0, int timeout = 1, double marginOfError = 0.5)
+void turn(double raw, int intakeSpeed = 0, int timeout = 1, double marginOfError = 1.0)
 {
 	//ROBOT.timeOut(2.5);
 	//ROBOT.reset();
