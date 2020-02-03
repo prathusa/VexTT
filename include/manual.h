@@ -266,8 +266,8 @@ void autonSkills()
     resetEncoders();
     Inertial.resetRotation();
     flipOut();
-    drive(8, 100);//39);
-    d.rotateFor(directionType::fwd, -1.2, rotationUnits::rev, 50, velocityUnits::pct, true);
+    drive(9.5, 100, 10, 1.5, 0.0015, 4.5);//39);
+    d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 50, velocityUnits::pct, true);
    // drive(-.4, 100. 10);//5);
     turn(45, 100, 40);
     drive(1.9, 100, 10, 3, 0.015, 4);//27);
