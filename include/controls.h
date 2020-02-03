@@ -46,7 +46,7 @@ void controls()
         }
         else if(Controller1.ButtonL2.pressing() && lift.value(pct) < liftTowerMid)
         {
-            intake.spin(directionType::rev, 100, pct);
+            intake.spin(directionType::rev, 80, pct);
         }
         else
         {
@@ -62,7 +62,7 @@ void controls()
           if(error > 0)
           {
             error = target - tilt.value(percentUnits::pct);
-            double volts = .15*error+2.5;
+            double volts = .4*error+2.5;
             Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
             vex::task::sleep(20);
           }
@@ -80,7 +80,7 @@ void controls()
           if(error > 0)
           {
             error = target - tilt.value(percentUnits::pct);
-            double volts = .1*error+2.5;
+            double volts = .4*error+2.5;
             Tilt.spin(directionType::rev, volts, voltageUnits::volt);
             vex::task::sleep(20);
           }

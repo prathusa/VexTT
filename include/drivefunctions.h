@@ -54,7 +54,7 @@ void marginalTurnTo(double raw, int intakeSpeed, double marginOfError = 1.0)
 {
   if (Inertial.installed()) 
   {
-    double kP = 0.45;    //.5
+    double kP = 0.54;    //.5
     double kI = 0.00006; //.0035
     double kD = 0.5;   // 0.3
     double target = raw;
@@ -380,7 +380,7 @@ void liftFor(int potentiometerPCT)
 
 void flipOut() 
 {
-  liftTo(liftMin+14, 12);
+  liftTo(liftTowerLow-5, 12);
   //vex::task::sleep(200);
   liftTo(liftMin, 12);
   //vex::task::sleep(500);
@@ -395,7 +395,7 @@ void stack(int intakeSpeed = 0)
     intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
     controls();
     error = target - tilt.value(percentUnits::pct);
-    double volts = .2 * error + 2; //.15 * error + 2; //.2 * error + 2 (2.550s)
+    double volts = .3 * error + 2; //.15 * error + 2; //.2 * error + 2 (2.550s)
     Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
     vex::task::sleep(20);
   }
