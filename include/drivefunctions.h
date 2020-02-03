@@ -46,6 +46,13 @@ void turnTo(double raw, int intakeSpeed, int timeout = 14)
     }
     goto end; 
   }
+  else
+  {
+    Brain.Screen.clearScreen();
+    Brain.Screen.setFont(fontType::mono40);
+    Brain.Screen.setFillColor(red);
+    Brain.Screen.print("No Inertial Sensor Installed");
+  }
 end:
   vex::task::sleep(20);
 }
@@ -81,6 +88,13 @@ void marginalTurnTo(double raw, int intakeSpeed, double marginOfError = 1.0)
       vex::task::sleep(15);
     }
     goto end; 
+  }
+  else
+  {
+    Brain.Screen.clearScreen();
+    Brain.Screen.setFont(fontType::mono40);
+    Brain.Screen.setFillColor(red);
+    Brain.Screen.print("No Inertial Sensor Installed");
   }
 end:
   vex::task::sleep(20);
@@ -624,6 +638,57 @@ void drive(double revolutions, int intakeSpeed = 0, int timeout = 50, double kP 
 {
   double target = revolutions + d.position(rotationUnits::rev);
   driveTo(target, intakeSpeed, timeout, kP, kI, kD);
+}
+
+void pTurn(double degrees) //P loop turn code (better than the smartdrive methods once kP is tuned properly)
+{
+  if(Inertial.installed())
+  {
+    double target = degrees; // In revolutions
+    double error = target - Inertial.rotation();
+    double kP = .6;
+    if(error > 0)
+    {
+      
+      while (std::abs(error) > 1) //1 allows +- 1 degree variance, don't change unless you know what you are doing
+      {
+        error = target - Inertial.rotation();
+        double percent = kP * error + 15;
+        l.spin(directionType::fwd, percent, pct);
+	      r.spin(directionType::rev, percent, pct);
+        vex::task::sleep(20);
+      }
+    }
+    else if(error > 0)
+    {
+      double target = degrees; // In revolutions
+      double error = target - Inertial.rotation();
+      double kP = .6;
+      while (std::abs(error) > 1) //1 allows +- 1 degree variance, don't change unless you know what you are doing
+      {
+        error = target - Inertial.rotation();
+        double percent = kP * error - 15;
+        l.spin(directionType::fwd, percent, pct);
+	      r.spin(directionType::rev, percent, pct);
+        vex::task::sleep(20);
+      }
+    }
+    else
+    {
+      l.stop();
+      r.stop();
+      goto end;
+    }
+  }
+  else
+  {
+    Brain.Screen.clearScreen();
+    Brain.Screen.setFont(fontType::mono40);
+    Brain.Screen.setFillColor(red);
+    Brain.Screen.print("No Inertial Sensor Installed");
+  }
+  end:
+  vex::task::sleep(10);
 }
 
 /*
