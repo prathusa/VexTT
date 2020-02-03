@@ -19,20 +19,20 @@ void p3()
     intake.spin(directionType::rev, 100, velocityUnits::pct);
     //drive(1.65, 100, 30, 3, 0.015, 4);
     d.rotateFor(directionType::fwd, 1.35, rotationUnits::rev, 40, velocityUnits::pct, true);
-    turn(-90, 100, 0); //100 (timeout) can be reduced
+    turn(-90, 100, 1); //100 (timeout) can be reduced
     //drive(1.65, 100, 30, 3, 0.015, 4);
     intake.stop();
     d.rotateFor(directionType::fwd, .6, rotationUnits::rev, 30, velocityUnits::pct, true);
     intake.spin(directionType::rev, 100, velocityUnits::pct);
     d.rotateFor(directionType::fwd, 1, rotationUnits::rev, 30, velocityUnits::pct, true);
-    turn(-127, 100, 0); //100 (timeout) can be reduced
+    turn(-127, 100, 10); //100 (timeout) can be reduced
     //drive(.8, 100, 30, 3, 0.015, 4);
     drive(1, 100, 10, 4, 0.03, 2);
     intake.spinFor(fwd, 1, rotationUnits::rev);
     stack();
     //d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
     //vex::task::sleep(270); //might need to be increased
-    intake.spinFor(fwd, .35, rotationUnits::rev, 30, velocityUnits::pct);
+    intake.spinFor(fwd, .65, rotationUnits::rev, 30, velocityUnits::pct);
     //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     fadeAway();
      //untested I believe may need to be removed
