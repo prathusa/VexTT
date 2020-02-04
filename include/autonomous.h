@@ -85,6 +85,10 @@ void autonomous(void)
     {
       s18();
     }
+    else if(OS.getValues(POINTS) == FOURTY)
+    {
+      s40();
+    }
 	}
 
   Brain:

@@ -288,7 +288,7 @@ void s18()
     Controller1.Screen.print("%d ", Brain.Timer.time()); 
 }
 
-void experimentalSkills()
+void s40()
 {
 	  Brain.Timer.reset();
     double driveFwdDistance = 4;
@@ -317,7 +317,7 @@ void experimentalSkills()
     drive(3, 100);
     drive(-.5, -10);
     towerMid();
-    drive(.65, 0, 30);
+    drive(.55, 0, 30);
     fadeAway();
     d.rotateFor(directionType::rev, .5, rotationUnits::rev, 50, velocityUnits::pct, true);
     liftTo(liftMin, 12);
@@ -325,19 +325,27 @@ void experimentalSkills()
     drive(0.5, 100, 10, 2, .5, 4);
     turn(90, 100);
     drive(3, -10);
+    drive(-.5, -10);
     towerLow();
+    drive(.55, 0, 30);
     fadeAway();
-    turn(-25);
+    turn(-15);
     drive(2.1, 100, 10);
     drive(-.5, -10);
     towerLow();
+    drive(.55, 0, 30);
     fadeAway();
     turn(0);
     drive(4, 100);
+    d.rotateFor(directionType::fwd, -1.2, rotationUnits::rev, 50, velocityUnits::pct, true);
     turn(45, 100, 40);
+    drive(1.9, 100, 30, 3, 0.015, 4);
+    d.rotateFor(directionType::fwd, -.085, rotationUnits::rev, 25, velocityUnits::pct, true);
+    intake.spinFor(fwd, 1, rotationUnits::rev);
     stack();
-    d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
-    vex::task::sleep(270); //might need to be increased
+    //d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
+    //vex::task::sleep(270); //might need to be increased
+    intake.spinFor(fwd, .65, rotationUnits::rev, 30, velocityUnits::pct);
     d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     intake.stop();
     Controller1.Screen.clearLine(3);
