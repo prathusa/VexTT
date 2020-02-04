@@ -71,12 +71,11 @@ void autonomous(void)
     //to be made
     else if(OS.getValues(POINTS) == SEVEN)
     {
-      //u7();
-      u8();
+      u7();
     }
     else if(OS.getValues(POINTS) == EIGHT)
     {
-      u8();
+      tu7();
     }
 	}
 	else if (OS.getValues(POSITION) == SKILLS) 
