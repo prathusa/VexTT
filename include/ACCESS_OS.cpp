@@ -54,7 +54,7 @@ Link to website: https://dev.azure.com/roboVEX/_git/ACCESS_OS
 
 //Define max entries in 2d array for easy coding
 #define maxMenus			3		//Make this the same # as items in maxMenusIndex
-#define maxOptions			7		//Make this the same # as items in 2D of menuDisplayIndex
+#define maxOptions			10		//Make this the same # as items in 2D of menuDisplayIndex
 
 //Define robot status for easy coding
 #define modeDisabled		0
@@ -76,6 +76,8 @@ Link to website: https://dev.azure.com/roboVEX/_git/ACCESS_OS
 #define SIX							4
 #define SEVEN						5
 #define EIGHT						6
+#define EIGHTTEEN					7
+#define FOURTY						8
 #define COLOR						0
 #define POSITION					1
 #define POINTS						2
@@ -106,7 +108,7 @@ private:
 	{
 		2,
 		4,
-		6
+		9
 	};
 
 	//1D Array for default selected options.
@@ -131,7 +133,7 @@ private:
 	{
 		{ "Blue",	"Red" }, //If "" doesn't work, try "NULL"
 		{ "Front",	"Back",		"Skills",		"Brain" },
-		{ "1", "3", "4",		"5",		"6", 	"7",	"8" }
+		{ "1", "3", "4",		"5",		"6", 	"7",	"8",  "18",    "40" }
 	};
 public:
 	ACCESS_OS();											//???

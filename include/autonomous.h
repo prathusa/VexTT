@@ -81,7 +81,10 @@ void autonomous(void)
 	}
 	else if (OS.getValues(POSITION) == SKILLS) 
   {
-		autonSkills();
+		if(OS.getValues(POINTS) == EIGHTTEEN)
+    {
+      s18();
+    }
 	}
 
   Brain:

@@ -259,7 +259,7 @@ void p8()
     Controller1.Screen.print("%d ", Brain.Timer.time());
 }
 
-void autonSkills()
+void s18()
 {
 	  Brain.Timer.reset();
     double driveFwdDistance = 4;

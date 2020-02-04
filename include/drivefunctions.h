@@ -14,9 +14,9 @@ void turnTo(double raw, int intakeSpeed, int timeout = 14)
 {
   if (Inertial.installed()) 
   {
-    double kP = 0.45;    // 0.55
+    double kP = 0.45;    // 0.45
     double kI = 0.00006; // 0.00006
-    double kD = 0.45;    // 0.45
+    double kD = 0.50;    // 0.45
     double target = raw;
     double error = target - Inertial.rotation(rotationUnits::deg);
     double integral = error;
@@ -61,9 +61,9 @@ void marginalTurnTo(double raw, int intakeSpeed, double marginOfError = 1.0)
 {
   if (Inertial.installed()) 
   {
-    double kP = 0.54;    //.5
-    double kI = 0.00006; //.0035
-    double kD = 0.5;   // 0.3
+    double kP = 0.45;    // 0.45
+    double kI = 0.0006; // 0.00006
+    double kD = 0.50;    // 0.45
     double target = raw;
     double error = target - Inertial.rotation(rotationUnits::deg);
     double integral = error;
