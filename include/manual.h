@@ -262,10 +262,16 @@ void p8()
 void s18()
 {
 	  Brain.Timer.reset();
-    double driveFwdDistance = 4;
     resetEncoders();
     Inertial.resetRotation();
     flipOut();
+    drive(1, 100, 30);
+    towerMid();
+    intake.spinFor(fwd, .5, rotationUnits::rev);
+    drive(.75, 100, 30);
+    fadeAway();
+    drive(-2, 0, 100);
+    turn(0);
     drive(9.5, 100, 10, 1.5, 0.0015, 4.5);//39);
     d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 50, velocityUnits::pct, true);
    // drive(-.4, 100. 10);//5);
@@ -289,23 +295,29 @@ void experimentalSkills()
     resetEncoders();
     Inertial.resetRotation();
     flipOut();
-    drive(3.2, 100, 10, 7, 0.0075, 6);//39);
+    drive(3.3, 100, 10, 7, 0.0075, 6);//39);
     turn(-30, 100, 40);
     intake.spin(directionType::rev, 100, percentUnits::pct);
     drive(1, 100);
     drive(-1, 100);
+    turn(0, 50);
+    d.rotateFor(directionType::fwd, -1.2, rotationUnits::rev, 50, velocityUnits::pct, true);
    // drive(-.4, 100. 10);//5);
     turn(140, 100, 40);
-    drive(2.1, 100, 10, 3, 0.015, 4);//27);
+    drive(1.9, 100, 30, 3, 0.015, 4);
+    d.rotateFor(directionType::fwd, -.085, rotationUnits::rev, 25, velocityUnits::pct, true);
+    intake.spinFor(fwd, 1, rotationUnits::rev);
     stack();
-    d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
-    vex::task::sleep(270); //might need to be increased
+    //d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
+    //vex::task::sleep(270); //might need to be increased
+    intake.spinFor(fwd, .65, rotationUnits::rev, 30, velocityUnits::pct);
     d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     intake.stop();
-    turn(90);
+    turn(-90);
     drive(3, 100);
     drive(-.5, -10);
     towerMid();
+    drive(.65, 0, 30);
     fadeAway();
     d.rotateFor(directionType::rev, .5, rotationUnits::rev, 50, velocityUnits::pct, true);
     liftTo(liftMin, 12);
