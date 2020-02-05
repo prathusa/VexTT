@@ -71,8 +71,34 @@ void p4()
     Controller1.Screen.print("%d ", Brain.Timer.time()); 
 }
 
-//start lined up to the right of red / left of blue, pre load off to the side (not being used)
+//start lined up with 2 cubes in front 
 void p5()
+{
+	  Brain.Timer.reset();
+    double fwd1 = 37.5;
+    double fwd2 = 36;
+    resetEncoders();
+    Inertial.resetRotation();
+    flipOut();
+    Lift.stop();
+    drive(1, 100);
+    turn(45);
+    intake.spinFor(1, rotationUnits::rev, 100, velocityUnits::pct);
+    turn(0);
+    drive(2.3, 100);
+    turn(-130, 50, 0); //100 (timeout) can be reduced
+    drive(3.5, 100, 10, 3, 0.015, 4);
+    intake.spinFor(fwd, 1, rotationUnits::rev);
+    stack();
+    intake.spinFor(fwd, .65, rotationUnits::rev, 50, velocityUnits::pct);
+    fadeAway();
+    Controller1.Screen.clearLine(3);
+    Controller1.Screen.setCursor(3, 1);
+    Controller1.Screen.print("%d ", Brain.Timer.time()); 
+}
+
+//start lined up to the right of red / left of blue, pre load off to the side (not being used)
+void tp5()
 {
 	  Brain.Timer.reset();
     double fwd1 = 37.5;
@@ -197,7 +223,7 @@ void u6()
     Controller1.Screen.print("%d ", Brain.Timer.time());  
 }
 
-void u7()
+void tu7()
 {
 	  Brain.Timer.reset();
     double driveFwdDistance = 4;
@@ -212,11 +238,10 @@ void u7()
     intake.spinFor(fwd, .5, rotationUnits::rev);
     turn(130, 0, 0);
     drive(3, 0, 30, 3, 0.015, 4);//27);
+    d.rotateFor(directionType::fwd, -.085, rotationUnits::rev, 25, velocityUnits::pct, true);
     intake.spinFor(fwd, .5, rotationUnits::rev, 70, velocityUnits::pct);
     stack();
-    d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
-    vex::task::sleep(270); //might need to be increased
-    //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
+    intake.spinFor(fwd, .65, rotationUnits::rev, 30, velocityUnits::pct);
     fadeAway();
     intake.stop();
     Controller1.Screen.clearLine(3);
@@ -224,7 +249,7 @@ void u7()
     Controller1.Screen.print("%d ", Brain.Timer.time());  
 }
 
-void tu7()
+void ttu7()
 {
 	  Brain.Timer.reset();
     double driveFwdDistance = 4;
@@ -247,6 +272,32 @@ void tu7()
     //vex::task::sleep(270); //might need to be increased
     intake.spinFor(fwd, .65, rotationUnits::rev, 30, velocityUnits::pct);
     //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
+    fadeAway();
+    intake.stop();
+    Controller1.Screen.clearLine(3);
+    Controller1.Screen.setCursor(3, 1);
+    Controller1.Screen.print("%d ", Brain.Timer.time());  
+}
+
+void u7()
+{
+	  Brain.Timer.reset();
+    double driveFwdDistance = 4;
+    resetEncoders();
+    Inertial.resetRotation();
+    flipOut();
+    drive(3.3, 100, 10);
+    turn(-30, 100, 10);
+    drive(-3.5, 40, 30, 3, 0.015, 4);
+    turn(0, 100, 10);
+    drive(2.9, 100, 10);
+    intake.spinFor(fwd, .5, rotationUnits::rev, false);
+    turn(134, 0, 0);
+    drive(1.9, 100, 30, 3, 0.015, 4);//27);
+    d.rotateFor(directionType::fwd, -.085, rotationUnits::rev, 25, velocityUnits::pct, true);
+    intake.spinFor(fwd, .5, rotationUnits::rev, 70, velocityUnits::pct);
+    stack();
+    intake.spinFor(fwd, .65, rotationUnits::rev, 30, velocityUnits::pct);
     fadeAway();
     intake.stop();
     Controller1.Screen.clearLine(3);
