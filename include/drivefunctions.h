@@ -284,11 +284,11 @@ void liftTiltCheck()
   // -----------------------------Avoids Lift-Tilter conflict
   Lift.setBrake(hold);
   Tilt.setBrake(hold);
-  if (lift.value(pct) > 32 && tilt.value(percentUnits::pct) < 31) 
+  if (lift.value(pct) > 32 && tilt.value(percentUnits::pct) < 39) 
   {
-    tiltTo(31, 12);
+    tiltTo(39, 12);
   } 
-  else if (lift.value(pct) <= 32 && tilt.value(percentUnits::pct) >= 31) 
+  else if (lift.value(pct) <= 32 && tilt.value(percentUnits::pct) >= 39) 
   {
     tiltTo(tiltMin, 12);
   }
@@ -409,7 +409,7 @@ void stack(int intakeSpeed = 0)
     intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
     controls();
     error = target - tilt.value(percentUnits::pct);
-    double volts = .3 * error + 2; //.15 * error + 2; //.2 * error + 2 (2.550s)
+    double volts = .35 * error + 2; //.15 * error + 2; //.2 * error + 2 (2.550s)
     Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
     vex::task::sleep(20);
   }

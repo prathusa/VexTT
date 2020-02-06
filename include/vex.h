@@ -26,7 +26,9 @@ using namespace vex;
 vex::brain Brain;
 vex::motor Lift (vex::PORT11, vex::gearSetting::ratio36_1,true);
 vex::motor Tilt (vex::PORT10, vex::gearSetting::ratio36_1,false);
-vex::motor LeftIntake (vex::PORT4, vex::gearSetting::ratio18_1,true);
+//port 3&4 ded
+//
+vex::motor LeftIntake (vex::PORT5, vex::gearSetting::ratio18_1,true);
 vex::motor RightIntake (vex::PORT14, vex::gearSetting::ratio18_1,false);
 vex::motor RightRearMotor (vex::PORT1, vex::gearSetting::ratio18_1,true);
 vex::motor RightFrontMotor (vex::PORT6, vex::gearSetting::ratio18_1,true);
@@ -53,8 +55,8 @@ int liftTowerLow = 48;
 int liftTilter = 31;
 int liftMin = 23;
 int tiltMax = 76;
-int tiltStack = 56;
-int tiltMin = 25; 
+int tiltStack = 55;
+int tiltMin = 32; 
 bool rojo = false;
 bool azul = false;
 bool slow = false;
