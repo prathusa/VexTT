@@ -23,11 +23,10 @@
 #include <fstream>
 
 using namespace vex;
-vex::brain Brain;
-vex::motor Lift (vex::PORT11, vex::gearSetting::ratio36_1,true);
-vex::motor Tilt (vex::PORT10, vex::gearSetting::ratio36_1,false);
 //port 3&4 ded
-//
+vex::brain Brain;
+vex::motor Lift (vex::PORT11, vex::gearSetting::ratio18_1,true);
+vex::motor Tilt (vex::PORT10, vex::gearSetting::ratio36_1,false);
 vex::motor LeftIntake (vex::PORT5, vex::gearSetting::ratio18_1,true);
 vex::motor RightIntake (vex::PORT14, vex::gearSetting::ratio18_1,false);
 vex::motor RightRearMotor (vex::PORT1, vex::gearSetting::ratio18_1,true);
@@ -66,6 +65,7 @@ bool rm = false;
 bool bm = false;
 bool manual = false;
 double driveSpeedFactor = 1;
+double turnSpeedFactor = 1;
 double tileInch = 23.6;
 int tempStatus = 0;
 #endif

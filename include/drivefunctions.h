@@ -284,13 +284,22 @@ void liftTiltCheck()
   // -----------------------------Avoids Lift-Tilter conflict
   Lift.setBrake(hold);
   Tilt.setBrake(hold);
-  if (lift.value(pct) > 32 && tilt.value(percentUnits::pct) < 39) 
+  if (lift.value(pct) > 32 && tilt.value(percentUnits::pct) < 37) 
   {
-    tiltTo(39, 12);
+    tiltTo(37, 12);
   } 
-  else if (lift.value(pct) <= 32 && tilt.value(percentUnits::pct) >= 39) 
+  else if (lift.value(pct) <= 32 && tilt.value(percentUnits::pct) >= 37) 
   {
     tiltTo(tiltMin, 12);
+  }
+}
+
+void tiltIntakeCheck()
+{
+  if(tilt.value(percentUnits::pct) > 40)
+  {
+    LeftIntake.setBrake(coast);
+    RightIntake.setBrake(coast);
   }
 }
 
@@ -407,6 +416,7 @@ void stack(int intakeSpeed = 0)
   while (error > 0) 
   {
     intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+    tiltIntakeCheck();
     controls();
     error = target - tilt.value(percentUnits::pct);
     double volts = .35 * error + 2; //.15 * error + 2; //.2 * error + 2 (2.550s)

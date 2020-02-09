@@ -10,10 +10,10 @@ using namespace vex;
 void controls()
 {       
         //Arcade Control
-        LeftFrontMotor.spin(directionType::fwd, (Controller1.Axis3.value() + Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct); //(Axis3+Axis4)/2;
-        LeftRearMotor.spin(directionType::fwd, (Controller1.Axis3.value() + Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct); //(Axis3+Axis4)/2;
-	      RightFrontMotor.spin(directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct);//(Axis3-Axis4)/2;
-	      RightRearMotor.spin(directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value())/(driveSpeedFactor), velocityUnits::pct);//(Axis3-Axis4)/2;
+        LeftFrontMotor.spin(directionType::fwd, (Controller1.Axis3.value() + Controller1.Axis1.value()*turnSpeedFactor)/(driveSpeedFactor), velocityUnits::pct); //(Axis3+Axis4)/2;
+        LeftRearMotor.spin(directionType::fwd, (Controller1.Axis3.value() + Controller1.Axis1.value()*turnSpeedFactor)/(driveSpeedFactor), velocityUnits::pct); //(Axis3+Axis4)/2;
+	      RightFrontMotor.spin(directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value()*turnSpeedFactor)/(driveSpeedFactor), velocityUnits::pct);//(Axis3-Axis4)/2;
+	      RightRearMotor.spin(directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value()*turnSpeedFactor)/(driveSpeedFactor), velocityUnits::pct);//(Axis3-Axis4)/2;
         LeftFrontMotor.setBrake(coast);
         RightFrontMotor.setBrake(coast);
         LeftRearMotor.setBrake(coast);
@@ -26,6 +26,12 @@ void controls()
         RightRearMotor.spin(vex::directionType::fwd, Controller1.Axis2.value()/driveSpeedFactor, vex::velocityUnits::pct);
         LeftRearMotor.spin(vex::directionType::fwd, Controller1.Axis3.value()/driveSpeedFactor, vex::velocityUnits::pct); 
  */     
+
+        if(lift.value(pct) >= liftTowerLow-2)
+        {
+          turnSpeedFactor = .75;
+        }
+
         //------------------------------DriveSpeed Control
         if(Controller1.ButtonB.pressing())
         {
@@ -98,7 +104,7 @@ void controls()
         }
         else
         {
-          Tilt.stop(brake);
+          Tilt.stop(hold);
         }
 }
 #endif

@@ -11,7 +11,8 @@ void usercontrol(void)
     while(1) 
     {
         controls();
-        
+        tiltIntakeCheck();
+
         // -----------------------------Toggle Stacker Command
         if(Controller1.ButtonY.pressing() && lift.value(pct) < liftTilter)
         {

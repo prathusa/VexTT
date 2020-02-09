@@ -288,7 +288,7 @@ void u7()
     resetEncoders();
     Inertial.resetRotation();
     flipOut();
-    drive(3.3, 100, 10);
+    drive(3.3, 100, 30);
     turn(-30, 100, 10);
     drive(-3.5, 40, 30, 3, 0.015, 4);
     turn(0, 100, 10);
