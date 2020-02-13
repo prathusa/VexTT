@@ -7,7 +7,6 @@
 //#include "drivefunctions.h"
 using namespace vex;
 
-	      RightFrontMotor.spin(directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value()*turnSpeedFactor)/(driveSpeedFactor), velocityUnits::pct);//(Axis3-Axis4)/2;
 void controls() 
 {
   // Mech Split-Arcade Control
