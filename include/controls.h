@@ -1,110 +1,119 @@
 #ifndef CONTROLS_H
 #define CONTROLS_H
 
-#include "vex.h" 
+#include "vex.h"
 //#include "play.h"
 //#include "manual.h"
 //#include "drivefunctions.h"
 using namespace vex;
 
-void controls()
-{       
-        //Arcade Control
-        LeftFrontMotor.spin(directionType::fwd, (Controller1.Axis3.value() + Controller1.Axis1.value()*turnSpeedFactor)/(driveSpeedFactor), velocityUnits::pct); //(Axis3+Axis4)/2;
-        LeftRearMotor.spin(directionType::fwd, (Controller1.Axis3.value() + Controller1.Axis1.value()*turnSpeedFactor)/(driveSpeedFactor), velocityUnits::pct); //(Axis3+Axis4)/2;
 	      RightFrontMotor.spin(directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value()*turnSpeedFactor)/(driveSpeedFactor), velocityUnits::pct);//(Axis3-Axis4)/2;
-	      RightRearMotor.spin(directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value()*turnSpeedFactor)/(driveSpeedFactor), velocityUnits::pct);//(Axis3-Axis4)/2;
-        LeftFrontMotor.setBrake(coast);
-        RightFrontMotor.setBrake(coast);
-        LeftRearMotor.setBrake(coast);
-        RightRearMotor.setBrake(coast);
+void controls() 
+{
+  // Mech Split-Arcade Control
+  int forward = Controller1.Axis3.position(vex::percent)/(driveSpeedFactor);
+  int sideways = Controller1.Axis4.position(vex::percent)/(driveSpeedFactor);
+  int turn = Controller1.Axis1.position(vex::percent)/(driveSpeedFactor*turnSpeedFactor);
 
-/*
-        //Tank Control
-        LeftFrontMotor.spin(vex::directionType::fwd, Controller1.Axis3.value()/driveSpeedFactor, vex::velocityUnits::pct);
-        RightFrontMotor.spin(vex::directionType::fwd, Controller1.Axis2.value()/driveSpeedFactor, vex::velocityUnits::pct);
-        RightRearMotor.spin(vex::directionType::fwd, Controller1.Axis2.value()/driveSpeedFactor, vex::velocityUnits::pct);
-        LeftRearMotor.spin(vex::directionType::fwd, Controller1.Axis3.value()/driveSpeedFactor, vex::velocityUnits::pct); 
- */     
+  LeftFrontMotor.spin(vex::forward, forward + sideways - turn, vex::percent);
+  LeftRearMotor.spin(vex::forward, forward - sideways - turn, vex::percent);
+  RightFrontMotor.spin(vex::forward, forward - sideways + turn, vex::percent);
+  RightRearMotor.spin(vex::forward, forward + sideways + turn, vex::percent);
 
-        if(lift.value(pct) >= liftTowerLow-2)
-        {
-          turnSpeedFactor = .75;
-        }
+  LeftFrontMotor.setBrake(coast);
+  RightFrontMotor.setBrake(coast);
+  LeftRearMotor.setBrake(coast);
+  RightRearMotor.setBrake(coast);
+  /*
+  // Regular Split-Arcade Control
+  LeftFrontMotor.spin(directionType::fwd, (Controller1.Axis3.value() + Controller1.Axis1.value() * turnSpeedFactor) / (driveSpeedFactor), velocityUnits::pct); //(Axis3+Axis4)/2;
+  LeftRearMotor.spin(directionType::fwd, (Controller1.Axis3.value() + Controller1.Axis1.value() * turnSpeedFactor) / (driveSpeedFactor), velocityUnits::pct); //(Axis3+Axis4)/2;
+  RightFrontMotor.spin(directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value() * turnSpeedFactor) / (driveSpeedFactor), velocityUnits::pct); //(Axis3-Axis4)/2;
+  RightRearMotor.spin(directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value() * turnSpeedFactor) / (driveSpeedFactor), velocityUnits::pct); //(Axis3-Axis4)/2;
 
-        //------------------------------DriveSpeed Control
-        if(Controller1.ButtonB.pressing())
-        {
-            driveSpeedFactor = 1.75; //Makes robot slower
-            Controller1.Screen.clearLine(1);
-            Controller1.Screen.setCursor(1,1);
-            Controller1.Screen.print("Slow Mode");
-            Controller1.rumble("-");
-        }
-        else if(Controller1.ButtonA.pressing())
-        {
-            driveSpeedFactor = 1; 
-            Controller1.Screen.clearLine(1);
-            Controller1.Screen.setCursor(1,1);
-            Controller1.Screen.print("Full Speed");
-            Controller1.rumble(".");
-        }
-        
-        // -----------------------------Intake Control 
-        if(Controller1.ButtonL1.pressing())
-        {
-            intake.spin(directionType::fwd, 50, pct);
-        }
-        else if(Controller1.ButtonL2.pressing() && lift.value(pct) < liftTowerMid)
-        {
-            intake.spin(directionType::rev, 80, pct);
-        }
-        else
-        {
-          LeftIntake.stop(brakeType::hold);
-          RightIntake.stop(brakeType::hold);
-        }
+  // Tank Control
+  LeftFrontMotor.spin(vex::directionType::fwd,Controller1.Axis3.value() / driveSpeedFactor,vex::velocityUnits::pct);
+  RightFrontMotor.spin(vex::directionType::fwd, Controller1.Axis2.value() / driveSpeedFactor, vex::velocityUnits::pct);
+  RightRearMotor.spin(vex::directionType::fwd, Controller1.Axis2.value() / driveSpeedFactor, vex::velocityUnits::pct);
+  LeftRearMotor.spin(vex::directionType::fwd, Controller1.Axis3.value() / driveSpeedFactor, vex::velocityUnits::pct);
+   */
 
-        // -----------------------------Tilt Control
-        if(Controller1.ButtonR2.pressing() && tilt.value(percentUnits::pct) < tiltMax && lift.value(pct) < liftTowerLow)
-        {
-          double target = tiltStack; //In revolutions
-          double error = target - tilt.value(percentUnits::pct);
-          if(error > 0)
-          {
-            error = target - tilt.value(percentUnits::pct);
-            double volts = .4*error+2.5;
-            Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
-            vex::task::sleep(20);
-          }
-          else
-          {
-            error = 0;
-            double volts = error+2.5;
-            Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
-          }
-        }
-        else if(Controller1.ButtonR1.pressing() && tilt.value(percentUnits::pct) > tiltMin && lift.value(pct) < liftTowerLow)
-        {
-          double target = tiltMax; //In revolutions
-          double error = target - tilt.value(percentUnits::pct);
-          if(error > 0)
-          {
-            error = target - tilt.value(percentUnits::pct);
-            double volts = .4*error+2.5;
-            Tilt.spin(directionType::rev, volts, voltageUnits::volt);
-            vex::task::sleep(20);
-          }
-          else
-          {
-            error = 0;
-            double volts = error+2.5;
-            Tilt.spin(directionType::rev, volts, voltageUnits::volt);
-          }
-        }
-        else
-        {
-          Tilt.stop(hold);
-        }
+  if (lift.value(pct) >= liftTowerLow - 2) 
+    turnSpeedFactor = 1.3;
+  else
+    turnSpeedFactor = 1;
+
+  //------------------------------DriveSpeed Control
+  if (Controller1.ButtonB.pressing())
+  {
+    driveSpeedFactor = 1.5; // Makes robot slower
+    Controller1.Screen.clearLine(1);
+    Controller1.Screen.setCursor(1, 1);
+    Controller1.Screen.print("Slow Mode");
+    Controller1.rumble("-");
+  } 
+  else if (Controller1.ButtonA.pressing()) 
+  {
+    driveSpeedFactor = 1;
+    Controller1.Screen.clearLine(1);
+    Controller1.Screen.setCursor(1, 1);
+    Controller1.Screen.print("Full Speed");
+    Controller1.rumble(".");
+  }
+
+  // -----------------------------Intake Control
+  if (Controller1.ButtonL1.pressing()) 
+  {
+    intake.spin(directionType::fwd, 50, pct);
+  } 
+  else if (Controller1.ButtonL2.pressing() && lift.value(pct) < liftTowerMid) 
+  {
+    intake.spin(directionType::rev, 80, pct);
+  } 
+  else
+  {
+    LeftIntake.stop(brakeType::hold);
+    RightIntake.stop(brakeType::hold);
+  }
+
+  // -----------------------------Tilt Control
+  if (Controller1.ButtonR2.pressing() && tilt.value(percentUnits::pct) < tiltMax && lift.value(pct) < liftTowerLow) 
+  {
+    double target = tiltStack; // In revolutions
+    double error = target - tilt.value(percentUnits::pct);
+    if (error > 0) 
+    {
+      error = target - tilt.value(percentUnits::pct);
+      double volts = .4 * error + 2.5;
+      Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
+      vex::task::sleep(20);
+    } 
+    else 
+    {
+      error = 0;
+      double volts = error + 2.5;
+      Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
+    }
+  } 
+  else if (Controller1.ButtonR1.pressing() && tilt.value(percentUnits::pct) > tiltMin && lift.value(pct) < liftTowerLow) 
+  {
+    double target = tiltMax; // In revolutions
+    double error = target - tilt.value(percentUnits::pct);
+    if (error > 0) 
+    {
+      error = target - tilt.value(percentUnits::pct);
+      double volts = .4 * error + 2.5;
+      Tilt.spin(directionType::rev, volts, voltageUnits::volt);
+      vex::task::sleep(20);
+    } 
+    else 
+    {
+      error = 0;
+      double volts = error + 2.5;
+      Tilt.spin(directionType::rev, volts, voltageUnits::volt);
+    }
+  } 
+  else 
+    Tilt.stop(hold);
 }
 #endif
