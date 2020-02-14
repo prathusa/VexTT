@@ -34,6 +34,8 @@ vex::motor RightFrontMotor (vex::PORT6, vex::gearSetting::ratio18_1,true);
 vex::motor LeftFrontMotor (vex::PORT8, vex::gearSetting::ratio18_1,false);
 vex::motor LeftRearMotor (vex::PORT9, vex::gearSetting::ratio18_1,false);
 vex::motor_group intake(LeftIntake, RightIntake);
+vex::motor_group f(LeftFrontMotor, RightFrontMotor);
+vex::motor_group b(LeftRearMotor, RightRearMotor);
 vex::motor_group l(LeftFrontMotor, LeftRearMotor);
 vex::motor_group r(RightFrontMotor, RightRearMotor);
 vex::motor_group d(LeftFrontMotor, LeftRearMotor, RightFrontMotor, RightRearMotor);
@@ -67,6 +69,7 @@ bool manual = false;
 bool isStacking = false;
 double driveSpeedFactor = 1;
 double turnSpeedFactor = 1;
+double circumference = 4;
 double tileInch = 23.6;
 int tempStatus = 0;
 #endif
