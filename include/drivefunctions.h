@@ -415,14 +415,16 @@ void stack(int intakeSpeed = 0)
   double error = target - tilt.value(percentUnits::pct);
   while (error > 0) 
   {
+    isStacking = true;
     intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
     tiltIntakeCheck();
     controls();
     error = target - tilt.value(percentUnits::pct);
-    double volts = .35 * error + 2; //.15 * error + 2; //.2 * error + 2 (2.550s)
+    double volts = .4 * error + 2.5; //.15 * error + 2; //.2 * error + 2 (2.550s)
     Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
     vex::task::sleep(20);
   }
+  isStacking = false;
   intake.stop();
   Tilt.stop();
 }

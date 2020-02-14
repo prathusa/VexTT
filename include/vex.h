@@ -64,6 +64,7 @@ bool skills = false;
 bool rm = false;
 bool bm = false;
 bool manual = false;
+bool isStacking = false;
 double driveSpeedFactor = 1;
 double turnSpeedFactor = 1;
 double tileInch = 23.6;

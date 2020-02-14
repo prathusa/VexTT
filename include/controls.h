@@ -61,18 +61,31 @@ void controls()
   }
 
   // -----------------------------Intake Control
-  if (Controller1.ButtonL1.pressing()) 
+  if (Controller1.ButtonL1.pressing() && lift.value(percentUnits::pct) < liftTowerLow-2) 
   {
-    intake.spin(directionType::fwd, 50, pct);
+    intake.spin(directionType::fwd, 40, pct);
   } 
+  //else if (Controller1.ButtonL1.pressing() && lift.value(percentUnits::pct) > liftTowerLow-2 && lift.value(percentUnits::pct) < liftTowerMid-2) 
+  //{
+  //  intake.spin(directionType::fwd, 40, pct);
+  //} 
+  //else if (Controller1.ButtonL1.pressing() && lift.value(percentUnits::pct) > liftTowerMid-2) 
+  //{
+  //  intake.spin(directionType::fwd, 40, pct);
+  //} 
   else if (Controller1.ButtonL2.pressing() && lift.value(pct) < liftTowerMid) 
   {
-    intake.spin(directionType::rev, 80, pct);
+    intake.spin(directionType::rev, 100, pct);
   } 
+  else if(isStacking)
+  {
+    LeftIntake.stop(brakeType::coast);
+    RightIntake.stop(brakeType::coast);
+  }
   else
   {
-    LeftIntake.stop(brakeType::hold);
-    RightIntake.stop(brakeType::hold);
+    LeftIntake.stop(brakeType::brake);
+    RightIntake.stop(brakeType::brake);
   }
 
   // -----------------------------Tilt Control
