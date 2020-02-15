@@ -1,50 +1,47 @@
-/*------------------------------------------------------------------------------------------------------
-[CONFIG] robot-config > Defines connected devices.
-Every file MUST have these lines of code on top:
-//Connected devices file
-#ifndef CONFIG_H
-#define CONFIG_H
-#include "robot-config.h"
-#endif
-------------------------------------------------------------------------------------------------------*/
+#pragma once
 
-/*++++++++++++++++++++++++++++++++++++++++++| INFOMATION |++++++++++++++++++++++++++++++++++++++++++++++
-This is a sample robot-config.h file for ACCESS_OS (Sample meaning not complete, a templete/base)
+extern vex::brain Brain;
+extern vex::motor Lift;
+extern vex::motor Tilt;
+extern vex::motor LeftIntake;
+extern vex::motor RightIntake;
+extern vex::motor RightRearMotor;
+extern vex::motor RightFrontMotor;
+extern vex::motor LeftFrontMotor;
+extern vex::motor LeftRearMotor;
+extern vex::motor_group intake;
+extern vex::motor_group l;
+extern vex::motor_group r;
+extern vex::motor_group d;
+extern vex::inertial Inertial;
+extern vex::gyro Gyro;
+extern vex::pot tilt;
+extern vex::pot lift;
+extern vex::limit Test;
+extern vex::limit Debug;
+extern vex::smartdrive sdt;
+extern vex::drivetrain dt;
+extern vex::controller Controller1;
+extern vex::competition Competition;
 
-The robot specs are as follows:
-2 motor omniwheel drive
-
-A small batch of example programs are provided, but you'll need to modify the code to fit your robot.
-
-Changelog, documentation, and more information can be found at the ACCESS_OS website.
-Link to website: https://dev.azure.com/roboVEX/_git/ACCESS_OS
-------------------------------------------------------------------------------------------------------*/
-
-/*------------------------------------------------------------------------------------------------------
-[GLOBAL] Includes > Include needed external libraries and files
-------------------------------------------------------------------------------------------------------*/
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>		//Include math.h in order to gain access to math functions like PI.
-#include <tgmath.h>
-#include <string.h>
-
-#include "v5.h"
-#include "v5_vcs.h"
-
-/*------------------------------------------------------------------------------------------------------
-[GLOBAL] Devices > Connected devices and sensors
-------------------------------------------------------------------------------------------------------*/
-//Main compoments
-//vex::brain Brain;
-//vex::controller Controller = vex::controller();
-
-//Drive motors
-//vex::motor LeftBaseM1 = vex::motor(vex::PORT1, vex::gearSetting::ratio18_1, false);		//geared 1:1
-//vex::motor RightBaseM1 = vex::motor(vex::PORT10, vex::gearSetting::ratio18_1, true);	//geared 1:1
-
-//Create object Compettition of the Competition class
-#ifndef COMPETITION_DEFINED
-#define COMPETITION_DEFINED
-//vex::competition Competition;
-#endif
+extern int liftMax;
+extern int liftTowerMid;
+extern int liftTowerLow;
+extern int liftTilter;
+extern int liftMin;
+extern int tiltMax;
+extern int tiltStack;
+extern int tiltMin; 
+extern bool rojo;
+extern bool azul;
+extern bool slow;
+extern bool test;
+extern bool skills;
+extern bool rm;
+extern bool bm;
+extern bool manual;
+extern bool isStacking;
+extern double driveSpeedFactor;
+extern double turnSpeedFactor;
+extern double tileInch;
+extern int tempStatus;
