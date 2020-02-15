@@ -33,8 +33,8 @@ void pre_auton(void)
     Brain.Screen.setFillColor(vex::black);
     Brain.Screen.setPenColor(vex::white);
 
-    OS.menuCONFIG();	//Calls ACCESS_OS's menuCONFIG, the main reason why you downloaded this
-	  OS.notificationHUD("Robot: OK");	//Sends message to driver
+    os.menuCONFIG();	//Calls ACCESS_OS's menuCONFIG, the main reason why you downloaded this
+	  os.notificationHUD("Robot: OK");	//Sends message to driver
 
     one:
     vex::task::sleep(300);

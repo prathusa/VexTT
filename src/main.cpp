@@ -1,6 +1,4 @@
 #include "vex.h"
-ROBOT_BASE ROBOT;
-ACCESS_OS OS;
 
 int main() 
 {

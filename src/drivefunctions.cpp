@@ -1,7 +1,12 @@
-#include "drivefunctions.h"
 #include "vex.h"
 
-void turnTo(double raw, int intakeSpeed, int timeout)
+BASE_DRIVE::BASE_DRIVE(){};
+mech::MECH_DRIVE::MECH_DRIVE(){};
+LIFTER::LIFTER(){};
+TILTER::TILTER(){};
+bot::ROBOT::ROBOT(){};
+
+void BASE_DRIVE::turnTo(double raw, int intakeSpeed, int timeout)
 {
   if (Inertial.installed()) 
   {
@@ -91,12 +96,12 @@ end:
   vex::task::sleep(20);
 }
 
-void turn(double raw, int intakeSpeed, int timeout, double marginOfError)
+void BASE_DRIVE::turn(double raw, int intakeSpeed, int timeout, double marginOfError)
 {
 	//ROBOT.timeOut(2.5);
 	//ROBOT.reset();
 
-	if (OS.getValues(COLOR) == BLUE) //If color is 0 (BLUE) flip the values 
+	if (os.getValues(COLOR) == BLUE) //If color is 0 (BLUE) flip the values 
 		raw = -raw;
 
   if(timeout == 0)
@@ -145,7 +150,7 @@ end:
 }
 
 //Left turning is broken
-void turnToHeading(double target, int timeout) 
+void BASE_DRIVE::turnToHeading(double target, int timeout) 
 {
   double rotation = Inertial.rotation(rotationUnits::deg);
   while(rotation >= 360)
@@ -158,10 +163,10 @@ void turnToHeading(double target, int timeout)
     target -= 360;
     rotation += 360;
   }
-  turnTo(target, timeout);
+  robot.turnTo(target, timeout);
 }
 
-void tiltTo(int potentiometerPCT, double volts, bool slowDown) 
+void TILTER::tiltTo(int potentiometerPCT, double volts, bool slowDown) 
 {
   double target = potentiometerPCT; // In revolutions
   double error = target - tilt.value(percentUnits::pct);
@@ -207,15 +212,15 @@ end:
   Tilt.stop();
 }
 
-void tiltFor(int potentiometerPCT, double volts) 
+void TILTER::tiltFor(int potentiometerPCT, double volts) 
 {
   int start = tilt.value(pct);
   int distance = potentiometerPCT;
   double target = distance + start;
-  tiltTo(target, volts);
+  robot.tiltTo(target, volts);
 }
 
-void tiltTo(int potentiometerPCT) 
+void TILTER::tiltTo(int potentiometerPCT) 
 {
   double error = potentiometerPCT - tilt.value(pct);
   double integral = error;
@@ -262,7 +267,7 @@ void tiltTo(int potentiometerPCT)
   }
 }
 
-void tiltFor(int potentiometerPCT) 
+void TILTER::tiltFor(int potentiometerPCT) 
 {
   int start = tilt.value(pct);
   int distance = potentiometerPCT;
@@ -277,11 +282,11 @@ void liftTiltCheck()
   Tilt.setBrake(hold);
   if (lift.value(pct) > 32 && tilt.value(percentUnits::pct) < 37) 
   {
-    tiltTo(37, 12);
+    robot.tiltTo(37, 12);
   } 
   else if (lift.value(pct) <= 32 && tilt.value(percentUnits::pct) >= 37) 
   {
-    tiltTo(tiltMin, 12);
+    robot.tiltTo(tiltMin, 12);
   }
 }
 
@@ -294,7 +299,7 @@ void tiltIntakeCheck()
   }
 }
 
-void liftTo(int potentiometerPCT, double volts) 
+void LIFTER::liftTo(int potentiometerPCT, double volts) 
 {
   double target = potentiometerPCT; // In revolutions
   double error = target - lift.value(percentUnits::pct);
@@ -323,7 +328,7 @@ end:
   Tilt.stop();
 }
 
-void liftFor(int potentiometerPCT, double volts) 
+void LIFTER::liftFor(int potentiometerPCT, double volts) 
 {
   int start = lift.value(pct);
   int distance = potentiometerPCT;
@@ -331,7 +336,7 @@ void liftFor(int potentiometerPCT, double volts)
   liftTo(target, volts);
 }
 
-void liftTo(int potentiometerPCT) 
+void LIFTER::liftTo(int potentiometerPCT) 
 {
   bool timeout = true;
   int time = 14; //if no movement in 15ms after no movement then task breaks
@@ -383,7 +388,7 @@ void liftTo(int potentiometerPCT)
   }
 }
 
-void liftFor(int potentiometerPCT) 
+void LIFTER::liftFor(int potentiometerPCT) 
 {
   int start = lift.value(pct);
   int distance = potentiometerPCT;
@@ -392,7 +397,7 @@ void liftFor(int potentiometerPCT)
 }
 
 
-void flipOut() 
+void bot::ROBOT::flipOut() 
 {
   liftTo(liftTowerLow-5, 12);
   //vex::task::sleep(200);
@@ -400,7 +405,7 @@ void flipOut()
   //vex::task::sleep(500);
 }
 
-void stack(int intakeSpeed) 
+void TILTER::stack(int intakeSpeed) 
 {
   double target = tiltStack; // In revolutions
   double error = target - tilt.value(percentUnits::pct);
@@ -420,23 +425,23 @@ void stack(int intakeSpeed)
   Tilt.stop();
 }
 
-void towerLow(void) 
+void LIFTER::towerLow(void) 
 {
   liftTo(liftTowerLow, 12);
 }
 
-void towerMid(void) 
+void LIFTER::towerMid(void) 
 {
   liftTo(liftTowerMid, 12);
 }
 
-void fadeAway()
+void bot::ROBOT::fadeAway()
 {
   intake.spinFor(directionType::rev, -2, rotationUnits::rev, 35, velocityUnits::pct, false); //possible reduction needed
   d.spinFor(-.75, rotationUnits::rev, 30, velocityUnits::pct);
 }
 
-void fadeAwayMid()
+void bot::ROBOT::fadeAwayMid()
 {
   intake.spinFor(directionType::rev, -2, rotationUnits::rev, 65, velocityUnits::pct, false); //possible reduction needed
   d.spinFor(-.75, rotationUnits::rev, 30, velocityUnits::pct);
@@ -521,7 +526,7 @@ void autonBrain()
   }
 }
 
-void resetEncoders(void) 
+void bot::ROBOT::resetEncoders(void) 
 {
   Lift.resetPosition();
   Tilt.resetPosition();
@@ -533,7 +538,7 @@ void resetEncoders(void)
   RightRearMotor.resetPosition();
 }
 
-void driveTo(double positionRev, int intakeSpeed, int timeout, double kP, double kI, double kD) 
+void BASE_DRIVE::driveTo(double positionRev, int intakeSpeed, int timeout, double kP, double kI, double kD) 
 {
   double error = positionRev - d.position(rotationUnits::rev);
   double integral = error;
@@ -637,7 +642,7 @@ void driveFor(double positionRev, int driveSpeed, int intakeSpeed, int timeout)
   intake.stop();
 }
 
-void drive(double revolutions, int intakeSpeed, int timeout, double kP, double kI, double kD) 
+void BASE_DRIVE::drive(double revolutions, int intakeSpeed, int timeout, double kP, double kI, double kD) 
 {
   double target = revolutions + d.position(rotationUnits::rev);
   driveTo(target, intakeSpeed, timeout, kP, kI, kD);
@@ -692,6 +697,30 @@ void pTurn(double degrees) //P loop turn code (better than the smartdrive method
   }
   end:
   vex::task::sleep(10);
+}
+
+bool bot::ROBOT::allInstalled()
+{
+  if(Lift.installed() && Tilt.installed() && LeftFrontMotor.installed() && LeftRearMotor.installed() && RightFrontMotor.installed() && RightRearMotor.installed() && LeftIntake.installed() && RightIntake.installed())
+  {
+    Controller1.Screen.setCursor(1, 1);
+    Controller1.Screen.clearLine(1);
+    Controller1.Screen.print("PORT DC");
+    return true;
+  }
+  return false;
+}
+
+bool bot::ROBOT::driveInstalled()
+{
+  if(LeftFrontMotor.installed() && LeftRearMotor.installed() && RightFrontMotor.installed() && RightRearMotor.installed())
+  {
+    Controller1.Screen.setCursor(1, 1);
+    Controller1.Screen.clearLine(1);
+    Controller1.Screen.print("DRIVE WORKING");
+    return true;
+  }
+  return false;
 }
 
 /*

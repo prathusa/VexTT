@@ -1,46 +1,96 @@
 #pragma once
 
-void turnTo(double raw, int intakeSpeed, int timeout = 14);
-void marginalTurnTo(double raw, int intakeSpeed, double marginOfError = 1.0);
-void turn(double raw, int intakeSpeed = 0, int timeout = 1, double marginOfError = 1.0);
-void turnFor(double raw, bool timeout = false, int time = 250);
-void turnToHeading(double target, int timeout = 250);
+class BASE_DRIVE
+{
+    private:
 
-void tiltTo(int potentiometerPCT, double volts, bool slowDown = false);
-void tiltFor(int potentiometerPCT, double volts);
-void tiltTo(int potentiometerPCT);
-void tiltFor(int potentiometerPCT);
+    public:
+    BASE_DRIVE();
+    void turnTo(double raw, int intakeSpeed, int timeout = 14);
+    void driveTo(double positionRev, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0075, double kD = 6);
+    void turn(double raw, int intakeSpeed = 0, int timeout = 1, double marginOfError = 1.0);
+    //void turnFor(double raw, bool timeout = false, int time = 250);
+    void turnTo(double degrees);
+    //void driveFor(double positionRev, int driveSpeed = 50, int intakeSpeed = 0, int timeout = 50);
+    void drive(double revolutions, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0095, double kD = 6);
+    void turnToHeading(double target, int timeout = 250);
+};
+
+namespace mech
+{
+  class MECH_DRIVE : public BASE_DRIVE
+  {
+    private:
+    
+    public:
+    MECH_DRIVE();
+    void strafe();
+    void strafeTo();
+    void strafeFor();
+  };
+}
+
+namespace track
+{
+  class TRACKING
+  {
+    private:
+    public:
+    TRACKING();
+    void driveTo();
+
+  };
+}
+
+class TILTER
+{
+  private:
+  public:
+  TILTER();
+  void tiltTo(int potentiometerPCT, double volts, bool slowDown = false);
+  void tiltFor(int potentiometerPCT, double volts);
+  void tiltTo(int potentiometerPCT);
+  void tiltFor(int potentiometerPCT);
+  void stack(int intakeSpeed = 0);
+};
+
 
 void liftTiltCheck();
-
 void tiltIntakeCheck();
 
-void liftTo(int potentiometerPCT, double volts);
-void liftFor(int potentiometerPCT, double volts);
-void liftTo(int potentiometerPCT);
-void liftFor(int potentiometerPCT);
+class LIFTER
+{
+  private:
+  public:
+  LIFTER();
+  void liftTo(int potentiometerPCT, double volts);
+  void liftFor(int potentiometerPCT, double volts);
+  void liftTo(int potentiometerPCT);
+  void liftFor(int potentiometerPCT);
+  void towerLow(void);
+  void towerMid(void);
+};
 
-void flipOut();
-
-void stack(int intakeSpeed = 0);
-
-void towerLow(void);
-void towerMid(void);
-
-void fadeAway();
-void fadeAwayMid();
+namespace bot
+{
+  class ROBOT : public mech::MECH_DRIVE, public LIFTER, public TILTER
+  {
+    private:
+    public:
+    ROBOT();
+    void fadeAway();
+    void fadeAwayMid();
+    void flipOut();
+    bool allInstalled();
+    bool driveInstalled();
+    void resetEncoders(void);
+  };
+}
 
 // Added Controller and Brain feedback when autonomous is selected.
 void autonController();
 void autonBrain();
 
-void resetEncoders(void);
-
-void driveTo(double positionRev, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0075, double kD = 6);
-void driveFor(double positionRev, int driveSpeed = 50, int intakeSpeed = 0, int timeout = 50);
-void drive(double revolutions, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0095, double kD = 6);
-
-void pTurn(double degrees);
 
 /*
 //-------------------------Method 1 (Guess and Check):

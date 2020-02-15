@@ -3,81 +3,91 @@
 void autonomous(void) 
 {
     //If configuration[1] is 0 (Front row), 1 (Back row), or 2 (Skills), run the correct auton
-	if(OS.getValues(POSITION) == BRAIN)
-    goto Brain;
-  else if (OS.getValues(POSITION) == FRONT) 
+	if(!robot.allInstalled())
   {
-    if(OS.getValues(POINTS) == ONE)
+    if(robot.driveInstalled())
+    {
+      if(os.getValues(POSITION) == FRONT)
+      {
+
+      }
+    }
+  }
+  else if(os.getValues(POSITION) == BRAIN)
+    goto Brain;
+  else if (os.getValues(POSITION) == FRONT) 
+  {
+    if(os.getValues(POINTS) == ONE)
     {
       autonAmbi();
     }
-    else if(OS.getValues(POINTS) == THREE)
+    else if(os.getValues(POINTS) == THREE)
     {
       p3();
     }
-    else if(OS.getValues(POINTS) == FOUR)
+    else if(os.getValues(POINTS) == FOUR)
     {
       p4();
     }
-    else if(OS.getValues(POINTS) == FIVE)
+    else if(os.getValues(POINTS) == FIVE)
     {
       p5();
     }
-    else if(OS.getValues(POINTS) == SIX)
+    else if(os.getValues(POINTS) == SIX)
     {
       p6();
     }
-    else if(OS.getValues(POINTS) == SEVEN)
+    else if(os.getValues(POINTS) == SEVEN)
     {
       //p7();
       p6();
     }
-    else if(OS.getValues(POINTS) == EIGHT)
+    else if(os.getValues(POINTS) == EIGHT)
     {
       //p8();
       p6();
     }
 	}
-	else if (OS.getValues(POSITION) == BACK) 
+	else if (os.getValues(POSITION) == BACK) 
   {
-		if(OS.getValues(POINTS) == ONE)
+		if(os.getValues(POINTS) == ONE)
     {
       autonAmbi();
     }
-    else if(OS.getValues(POINTS) == THREE)
+    else if(os.getValues(POINTS) == THREE)
     {
       u5();
     }
-    else if(OS.getValues(POINTS) == FOUR)
+    else if(os.getValues(POINTS) == FOUR)
     {
       u5();
       //u4(); non existant rn
     }
-    else if(OS.getValues(POINTS) == FIVE)
+    else if(os.getValues(POINTS) == FIVE)
     {
       u5();
     }
-    else if(OS.getValues(POINTS) == SIX)
+    else if(os.getValues(POINTS) == SIX)
     {
       u6();
     }
     //to be made
-    else if(OS.getValues(POINTS) == SEVEN)
+    else if(os.getValues(POINTS) == SEVEN)
     {
       u7();
     }
-    else if(OS.getValues(POINTS) == EIGHT)
+    else if(os.getValues(POINTS) == EIGHT)
     {
       tu7();
     }
 	}
-	else if (OS.getValues(POSITION) == SKILLS) 
+	else if (os.getValues(POSITION) == SKILLS) 
   {
-		if(OS.getValues(POINTS) == EIGHTTEEN)
+		if(os.getValues(POINTS) == EIGHTTEEN)
     {
       s18();
     }
-    else if(OS.getValues(POINTS) == FOURTY)
+    else if(os.getValues(POINTS) == FOURTY)
     {
       s40();
     }
@@ -177,6 +187,6 @@ void autonomous(void)
     }
 
 	//Auton end. Prints auton end on the controller + vibrate controller
-	OS.notificationHUD("Auton: DONE");
-	ROBOT.rumble();
+	os.notificationHUD("Auton: DONE");
+	base.rumble();
 }

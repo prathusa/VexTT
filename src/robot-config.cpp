@@ -1,7 +1,5 @@
 #include "vex.h"
 
-using namespace vex;
-
 vex::brain Brain;
 vex::motor Lift (vex::PORT11, vex::gearSetting::ratio18_1,true);
 vex::motor Tilt (vex::PORT10, vex::gearSetting::ratio36_1,false);
@@ -25,6 +23,9 @@ vex::smartdrive sdt(l, r, Inertial, 12.56, 16, 16, distanceUnits::in);
 vex::drivetrain dt(l, r);
 vex::controller Controller1;
 vex::competition Competition;
+ROBOT_BASE base;
+ACCESS_OS os;
+bot::ROBOT robot;
 
 int liftMax = 55;
 int liftTowerMid = 58;
