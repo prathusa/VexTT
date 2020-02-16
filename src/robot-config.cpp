@@ -12,6 +12,8 @@ vex::motor LeftRearMotor (vex::PORT12, vex::gearSetting::ratio18_1,false);
 vex::motor_group intake(LeftIntake, RightIntake);
 vex::motor_group l(LeftFrontMotor, LeftRearMotor);
 vex::motor_group r(RightFrontMotor, RightRearMotor);
+vex::motor_group ld(LeftFrontMotor, RightRearMotor);
+vex::motor_group rd(RightFrontMotor, LeftRearMotor);
 vex::motor_group d(LeftFrontMotor, LeftRearMotor, RightFrontMotor, RightRearMotor);
 vex::inertial Inertial(vex::PORT2);
 vex::gyro Gyro (Brain.ThreeWirePort.G);

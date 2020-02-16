@@ -12,6 +12,8 @@ extern vex::motor LeftRearMotor;
 extern vex::motor_group intake;
 extern vex::motor_group l;
 extern vex::motor_group r;
+extern vex::motor_group ld;
+extern vex::motor_group rd;
 extern vex::motor_group d;
 extern vex::inertial Inertial;
 extern vex::gyro Gyro;

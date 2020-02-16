@@ -600,7 +600,7 @@ void BASE_DRIVE::driveTo(double positionRev, int intakeSpeed, int timeout, doubl
   intake.stop();
 }
 
-void driveFor(double positionRev, int driveSpeed, int intakeSpeed, int timeout) 
+void BASE_DRIVE::driveFor(double positionRev, int driveSpeed, int intakeSpeed, int timeout) 
 {
   double error = positionRev - d.position(rotationUnits::rev);
   double kP = driveSpeed/28.57;
@@ -648,6 +648,132 @@ void BASE_DRIVE::drive(double revolutions, int intakeSpeed, int timeout, double 
 {
   double target = revolutions + d.position(rotationUnits::rev);
   driveTo(target, intakeSpeed, timeout, kP, kI, kD);
+}
+
+void mech::MECH_DRIVE::strafeTo(double revolutions, int intakeSpeed, int timeout, double kP, double kI, double kD) 
+{
+  double errorLD = revolutions - ld.position(rotationUnits::rev);
+  double errorRD = -revolutions - rd.position(rotationUnits::rev);
+  double integralLD = errorLD;
+  double integralRD = errorRD;
+  double prevErrorLD = errorLD;
+  double prevErrorRD = errorRD;
+  double derivativeLD = errorLD - prevErrorLD;
+  double derivativeRD = errorRD - prevErrorRD;
+  int motionless = 0;
+  if (errorLD > 0 && errorRD < 0) 
+  {
+    while (errorLD > 0 && errorRD < 0 && motionless <= timeout) 
+    {
+      intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      errorLD = revolutions - ld.position(rotationUnits::rev);
+      errorRD = -revolutions - rd.position(rotationUnits::rev);
+      integralLD += errorLD;
+      integralRD += errorRD;
+      if (errorLD <= 0 || errorRD >= 0) 
+      {
+        integralLD = 0;
+        integralRD = 0;
+      }
+      derivativeLD = errorLD - prevErrorLD;
+      derivativeRD = errorLD - prevErrorLD;
+      prevErrorLD = errorLD;
+      prevErrorLD = errorLD;
+      double voltsLD = errorLD * kP + integralLD * kI + derivativeLD * kD;
+      double voltsRD = errorRD * kP + integralRD * kI + derivativeRD * kD;
+      ld.spin(fwd, voltsLD, voltageUnits::volt);
+      rd.spin(fwd, voltsRD, voltageUnits::volt);
+      if(std::abs(dt.velocity(percentUnits::pct)) < 0.1)
+        motionless+=15;
+      if(dt.velocity(percentUnits::pct) != 0)
+        motionless+=0;
+      vex::task::sleep(15);
+    }
+  }
+  else if (errorLD < 0 && errorRD > 0) 
+  {
+    while (errorLD < 0 && errorRD > 0 && motionless <= timeout) 
+    {
+      intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      errorLD = revolutions - ld.position(rotationUnits::rev);
+      errorRD = -revolutions - rd.position(rotationUnits::rev);
+      integralLD += errorLD;
+      integralRD += errorRD;
+      if (errorLD >= 0 || errorRD <= 0) 
+      {
+        integralLD = 0;
+        integralRD = 0;
+      }
+      derivativeLD = errorLD - prevErrorLD;
+      derivativeRD = errorLD - prevErrorLD;
+      prevErrorLD = errorLD;
+      prevErrorLD = errorLD;
+      double voltsLD = errorLD * kP + integralLD * kI + derivativeLD * kD;
+      double voltsRD = errorRD * kP + integralRD * kI + derivativeRD * kD;
+      ld.spin(fwd, voltsLD, voltageUnits::volt);
+      rd.spin(fwd, voltsRD, voltageUnits::volt);
+      if(std::abs(dt.velocity(percentUnits::pct)) < 0.1)
+        motionless+=15;
+      if(dt.velocity(percentUnits::pct) != 0)
+        motionless+=0;
+      vex::task::sleep(15);
+    }
+  }
+  intake.stop();
+}
+
+void mech::MECH_DRIVE::strafeFor(double revolutions, int driveSpeed, int intakeSpeed, int timeout) 
+{
+  double error = revolutions - d.position(rotationUnits::rev);
+  double kP = driveSpeed/28.57;
+  int motionless = 0;
+  if (error > 0) 
+  {
+    while (error > 0 && motionless <= timeout) 
+    {
+      if(tilt.value(percentUnits::pct) - tiltStack > -3 && dt.velocity(percentUnits::pct) < 0)
+        intake.spin(directionType::rev, dt.velocity(percentUnits::pct), percentUnits::pct);
+      else
+        intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      error = revolutions - d.position(rotationUnits::rev);
+      double volts = (error * kP) + 2;
+      ld.spin(fwd, volts, voltageUnits::volt);
+      rd.spin(fwd, -volts, voltageUnits::volt);
+      if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=15;
+      if(dt.velocity(percentUnits::pct) != 0)
+        motionless+=0;
+      vex::task::sleep(15);
+    }
+  }
+  else if (error < 0) 
+  {
+    while (error < 0 && motionless <= timeout) 
+    {
+      if(tilt.value(percentUnits::pct) - tiltStack > -3 && dt.velocity(percentUnits::pct) < 0)
+        intake.spin(directionType::rev, dt.velocity(percentUnits::pct), percentUnits::pct);
+      else
+        intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+      error = revolutions - d.position(rotationUnits::rev);
+      double volts = (error * kP) - 2;
+      ld.spin(fwd, -volts, voltageUnits::volt);
+      rd.spin(fwd, volts, voltageUnits::volt);
+      if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=15;
+      if(dt.velocity(percentUnits::pct) != 0)
+        motionless+=0;
+      vex::task::sleep(15);
+    }
+  }
+  intake.stop();
+}
+
+void mech::MECH_DRIVE::strafe(double revolutions, int intakeSpeed, int timeout, double kP, double kI, double kD) 
+{
+  if (os.getValues(COLOR) == BLUE) //If color is 0 (BLUE) flip the values 
+		revolutions = -revolutions;
+  double target = revolutions + ld.position(rotationUnits::rev);
+  strafeTo(target, intakeSpeed, timeout, kP, kI, kD);
 }
 
 void pTurn(double degrees) //P loop turn code (better than the smartdrive methods once kP is tuned properly)
@@ -733,13 +859,11 @@ void IMU::getPositionY()
   {
     double accelerationY = Inertial.acceleration(axisType::yaxis);
     
-    velocityY += accelerationY*(1000/1000);
+    velocityY += accelerationY*(0.02);
     
-    positionY += velocityY*(1000/1000);
+    positionY += velocityY*(0.02);
 
-    Brain.Screen.clearScreen();
-    Brain.Screen.setFont(fontType::mono30);
-    Brain.Screen.printAt(1, 20, "%d", Inertial.angle());
+    std::cout << positionY << std::endl;
     task::sleep(200);
   }
 }

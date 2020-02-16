@@ -18,9 +18,9 @@ class BASE_DRIVE : public IMU
     BASE_DRIVE();
     void driveTo(double positionRev, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0075, double kD = 6);
     void turn(double raw, int intakeSpeed = 0, int timeout = 1, double marginOfError = 1.0);
-    //void turnFor(double raw, bool timeout = false, int time = 250);
+    void turnFor(double raw, bool timeout = false, int time = 250);
     void turnTo(double degrees);
-    //void driveFor(double positionRev, int driveSpeed = 50, int intakeSpeed = 0, int timeout = 50);
+    void driveFor(double positionRev, int driveSpeed = 50, int intakeSpeed = 0, int timeout = 50);
     void drive(double revolutions, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0095, double kD = 6);
 };
 
@@ -32,9 +32,9 @@ namespace mech
     
     public:
     MECH_DRIVE();
-    void strafe();
-    void strafeTo();
-    void strafeFor();
+    void strafe(double revolutions, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0095, double kD = 6);
+    void strafeTo(double revolutions, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0095, double kD = 6);
+    void strafeFor(double revolutions, int driveSpeed, int intakeSpeed, int timeout) ;
   };
 }
 
