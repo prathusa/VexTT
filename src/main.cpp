@@ -2,6 +2,7 @@
 
 int main() 
 {
+  // robot.getPositionY();
   // Run the pre-autonomous function.
   pre_auton();
 

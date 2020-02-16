@@ -1,19 +1,27 @@
 #pragma once
 
-class BASE_DRIVE
+class IMU
+{
+  public:
+  IMU();
+  void turnTo(double raw, int intakeSpeed, int timeout = 14);
+  void turnToHeading(double target, int timeout = 250);
+  void getPositionY();
+};
+
+
+class BASE_DRIVE : public IMU
 {
     private:
 
     public:
     BASE_DRIVE();
-    void turnTo(double raw, int intakeSpeed, int timeout = 14);
     void driveTo(double positionRev, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0075, double kD = 6);
     void turn(double raw, int intakeSpeed = 0, int timeout = 1, double marginOfError = 1.0);
     //void turnFor(double raw, bool timeout = false, int time = 250);
     void turnTo(double degrees);
     //void driveFor(double positionRev, int driveSpeed = 50, int intakeSpeed = 0, int timeout = 50);
     void drive(double revolutions, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0095, double kD = 6);
-    void turnToHeading(double target, int timeout = 250);
 };
 
 namespace mech

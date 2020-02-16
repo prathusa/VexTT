@@ -6,7 +6,7 @@ void controls()
   // Mech Split-Arcade Control
   int forward = Controller1.Axis3.position(vex::percent)/(driveSpeedFactor);
   int sideways = Controller1.Axis4.position(vex::percent)/(driveSpeedFactor);
-  int turn = Controller1.Axis1.position(vex::percent)/(driveSpeedFactor*turnSpeedFactor);
+  int turn = -Controller1.Axis1.position(vex::percent)/(driveSpeedFactor*turnSpeedFactor);
 
   LeftFrontMotor.spin(vex::forward, forward + sideways - turn, vex::percent);
   LeftRearMotor.spin(vex::forward, forward - sideways - turn, vex::percent);

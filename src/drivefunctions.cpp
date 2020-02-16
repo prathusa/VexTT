@@ -1,12 +1,14 @@
 #include "vex.h"
 
 BASE_DRIVE::BASE_DRIVE(){};
+IMU::IMU(){};
 mech::MECH_DRIVE::MECH_DRIVE(){};
 LIFTER::LIFTER(){};
 TILTER::TILTER(){};
 bot::ROBOT::ROBOT(){};
 
-void BASE_DRIVE::turnTo(double raw, int intakeSpeed, int timeout)
+IMU imu;
+void IMU::turnTo(double raw, int intakeSpeed, int timeout)
 {
   if (Inertial.installed()) 
   {
@@ -107,7 +109,7 @@ void BASE_DRIVE::turn(double raw, int intakeSpeed, int timeout, double marginOfE
   if(timeout == 0)
     marginalTurnTo(raw, intakeSpeed, marginOfError);
   else
-	  turnTo(raw, intakeSpeed, timeout);
+	  imu.turnTo(raw, intakeSpeed, timeout);
 }
 
 void turnFor(double raw, bool timeout, int time) 
@@ -150,7 +152,7 @@ end:
 }
 
 //Left turning is broken
-void BASE_DRIVE::turnToHeading(double target, int timeout) 
+void IMU::turnToHeading(double target, int timeout) 
 {
   double rotation = Inertial.rotation(rotationUnits::deg);
   while(rotation >= 360)
@@ -163,7 +165,7 @@ void BASE_DRIVE::turnToHeading(double target, int timeout)
     target -= 360;
     rotation += 360;
   }
-  robot.turnTo(target, timeout);
+  turnTo(target, timeout);
 }
 
 void TILTER::tiltTo(int potentiometerPCT, double volts, bool slowDown) 
@@ -721,6 +723,25 @@ bool bot::ROBOT::driveInstalled()
     return true;
   }
   return false;
+}
+
+void IMU::getPositionY()
+{  
+  double velocityY = 0;
+  double positionY = 0;
+  while(1)
+  {
+    double accelerationY = Inertial.acceleration(axisType::yaxis);
+    
+    velocityY += accelerationY*(1000/1000);
+    
+    positionY += velocityY*(1000/1000);
+
+    Brain.Screen.clearScreen();
+    Brain.Screen.setFont(fontType::mono30);
+    Brain.Screen.printAt(1, 20, "%d", Inertial.angle());
+    task::sleep(200);
+  }
 }
 
 /*
