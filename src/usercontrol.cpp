@@ -27,8 +27,9 @@ void usercontrol(void)
         if(Controller1.ButtonX.pressing() && lift.value(percentUnits::pct) <= liftTowerLow+2)
         {
           robot.fadeAway();
+          //robot.driveFor(1);
         }
-        if(Controller1.ButtonX.pressing() && std::abs(lift.value(percentUnits::pct) - liftTowerMid) <= 2)
+        else if(Controller1.ButtonX.pressing() && std::abs(lift.value(percentUnits::pct) - liftTowerMid) <= 2)
         {
           robot.fadeAwayMid();
         }

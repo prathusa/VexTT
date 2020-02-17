@@ -12,8 +12,7 @@ int main()
   // Prevent main from exiting with an infinite loop.
   while (1) 
   {
-    std::cout << LeftFrontMotor.position(rev) << std::endl;
-    vex::task::sleep(200);
+    vex::task::sleep(20);
     // Sleep the task for a short amount of time to
     // prevent wasted resources.
   }
