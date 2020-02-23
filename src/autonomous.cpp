@@ -188,5 +188,4 @@ void autonomous(void)
 
 	//Auton end. Prints auton end on the controller + vibrate controller
 	os.notificationHUD("Auton: DONE");
-	base.rumble();
 }

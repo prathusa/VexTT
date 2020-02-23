@@ -4,7 +4,7 @@ class IMU
 {
   public:
   IMU();
-  void turnTo(double raw, int intakeSpeed, int timeout = 14);
+  void turnTo(double raw, int intakeSpeed, int timeout = 1, double tolerance = 0.1);
   void turnToHeading(double target, int timeout = 250);
   void getPositionY();
 };

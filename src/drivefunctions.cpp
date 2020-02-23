@@ -8,7 +8,7 @@ TILTER::TILTER(){};
 bot::ROBOT::ROBOT(){};
 
 IMU imu;
-void IMU::turnTo(double raw, int intakeSpeed, int timeout)
+void IMU::turnTo(double raw, int intakeSpeed, int timeout, double tolerance)
 {
   if (Inertial.installed()) 
   {
@@ -21,7 +21,7 @@ void IMU::turnTo(double raw, int intakeSpeed, int timeout)
     double prevError = error;
     double derivative = error - prevError;
     int motionless = 0;
-    while (std::abs(error) > 0 && (motionless <= timeout))
+    while ((timeout == 0 && std::abs(error) > tolerance) || (std::abs(error) > 0 && (motionless <= timeout)))
     {
       intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
       //controls();
@@ -36,11 +36,11 @@ void IMU::turnTo(double raw, int intakeSpeed, int timeout)
       double volts = error * kP + integral * kI + derivative * kD;
       l.spin(fwd, volts, voltageUnits::volt);
       r.spin(reverse, volts, voltageUnits::volt);
-      if(dt.velocity(percentUnits::pct) == 0)
-        motionless+=15;
-      if(dt.velocity(percentUnits::pct) != 0)
+      if(std::abs(dt.velocity(percentUnits::pct)) >= tolerance)
+        motionless+=20;
+      if(std::abs(dt.velocity(percentUnits::pct)) < tolerance)
         motionless+=0;
-      vex::task::sleep(15);
+      vex::task::sleep(20);
     }
     goto end; 
   }
@@ -55,50 +55,7 @@ end:
   vex::task::sleep(20);
 }
 
-void marginalTurnTo(double raw, int intakeSpeed, double marginOfError)
-{
-  if (Inertial.installed()) 
-  {
-    double kP = 0.45;    // 0.45
-    double kI = 0.0006; // 0.00006
-    double kD = 0.50;    // 0.45
-    double target = raw;
-    double error = target - Inertial.rotation(rotationUnits::deg);
-    double integral = error;
-    double prevError = error;
-    double derivative = error - prevError;
-    while (std::abs(error) > marginOfError)
-    {
-      intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
-      //controls();
-      //intake.spin(directionType::rev, 100, velocityUnits::pct);
-      error = target - Inertial.rotation(rotationUnits::deg);
-      integral += error;
-      if (error == 0) 
-      {
-        integral = 0;
-      }
-      derivative = error - prevError;
-      prevError = error;
-      double volts = error * kP + integral * kI + derivative * kD;
-      l.spin(fwd, volts, voltageUnits::volt);
-      r.spin(reverse, volts, voltageUnits::volt);
-      vex::task::sleep(15);
-    }
-    goto end; 
-  }
-  else
-  {
-    Brain.Screen.clearScreen();
-    Brain.Screen.setFont(fontType::mono40);
-    Brain.Screen.setFillColor(red);
-    Brain.Screen.print("No Inertial Sensor Installed");
-  }
-end:
-  vex::task::sleep(20);
-}
-
-void BASE_DRIVE::turn(double raw, int intakeSpeed, int timeout, double marginOfError)
+void BASE_DRIVE::turn(double raw, int intakeSpeed, int timeout, double tolerance)
 {
 	//ROBOT.timeOut(2.5);
 	//ROBOT.reset();
@@ -106,10 +63,7 @@ void BASE_DRIVE::turn(double raw, int intakeSpeed, int timeout, double marginOfE
 	if (os.getValues(COLOR) == BLUE) //If color is 0 (BLUE) flip the values 
 		raw = -raw;
 
-  if(timeout == 0)
-    marginalTurnTo(raw, intakeSpeed, marginOfError);
-  else
-	  imu.turnTo(raw, intakeSpeed, timeout);
+	imu.turnTo(raw, intakeSpeed, timeout, tolerance);
 }
 
 void turnFor(double raw, bool timeout, int time) 
@@ -140,10 +94,10 @@ void turnFor(double raw, bool timeout, int time)
         l.spin(fwd, volts, voltageUnits::volt);
         r.spin(reverse, volts, voltageUnits::volt);
         if(dt.velocity(percentUnits::pct) == 0)
-        motionless+=15;
+        motionless+=20;
       if(dt.velocity(percentUnits::pct) != 0)
         motionless+=0;
-        vex::task::sleep(15);
+        vex::task::sleep(20);
       }
       goto end; 
   }
@@ -246,7 +200,7 @@ void TILTER::tiltTo(int potentiometerPCT)
       prevError = error;
       double volts = error * kP + integral * kI + derivative * kD;
       Tilt.spin(fwd, volts, voltageUnits::volt);
-      vex::task::sleep(15);
+      vex::task::sleep(20);
     }
   }
   else if (error < 0) 
@@ -264,7 +218,7 @@ void TILTER::tiltTo(int potentiometerPCT)
       prevError = error;
       double volts = error * kP + integral * kI + derivative * kD;
       Tilt.spin(fwd, volts, voltageUnits::volt);
-      vex::task::sleep(15);
+      vex::task::sleep(20);
     }
   }
 }
@@ -364,9 +318,9 @@ void LIFTER::liftTo(int potentiometerPCT)
       Lift.spin(fwd, volts, voltageUnits::volt);
       if(Lift.velocity(percentUnits::pct) == 0)
       {
-        motionless+=15;
+        motionless+=20;
       }
-      vex::task::sleep(15);
+      vex::task::sleep(20);
     }
   }
   else if (error < 0) 
@@ -383,9 +337,9 @@ void LIFTER::liftTo(int potentiometerPCT)
       Lift.spin(fwd, volts, voltageUnits::volt);
       if(Lift.velocity(percentUnits::pct) == 0)
       {
-        motionless+=15;
+        motionless+=20;
       }
-      vex::task::sleep(15);
+      vex::task::sleep(20);
     }
   }
 }
@@ -563,10 +517,10 @@ void BASE_DRIVE::driveTo(double positionRev, int intakeSpeed, int timeout, doubl
       double volts = error * kP + integral * kI + derivative * kD;
       d.spin(fwd, volts, voltageUnits::volt);
       if(std::abs(dt.velocity(percentUnits::pct)) >= tolerance)
-        motionless+=15;
+        motionless+=20;
       if(std::abs(dt.velocity(percentUnits::pct)) < tolerance)
         motionless+=0;
-      vex::task::sleep(15);
+      vex::task::sleep(20);
     }
   }
   else if (error < 0) 
@@ -585,10 +539,10 @@ void BASE_DRIVE::driveTo(double positionRev, int intakeSpeed, int timeout, doubl
       double volts = error * kP + integral * kI + derivative * kD;
       d.spin(fwd, volts, voltageUnits::volt);
       if(std::abs(dt.velocity(percentUnits::pct)) >= tolerance)
-        motionless+=15;
+        motionless+=20;
       if(std::abs(dt.velocity(percentUnits::pct)) < tolerance)
         motionless+=0;
-      vex::task::sleep(15);
+      vex::task::sleep(20);
     }
   }
   intake.stop();
@@ -608,10 +562,10 @@ void BASE_DRIVE::driveFor(double positionRev, int driveSpeed, int intakeSpeed, i
       double volts = (error * kP) + 2;
       d.spin(fwd, volts, voltageUnits::volt);
       if(dt.velocity(percentUnits::pct) == 0)
-        motionless+=15;
+        motionless+=20;
       if(dt.velocity(percentUnits::pct) != 0)
         motionless+=0;
-      vex::task::sleep(15);
+      vex::task::sleep(20);
     }
   }
   else if (error < 0) 
@@ -623,10 +577,10 @@ void BASE_DRIVE::driveFor(double positionRev, int driveSpeed, int intakeSpeed, i
       double volts = (error * kP) - 2;
       d.spin(fwd, volts, voltageUnits::volt);
       if(dt.velocity(percentUnits::pct) == 0)
-        motionless+=15;
+        motionless+=20;
       if(dt.velocity(percentUnits::pct) != 0)
         motionless+=0;
-      vex::task::sleep(15);
+      vex::task::sleep(20);
     }
   }
   intake.stop();
@@ -672,10 +626,10 @@ void mech::MECH_DRIVE::strafeTo(double revolutions, int intakeSpeed, int timeout
       ld.spin(fwd, voltsLD, voltageUnits::volt);
       rd.spin(fwd, voltsRD, voltageUnits::volt);
       if(std::abs(ld.velocity(percentUnits::pct)) <= tolerance && std::abs(rd.velocity(percentUnits::pct)) <= tolerance)
-        motionless+=15;
+        motionless+=20;
       if(std::abs(ld.velocity(percentUnits::pct)) > tolerance || std::abs(rd.velocity(percentUnits::pct)) > tolerance)
         motionless+=0;
-      vex::task::sleep(15);
+      vex::task::sleep(20);
     }
   }
   else if (errorLD < 0 && errorRD > 0) 
@@ -701,10 +655,10 @@ void mech::MECH_DRIVE::strafeTo(double revolutions, int intakeSpeed, int timeout
       ld.spin(fwd, voltsLD, voltageUnits::volt);
       rd.spin(fwd, voltsRD, voltageUnits::volt);
       if(std::abs(ld.velocity(percentUnits::pct)) <= tolerance && std::abs(rd.velocity(percentUnits::pct)) <= tolerance)
-        motionless+=15;
+        motionless+=20;
       if(std::abs(ld.velocity(percentUnits::pct)) > tolerance || std::abs(rd.velocity(percentUnits::pct)) > tolerance)
         motionless+=0;
-      vex::task::sleep(15);
+      vex::task::sleep(20);
     }
   }
   intake.stop();
@@ -725,10 +679,10 @@ void mech::MECH_DRIVE::strafeFor(double revolutions, int driveSpeed, int intakeS
       ld.spin(fwd, volts, voltageUnits::volt);
       rd.spin(fwd, -volts, voltageUnits::volt);
       if(dt.velocity(percentUnits::pct) == 0)
-        motionless+=15;
+        motionless+=20;
       if(dt.velocity(percentUnits::pct) != 0)
         motionless+=0;
-      vex::task::sleep(15);
+      vex::task::sleep(20);
     }
   }
   else if (error < 0) 
@@ -741,10 +695,10 @@ void mech::MECH_DRIVE::strafeFor(double revolutions, int driveSpeed, int intakeS
       ld.spin(fwd, -volts, voltageUnits::volt);
       rd.spin(fwd, volts, voltageUnits::volt);
       if(dt.velocity(percentUnits::pct) == 0)
-        motionless+=15;
+        motionless+=20;
       if(dt.velocity(percentUnits::pct) != 0)
         motionless+=0;
-      vex::task::sleep(15);
+      vex::task::sleep(20);
     }
   }
   intake.stop();
@@ -809,18 +763,6 @@ void pTurn(double degrees) //P loop turn code (better than the smartdrive method
   vex::task::sleep(10);
 }
 
-bool bot::ROBOT::allInstalled()
-{
-  if(Lift.installed() && Tilt.installed() && LeftFrontMotor.installed() && LeftRearMotor.installed() && RightFrontMotor.installed() && RightRearMotor.installed() && LeftIntake.installed() && RightIntake.installed())
-  {
-    Controller1.Screen.setCursor(1, 1);
-    Controller1.Screen.clearLine(1);
-    Controller1.Screen.print("PORT DC");
-    return true;
-  }
-  return false;
-}
-
 bool bot::ROBOT::driveInstalled()
 {
   if(LeftFrontMotor.installed() && LeftRearMotor.installed() && RightFrontMotor.installed() && RightRearMotor.installed())
@@ -830,6 +772,16 @@ bool bot::ROBOT::driveInstalled()
     Controller1.Screen.print("DRIVE WORKING");
     return true;
   }
+  return false;
+}
+
+bool bot::ROBOT::allInstalled()
+{
+  if(Lift.installed() && Tilt.installed() && driveInstalled() && LeftIntake.installed() && RightIntake.installed())
+    return true;
+  Controller1.Screen.setCursor(1, 1);
+  Controller1.Screen.clearLine(1);
+  Controller1.Screen.print("PORT DC");
   return false;
 }
 
