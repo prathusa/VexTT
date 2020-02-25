@@ -7,11 +7,32 @@ void controls()
   int forward = Controller1.Axis3.position(vex::percent)/(driveSpeedFactor);
   int sideways = Controller1.Axis4.position(vex::percent)/(driveSpeedFactor);
   int turn = -Controller1.Axis1.position(vex::percent)/(driveSpeedFactor*turnSpeedFactor);
+  
+  // Combined Exponential Drive Curve with Slew Curve modeling
+  LeftFrontMotor.spin(vex::forward, driveSlew(0.01 * pow(forward + sideways - turn, 2)), vex::percent);
+  LeftRearMotor.spin(vex::forward, driveSlew(0.01 * pow(forward - sideways - turn, 2)), vex::percent);
+  RightFrontMotor.spin(vex::forward, driveSlew(0.01 * pow(forward - sideways + turn, 2)), vex::percent);
+  RightRearMotor.spin(vex::forward, driveSlew(0.01 * pow(forward + sideways + turn, 2)), vex::percent);
 
-  LeftFrontMotor.spin(vex::forward, forward + sideways - turn, vex::percent);
-  LeftRearMotor.spin(vex::forward, forward - sideways - turn, vex::percent);
-  RightFrontMotor.spin(vex::forward, forward - sideways + turn, vex::percent);
-  RightRearMotor.spin(vex::forward, forward + sideways + turn, vex::percent);
+  /*
+  // Exponential Driver Control
+  LeftFrontMotor.spin(vex::forward, 0.01 * pow(forward + sideways - turn, 2), vex::percent);
+  LeftRearMotor.spin(vex::forward, 0.01 * pow(forward - sideways - turn, 2), vex::percent);
+  RightFrontMotor.spin(vex::forward, 0.01 * pow(forward - sideways + turn, 2), vex::percent);
+  RightRearMotor.spin(vex::forward, 0.01 * pow(forward + sideways + turn, 2), vex::percent);
+
+  // Slew Control Drive
+  LeftFrontMotor.spin(vex::forward, driveSlew(forward + sideways - turn), vex::percent);
+  LeftRearMotor.spin(vex::forward, driveSlew(forward - sideways - turn), vex::percent);
+  RightFrontMotor.spin(vex::forward, driveSlew(forward - sideways + turn), vex::percent);
+  RightRearMotor.spin(vex::forward, driveSlew(forward + sideways + turn), vex::percent);
+
+  // Vanilla Drive Code
+  LeftFrontMotor.spin(vex::forward, driveSlew(forward + sideways - turn), vex::percent);
+  LeftRearMotor.spin(vex::forward, driveSlew(forward - sideways - turn), vex::percent);
+  RightFrontMotor.spin(vex::forward, driveSlew(forward - sideways + turn), vex::percent);
+  RightRearMotor.spin(vex::forward, driveSlew(forward + sideways + turn), vex::percent);
+  */
 
   LeftFrontMotor.setBrake(coast);
   RightFrontMotor.setBrake(coast);

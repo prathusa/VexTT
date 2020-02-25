@@ -14,6 +14,13 @@ void IMU::setPID(double p, double i, double d)
   kD = d;
 }
 
+void IMU::resetPID()
+{
+  kP = 0.45;    // 0.45
+  kI = 0.00006; // 0.00006
+  kD = 0.50;
+}
+
 void IMU::turnTo(double raw, int intakeSpeed, int timeout, double tolerance)
 {
   if (Inertial.installed()) 
@@ -58,7 +65,7 @@ end:
   vex::task::sleep(20);
 }
 
-void BASE_DRIVE::turn(double raw, int intakeSpeed, int timeout, double tolerance)
+void IMU::turn(double raw, int intakeSpeed, int timeout, double tolerance)
 {
 	//ROBOT.timeOut(2.5);
 	//ROBOT.reset();
@@ -779,6 +786,7 @@ const int accel_step = 9;
 const int deccel_step = 9; 
 static int leftSpeed = 0;
 static int rightSpeed = 0;
+static int driveSpeed = 0;
 
 void leftSlew(int leftTarget)
 {
@@ -817,6 +825,25 @@ void rightSlew(int rightTarget)
     rightSpeed = rightTarget;
 
   r.spin(fwd, rightSpeed, velocityUnits::rpm);
+}
+
+int driveSlew(int driveTarget)
+{
+  int step;
+
+  if(abs(driveSpeed) < abs(driveTarget))
+    step = accel_step;
+  else
+    step = deccel_step;
+
+  if(driveTarget > driveSpeed + step)
+    driveSpeed += step;
+  else if(driveTarget < driveSpeed - step)
+    driveSpeed -= step;
+  else
+    driveSpeed = driveTarget;
+
+  return driveSpeed;
 }
 
 void pTurn(double degrees) //P loop turn code (better than the smartdrive methods once kP is tuned properly)

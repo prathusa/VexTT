@@ -8,9 +8,13 @@ class IMU
   double kD = 0.50;    // 0.45
   public:
   IMU();
+  void resetPID();
   void setPID(double kP, double kI, double kD);
   void turnTo(double raw, int intakeSpeed, int timeout = 1, double tolerance = 0.1);
   void turnToHeading(double target, int timeout = 250);
+  void turn(double raw, int intakeSpeed = 0, int timeout = 1, double marginOfError = 1.0);
+  void turnFor(double raw, bool timeout = false, int time = 250);
+  void turnTo(double degrees);
   void getPositionY();
 };
 
@@ -25,13 +29,10 @@ class BASE_DRIVE : public IMU
     double thetaTolerance = 1;
     public:
     BASE_DRIVE();
-    void setPID(double kP, double kI, double kD);
     void resetPID();
+    void setPID(double kP, double kI, double kD);
     void setTheta(double angle, double angleTolerance);
     void driveTo(double positionRev, int intakeSpeed = 0, int timeout = 50, double tolerance = 0.1);
-    void turn(double raw, int intakeSpeed = 0, int timeout = 1, double marginOfError = 1.0);
-    void turnFor(double raw, bool timeout = false, int time = 250);
-    void turnTo(double degrees);
     void driveFor(double positionRev, int driveSpeed = 50, int intakeSpeed = 0, int timeout = 50);
     void drive(double revolutions, int intakeSpeed = 0, int timeout = 50, double tolerance = 0.1);
 };
@@ -107,8 +108,9 @@ namespace bot
   };
 }
 
-void leftSlew();
-void rightSlew();
+void leftSlew(int leftTarget);
+void rightSlew(int rightTarget);
+int driveSlew(int driveTarget);
 
 // Added Controller and Brain feedback when autonomous is selected.
 void autonController();
