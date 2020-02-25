@@ -2,8 +2,13 @@
 
 class IMU
 {
+  private:
+  double kP = 0.45;    // 0.45
+  double kI = 0.00006; // 0.00006
+  double kD = 0.50;    // 0.45
   public:
   IMU();
+  void setPID(double kP, double kI, double kD);
   void turnTo(double raw, int intakeSpeed, int timeout = 1, double tolerance = 0.1);
   void turnToHeading(double target, int timeout = 250);
   void getPositionY();
@@ -13,30 +18,37 @@ class IMU
 class BASE_DRIVE : public IMU
 {
     private:
-
+    double kP = 2;
+    double kI = 0.0075;
+    double kD = 6;
+    double theta = 0;
+    double thetaTolerance = 1;
     public:
     BASE_DRIVE();
-    void driveTo(double positionRev, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0075, double kD = 6, double tolerance = 0.1);
+    void setPID(double kP, double kI, double kD);
+    void resetPID();
+    void setTheta(double angle, double angleTolerance);
+    void driveTo(double positionRev, int intakeSpeed = 0, int timeout = 50, double tolerance = 0.1);
     void turn(double raw, int intakeSpeed = 0, int timeout = 1, double marginOfError = 1.0);
     void turnFor(double raw, bool timeout = false, int time = 250);
     void turnTo(double degrees);
     void driveFor(double positionRev, int driveSpeed = 50, int intakeSpeed = 0, int timeout = 50);
-    void drive(double revolutions, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0095, double kD = 6, double tolerance = 0.1);
+    void drive(double revolutions, int intakeSpeed = 0, int timeout = 50, double tolerance = 0.1);
 };
 
-namespace mech
+class MECH_DRIVE : public BASE_DRIVE
 {
-  class MECH_DRIVE : public BASE_DRIVE
-  {
-    private:
-    
-    public:
-    MECH_DRIVE();
-    void strafe(double revolutions, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0095, double kD = 6, double tolerance = 0.1);
-    void strafeTo(double revolutions, int intakeSpeed = 0, int timeout = 50, double kP = 2, double kI = 0.0095, double kD = 6, double tolerance = 0.1);
-    void strafeFor(double revolutions, int driveSpeed, int intakeSpeed, int timeout) ;
-  };
-}
+  private:
+  double kP = 2;
+  double kI = 0.0095;
+  double kD = 6;
+  public:
+  MECH_DRIVE();
+  void setPID(double kP, double kI, double kD);
+  void strafe(double revolutions, int intakeSpeed = 0, int timeout = 10, double tolerance = 0.1);
+  void strafeTo(double revolutions, int intakeSpeed = 0, int timeout = 10, double tolerance = 0.1);
+  void strafeFor(double revolutions, int driveSpeed, int intakeSpeed, int timeout) ;
+};
 
 namespace track
 {
@@ -81,7 +93,7 @@ class LIFTER
 
 namespace bot
 {
-  class ROBOT : public mech::MECH_DRIVE, public LIFTER, public TILTER
+  class ROBOT : public MECH_DRIVE, public LIFTER, public TILTER
   {
     private:
     public:
@@ -94,6 +106,9 @@ namespace bot
     void resetEncoders(void);
   };
 }
+
+void leftSlew();
+void rightSlew();
 
 // Added Controller and Brain feedback when autonomous is selected.
 void autonController();

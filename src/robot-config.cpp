@@ -26,6 +26,9 @@ vex::drivetrain dt(l, r);
 vex::controller Controller1;
 vex::competition Competition;
 ACCESS_OS os;
+IMU imu;
+BASE_DRIVE base;
+MECH_DRIVE mech;
 bot::ROBOT robot;
 
 int liftMax = 55;

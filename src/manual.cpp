@@ -19,7 +19,8 @@ void p3()
     d.rotateFor(directionType::fwd, 1, rotationUnits::rev, 30, velocityUnits::pct, true);
     robot.turn(-127, 100, 10); //100 (timeout) can be reduced
     //drive(.8, 100, 30, 3, 0.015, 4);
-    robot.drive(1, 100, 10, 4, 0.03, 2);
+    base.setPID(4, 0.03, 2);
+    robot.drive(1, 100, 10);
     intake.spinFor(fwd, 1, rotationUnits::rev);
     robot.stack();
     //d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
@@ -47,15 +48,17 @@ void p4()
     Lift.stop();
     intake.spin(directionType::rev, 100, velocityUnits::pct);
     robot.drive(3.3, 100);
-    robot.turn(-130, 100, 0); //100 (timeout) can be reduced
-    robot.drive(3.5, 100, 10, 3, 0.015, 4);
+    robot.turn(-130, 100, 0); //100 (timeout) can be 
+    base.setPID(3, 0.015, 4);
+    robot.drive(3.5, 100, 10);
     intake.spinFor(fwd, .5, rotationUnits::rev);
     robot.stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false); //untested I believe may need to be removed
     vex::task::sleep(270); //untested I believe may need to be removed
     //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     //fadeAway();
-    robot.drive(-.75, 0, 10, 3, 0.015, 4);
+    base.setPID(3, 0.015, 4);
+    robot.drive(-.75, 0, 10);
     Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%d ", Brain.Timer.time()); 
@@ -75,7 +78,8 @@ void p5()
     robot.turn(0);
     robot.drive(2.3, 100);
     robot.turn(-130, 50, 0); //100 (timeout) can be reduced
-    robot.drive(3.5, 100, 10, 3, 0.015, 4);
+    base.setPID(3, 0.015, 4);
+    robot.drive(3.5, 100, 10);
     intake.spinFor(fwd, 1, rotationUnits::rev);
     robot.stack();
     intake.spinFor(fwd, .65, rotationUnits::rev, 50, velocityUnits::pct);
@@ -94,18 +98,19 @@ void tp5()
     robot.flipOut();
     Lift.stop();
     intake.spin(directionType::rev, 100, velocityUnits::pct);
-    robot.drive(3.3, 100, 30, 3, 0.015, 4);
+    base.setPID(3, 0.015, 4);
+    robot.drive(3.3, 100, 30);
     robot.turn(-90, 100, 0);
-    robot.drive(.5, 100, 30, 3, 0.015, 4);
+    robot.drive(.5, 100, 30);
     robot.turn(-130, 100, 0); //100 (timeout) can be reduced
-    robot.drive(3.5, 100, 10, 3, 0.015, 4);
+    robot.drive(3.5, 100, 10);
     intake.spinFor(fwd, .5, rotationUnits::rev);
     robot.stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false); //untested I believe may need to be removed
     vex::task::sleep(270); //untested I believe may need to be removed
     //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     //fadeAway();
-    robot.drive(-.75, 0, 10, 3, 0.015, 4);
+    robot.drive(-.75, 0, 10);
     Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%d ", Brain.Timer.time()); 
@@ -120,20 +125,21 @@ void p6()
     robot.flipOut();
     Lift.stop();
     intake.spin(directionType::rev, 100, velocityUnits::pct);
-    robot.drive(3.3, 100, 10, 3, 0.015, 4);
+    base.setPID(3, 0.015, 4);
+    robot.drive(3.3, 100, 10);
     robot.turn(-90, 100, 0);
     robot.drive(.5, 100, 10);
     robot.turn(-180, 100, 0);
-    robot.drive(3, 100, 10, 3, 0.015, 4);
+    robot.drive(3, 100, 10);
     robot.turn(-90, 100, 0);
-    robot.drive(3, 100, 10, 3, 0.015, 4);
+    robot.drive(3, 100, 10);
     intake.spinFor(fwd, .5, rotationUnits::rev);
     robot.stack();
     d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, false); //untested I believe may need to be removed
     vex::task::sleep(270); //untested I believe may need to be removed
     //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     //fadeAway();
-    robot.drive(-.75, 0, 10, 3, 0.015, 4);
+    robot.drive(-.75, 0, 10);
     Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%d ", Brain.Timer.time()); 
@@ -152,7 +158,7 @@ void u4()
     vex::task::sleep(270); //might need to be increased
     //d.spinFor(-.75, rotationUnits::rev, 50, velocityUnits::pct);
     //fadeAway();
-    robot.drive(-.75, 0, 10, 3, 0.015, 4);
+    robot.drive(-.75, 0, 10);
     Controller1.Screen.clearLine(3);
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%d ", Brain.Timer.time());  
@@ -171,7 +177,7 @@ void u5()
    // drive(-.4, 100. 10);//5);
     robot.turn(135, 50, 10);
     //intake.spinFor(fwd, .5, rotationUnits::rev, 70, velocityUnits::pct, true);
-    robot.drive(1.9, 100, 30, 3, 0.015, 4);//27);
+    robot.drive(1.9, 100, 30);//27);
     d.rotateFor(directionType::fwd, -.085, rotationUnits::rev, 25, velocityUnits::pct, true);
     intake.spinFor(fwd, 1, rotationUnits::rev, 70, velocityUnits::pct);
     robot.stack();
@@ -195,7 +201,7 @@ void u6()
     d.rotateFor(directionType::fwd, -1.9, rotationUnits::rev, 50, velocityUnits::pct, true);
    // drive(-.4, 100. 10);//5);
     robot.turn(140, 100, 0);
-    robot.drive(2.1, 100, 30, 3, 0.015, 4);//27);
+    robot.drive(2.1, 100, 30);//27);
     intake.spinFor(fwd, .5, rotationUnits::rev);
     robot.stack();
     //d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
@@ -217,12 +223,13 @@ void tu7()
     robot.flipOut();
     robot.drive(3.3, 100, 10);
     robot.turn(30, 100, 10);
-    robot.drive(-3.5, 40, 30, 3, 0.015, 4);
+    base.setPID(3, 0.015, 4);
+    robot.drive(-3.5, 40, 30);
     robot.turn(0, 100, 10);
     robot.drive(2.8, 100, 10);
     intake.spinFor(fwd, .5, rotationUnits::rev);
     robot.turn(130, 0, 0);
-    robot.drive(3, 0, 30, 3, 0.015, 4);//27);
+    robot.drive(3, 0, 30);//27);
     d.rotateFor(directionType::fwd, -.085, rotationUnits::rev, 25, velocityUnits::pct, true);
     intake.spinFor(fwd, .5, rotationUnits::rev, 70, velocityUnits::pct);
     robot.stack();
@@ -248,7 +255,8 @@ void ttu7()
     robot.drive(1.4, 100, 10);
     robot.turn(135, 100, 10);
     intake.spinFor(fwd, .5, rotationUnits::rev, 70, velocityUnits::pct, false);
-    robot.drive(2.4, 0, 30, 3, 0.015, 4);//27);
+    base.setPID(3, 0.015, 4);
+    robot.drive(2.4, 0, 30);//27);
     d.rotateFor(directionType::fwd, -.085, rotationUnits::rev, 25, velocityUnits::pct, true);
     intake.spinFor(fwd, .5, rotationUnits::rev, 70, velocityUnits::pct);
     robot.stack();
@@ -271,12 +279,15 @@ void u7()
     robot.flipOut();
     robot.drive(3.3, 100, 30);
     robot.turn(-30, 100, 10);
-    robot.drive(-3.5, 40, 30, 3, 0.015, 4);
+    base.setPID(3, 0.015, 4);
+    robot.drive(-3.5, 40, 30);
     robot.turn(0, 100, 10);
+    base.resetPID();
     robot.drive(2.9, 100, 10);
     intake.spinFor(fwd, .5, rotationUnits::rev, false);
     robot.turn(134, 0, 0);
-    robot.drive(1.9, 100, 30, 3, 0.015, 4);//27);
+    base.setPID(3, 0.015, 4);
+    robot.drive(1.9, 100, 30);//27);
     d.rotateFor(directionType::fwd, -.085, rotationUnits::rev, 25, velocityUnits::pct, true);
     intake.spinFor(fwd, .5, rotationUnits::rev, 70, velocityUnits::pct);
     robot.stack();
@@ -298,7 +309,9 @@ void p8()
     Lift.stop();
     robot.drive(2.1, 100, 30);
     robot.turn(-30, 100, 10);
-    robot.drive(-1.8, 100, 30, 3, 0.015, 4);
+    base.setPID(3, 0.015, 4);
+    robot.drive(-1.8, 100, 30);
+    base.resetPID();
     robot.drive(2.6, 100, 30);
     //drive(-.9, 100, 30, 3, 0.015, 4);
     robot.turn(-130, true, 100); //100 (timeout) can be reduced
@@ -329,19 +342,22 @@ void s18()
     robot.resetEncoders();
     Inertial.resetRotation();
     robot.flipOut();
-    robot.drive(1, 100, 30, 3, 0.015, 4);
+    base.setPID(3, 0.015, 4);
+    robot.drive(1, 100, 30);
     robot.towerMid();
     intake.spinFor(fwd, .5, rotationUnits::rev);
-    robot.drive(.75, 100, 30, 3, 0.015, 4);
+    robot.drive(.75, 100, 30);
     robot.fadeAway();
     robot.liftTo(liftMin, 12);
     robot.drive(-2, 0, 100);
     robot.turn(0);
-    robot.drive(9.5, 100, 10, 1.5, 0.0015, 4.5);//39);
+    base.setPID(1.5, 0.0015, 4.5);
+    robot.drive(9.5, 100, 10);//39);
     d.rotateFor(directionType::fwd, -.5, rotationUnits::rev, 50, velocityUnits::pct, true);
    // drive(-.4, 100. 10);//5);
     robot.turn(45, 100, 40);
-    robot.drive(1.9, 100, 10, 3, 0.015, 4);//27);
+    base.setPID(3, 0.015, 4);
+    robot.drive(1.9, 100, 10);//27);
     intake.spinFor(fwd, 1, rotationUnits::rev);
     robot.stack();
     //d.rotateFor(directionType::fwd, .085, rotationUnits::rev, 25, velocityUnits::pct, true);
@@ -359,7 +375,8 @@ void s40()
     robot.resetEncoders();
     Inertial.resetRotation();
     robot.flipOut();
-    robot.drive(3.3, 100, 10, 7, 0.0075, 6);//39);
+    base.setPID(7, 0.0075, 6);
+    robot.drive(3.3, 100, 10);//39);
     robot.turn(-30, 100, 40);
     intake.spin(directionType::rev, 100, percentUnits::pct);
     robot.drive(1, 100);
@@ -368,7 +385,8 @@ void s40()
     d.rotateFor(directionType::fwd, -1.2, rotationUnits::rev, 50, velocityUnits::pct, true);
    // drive(-.4, 100. 10);//5);
     robot.turn(140, 100, 40);
-    robot.drive(1.9, 100, 30, 3, 0.015, 4);
+    base.setPID(3, 0.015, 4);
+    robot.drive(1.9, 100, 30);
     d.rotateFor(directionType::fwd, -.085, rotationUnits::rev, 25, velocityUnits::pct, true);
     intake.spinFor(fwd, 1, rotationUnits::rev);
     robot.stack();
@@ -386,7 +404,8 @@ void s40()
     d.rotateFor(directionType::rev, .5, rotationUnits::rev, 50, velocityUnits::pct, true);
     robot.liftTo(liftMin, 12);
     robot.turn(0, 100);
-    robot.drive(0.5, 100, 10, 2, .5, 4);
+    base.setPID(2, .5, 4);
+    robot.drive(0.5, 100, 10);
     robot.turn(90, 100);
     robot.drive(3, -10);
     robot.drive(-.5, -10);
@@ -403,7 +422,8 @@ void s40()
     robot.drive(4, 100);
     d.rotateFor(directionType::fwd, -1.2, rotationUnits::rev, 50, velocityUnits::pct, true);
     robot.turn(45, 100, 40);
-    robot.drive(1.9, 100, 30, 3, 0.015, 4);
+    base.setPID(3, 0.015, 4);
+    robot.drive(1.9, 100, 30);
     d.rotateFor(directionType::fwd, -.085, rotationUnits::rev, 25, velocityUnits::pct, true);
     intake.spinFor(fwd, 1, rotationUnits::rev);
     robot.stack();

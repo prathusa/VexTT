@@ -2,19 +2,22 @@
 
 BASE_DRIVE::BASE_DRIVE(){};
 IMU::IMU(){};
-mech::MECH_DRIVE::MECH_DRIVE(){};
+MECH_DRIVE::MECH_DRIVE(){};
 LIFTER::LIFTER(){};
 TILTER::TILTER(){};
 bot::ROBOT::ROBOT(){};
 
-IMU imu;
+void IMU::setPID(double p, double i, double d)
+{
+  kP = p;
+  kI = i;
+  kD = d;
+}
+
 void IMU::turnTo(double raw, int intakeSpeed, int timeout, double tolerance)
 {
   if (Inertial.installed()) 
   {
-    double kP = 0.45;    // 0.45
-    double kI = 0.00006; // 0.00006
-    double kD = 0.50;    // 0.45
     double target = raw;
     double error = target - Inertial.rotation(rotationUnits::deg);
     double integral = error;
@@ -494,7 +497,27 @@ void bot::ROBOT::resetEncoders(void)
   RightRearMotor.resetPosition();
 }
 
-void BASE_DRIVE::driveTo(double positionRev, int intakeSpeed, int timeout, double kP, double kI, double kD, double tolerance) 
+void BASE_DRIVE::setPID(double p, double i, double d)
+{
+  kP = p;
+  kI = i;
+  kD = d;
+}
+
+void BASE_DRIVE::resetPID()
+{
+  kP = 2;
+  kI = 0.0075;
+  kD = 6;
+}
+
+void BASE_DRIVE::setTheta(double angle, double angleTolerance)
+{
+  theta = angle;
+  thetaTolerance = angleTolerance;
+}
+
+void BASE_DRIVE::driveTo(double positionRev, int intakeSpeed, int timeout, double tolerance) 
 {
   double error = positionRev - d.position(rotationUnits::rev);
   double integral = error;
@@ -515,7 +538,23 @@ void BASE_DRIVE::driveTo(double positionRev, int intakeSpeed, int timeout, doubl
       derivative = error - prevError;
       prevError = error;
       double volts = error * kP + integral * kI + derivative * kD;
-      d.spin(fwd, volts, voltageUnits::volt);
+      double thetaError = theta - Inertial.rotation();
+      if(thetaError > thetaTolerance) // Tolerance needs to be tuned
+      {
+        double leftVolts = volts;
+        double rightVolts = volts*cos(thetaError/8); // Needs to be tuned
+        l.spin(fwd, leftVolts, voltageUnits::volt);
+        r.spin(fwd, rightVolts, voltageUnits::volt);
+      }
+      else if(thetaError < -thetaTolerance) // Tolerance needs to be tuned
+      {
+        double leftVolts = volts*cos(thetaError/8); // Needs to be tuned
+        double rightVolts = volts;
+        l.spin(fwd, leftVolts, voltageUnits::volt);
+        r.spin(fwd, rightVolts, voltageUnits::volt);
+      }
+      else
+        d.spin(fwd, volts, voltageUnits::volt);
       if(std::abs(dt.velocity(percentUnits::pct)) >= tolerance)
         motionless+=20;
       if(std::abs(dt.velocity(percentUnits::pct)) < tolerance)
@@ -537,7 +576,23 @@ void BASE_DRIVE::driveTo(double positionRev, int intakeSpeed, int timeout, doubl
       derivative = error - prevError;
       prevError = error;
       double volts = error * kP + integral * kI + derivative * kD;
-      d.spin(fwd, volts, voltageUnits::volt);
+      double thetaError = theta - Inertial.rotation();
+      if(thetaError > thetaTolerance) // Tolerance needs to be tuned
+      {
+        double leftVolts = volts;
+        double rightVolts = volts*cos(thetaError/8); // Needs to be tuned
+        l.spin(fwd, leftVolts, voltageUnits::volt);
+        r.spin(fwd, rightVolts, voltageUnits::volt);
+      }
+      else if(thetaError < -thetaTolerance) // Tolerance needs to be tuned
+      {
+        double leftVolts = volts*cos(thetaError/8); // Needs to be tuned
+        double rightVolts = volts;
+        l.spin(fwd, leftVolts, voltageUnits::volt);
+        r.spin(fwd, rightVolts, voltageUnits::volt);
+      }
+      else
+        d.spin(fwd, volts, voltageUnits::volt);
       if(std::abs(dt.velocity(percentUnits::pct)) >= tolerance)
         motionless+=20;
       if(std::abs(dt.velocity(percentUnits::pct)) < tolerance)
@@ -586,13 +641,20 @@ void BASE_DRIVE::driveFor(double positionRev, int driveSpeed, int intakeSpeed, i
   intake.stop();
 }
 
-void BASE_DRIVE::drive(double revolutions, int intakeSpeed, int timeout, double kP, double kI, double kD, double tolerance) 
+void BASE_DRIVE::drive(double revolutions, int intakeSpeed, int timeout, double tolerance) 
 {
   double target = revolutions + d.position(rotationUnits::rev);
-  driveTo(target, intakeSpeed, timeout, kP, kI, kD, tolerance);
+  driveTo(target, intakeSpeed, timeout, tolerance);
 }
 
-void mech::MECH_DRIVE::strafeTo(double revolutions, int intakeSpeed, int timeout, double kP, double kI, double kD, double tolerance) 
+void MECH_DRIVE::setPID(double p, double i, double d)
+{
+  kP = p;
+  kI = i;
+  kD = d;
+}
+
+void MECH_DRIVE::strafeTo(double revolutions, int intakeSpeed, int timeout, double tolerance) 
 {
   double errorLD = revolutions - ld.position(rotationUnits::rev);
   double errorRD = -revolutions - rd.position(rotationUnits::rev);
@@ -664,7 +726,7 @@ void mech::MECH_DRIVE::strafeTo(double revolutions, int intakeSpeed, int timeout
   intake.stop();
 }
 
-void mech::MECH_DRIVE::strafeFor(double revolutions, int driveSpeed, int intakeSpeed, int timeout) 
+void MECH_DRIVE::strafeFor(double revolutions, int driveSpeed, int intakeSpeed, int timeout) 
 {
   double error = revolutions - d.position(rotationUnits::rev);
   double kP = driveSpeed/28.57;
@@ -704,12 +766,57 @@ void mech::MECH_DRIVE::strafeFor(double revolutions, int driveSpeed, int intakeS
   intake.stop();
 }
 
-void mech::MECH_DRIVE::strafe(double revolutions, int intakeSpeed, int timeout, double kP, double kI, double kD, double tolerance) 
+void MECH_DRIVE::strafe(double revolutions, int intakeSpeed, int timeout, double tolerance) 
 {
   if (os.getValues(COLOR) == BLUE) //If color is 0 (BLUE) flip the values 
 		revolutions = -revolutions;
   double target = revolutions + ld.position(rotationUnits::rev);
-  strafeTo(target, intakeSpeed, timeout, kP, kI, kD, tolerance);
+  strafeTo(target, intakeSpeed, timeout, tolerance);
+}
+
+//slew control
+const int accel_step = 9;
+const int deccel_step = 9; 
+static int leftSpeed = 0;
+static int rightSpeed = 0;
+
+void leftSlew(int leftTarget)
+{
+  int step;
+
+  if(abs(leftSpeed) < abs(leftTarget))
+    step = accel_step;
+  else
+    step = deccel_step;
+
+  if(leftTarget > leftSpeed + step)
+    leftSpeed += step;
+  else if(leftTarget < leftSpeed - step)
+    leftSpeed -= step;
+  else
+    leftSpeed = leftTarget;
+
+  l.spin(fwd, leftSpeed, velocityUnits::rpm);
+}
+
+//slew control
+void rightSlew(int rightTarget)
+{
+  int step;
+
+  if(abs(rightSpeed) < abs(rightTarget))
+    step = accel_step;
+  else
+    step = deccel_step;
+
+  if(rightTarget > rightSpeed + step)
+    rightSpeed += step;
+  else if(rightTarget < rightSpeed - step)
+    rightSpeed -= step;
+  else
+    rightSpeed = rightTarget;
+
+  r.spin(fwd, rightSpeed, velocityUnits::rpm);
 }
 
 void pTurn(double degrees) //P loop turn code (better than the smartdrive methods once kP is tuned properly)

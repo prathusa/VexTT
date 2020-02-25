@@ -22,4 +22,7 @@
 
 //port 3&4&10&11 ded
 extern ACCESS_OS os;
+extern IMU imu;
+extern BASE_DRIVE base;
+extern MECH_DRIVE mech;
 extern bot::ROBOT robot;
