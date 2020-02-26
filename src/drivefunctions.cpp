@@ -14,6 +14,8 @@ PID::PID(double iKP, double iKI, double iKD)
   kD = iKD;
 };
 
+PID callbackPID;
+
 void IMU::setPID(double p, double i, double d)
 {
   kP = p;
@@ -1034,16 +1036,16 @@ double PID::calc_pidTo(double iTarget, double iData)
 
 int pidToCallback()
 {
-  while(!robot.pid.completed())
+  while(!callbackPID.completed())
   {
-    double volts = robot.pid.calc_pidTo(robot.pid.getTarget(), robot.pid.getData());
-    if(std::abs(volts) < std::abs(robot.pid.getTolerance()))
+    double volts = callbackPID.calc_pidTo(callbackPID.getTarget(), callbackPID.getData());
+    if(std::abs(volts) < std::abs(callbackPID.getTolerance()))
     {
       volts = 0;
-      robot.pid.setComplete(true);
+      callbackPID.setComplete(true);
       this_thread::yield(); 
     }
-    motor placeholder = robot.pid.getMotor();
+    motor placeholder = callbackPID.getMotor();
     placeholder.spin(fwd, volts, voltageUnits::volt);
     this_thread::sleep_for(20);
   }
@@ -1089,7 +1091,7 @@ void PID::pidTo(double iTarget, double iData, vex::motor iM, double iTolerance)
 
 void PID::async_pidTo(double iTarget, double iData, motor iM, double iTolerance) 
 {
-  setParam(iTarget, iData, iM, iTolerance);
+  callbackPID.setParam(iTarget, iData, iM, iTolerance);
   thread async_pid = thread(pidToCallback);
 }
 
