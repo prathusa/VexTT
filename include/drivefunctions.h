@@ -18,6 +18,37 @@ class IMU
   void getPositionY();
 };
 
+class PID
+{
+  private:
+  double kP = 0;
+  double kI = 0;
+  double kD = 0;
+  double target = 0;
+  double error = 0;
+  double data = 0;
+  vex::motor m = vex::motor(vex::PORT1, vex::gearSetting::ratio18_1, false);
+  double tolerance = 0.1;
+  double integral = 0;
+  double prevError = 0;
+  bool complete = false;
+  public:
+  PID();
+  PID(double kP, double kI, double kD);
+  bool completed();
+  double getTolerance();
+  double getData();
+  double getTarget();
+  vex::motor getMotor();
+  void setComplete(bool iComplete);
+  void setPID(double kP, double kI, double kD);
+  void setParam(double target, double iData, vex::motor m, double tolerance = 0.1);
+  void pidTo();
+  void pidTo(double target, double iData, vex::motor m, double tolerance = 0.1);
+  void async_pidTo(double target, double iData, vex::motor m, double tolerance = 0.1);
+  double calc_pidTo(double target, double iData);
+};
+
 
 class BASE_DRIVE : public IMU
 {
@@ -94,11 +125,15 @@ class LIFTER
 
 namespace bot
 {
-  class ROBOT : public MECH_DRIVE, public LIFTER, public TILTER
+  class ROBOT : public MECH_DRIVE, public LIFTER, public TILTER, public PID
   {
     private:
     public:
     ROBOT();
+    IMU imu;
+    PID pid;
+    BASE_DRIVE base;
+    MECH_DRIVE mech;
     void fadeAway();
     void fadeAwayMid();
     void flipOut();
@@ -108,9 +143,9 @@ namespace bot
   };
 }
 
-void leftSlew(int leftTarget);
-void rightSlew(int rightTarget);
-int driveSlew(int driveTarget);
+int leftSlew(int leftTarget);
+int rightSlew(int rightTarget);
+int slew(int target, double iMotor);
 
 // Added Controller and Brain feedback when autonomous is selected.
 void autonController();

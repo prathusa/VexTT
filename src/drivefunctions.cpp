@@ -6,6 +6,13 @@ MECH_DRIVE::MECH_DRIVE(){};
 LIFTER::LIFTER(){};
 TILTER::TILTER(){};
 bot::ROBOT::ROBOT(){};
+PID::PID(){};
+PID::PID(double iKP, double iKI, double iKD)
+{
+  kP = iKP;
+  kI = iKI;
+  kD = iKD;
+};
 
 void IMU::setPID(double p, double i, double d)
 {
@@ -73,7 +80,7 @@ void IMU::turn(double raw, int intakeSpeed, int timeout, double tolerance)
 	if (os.getValues(COLOR) == BLUE) //If color is 0 (BLUE) flip the values 
 		raw = -raw;
 
-	imu.turnTo(raw, intakeSpeed, timeout, tolerance);
+	robot.imu.turnTo(raw, intakeSpeed, timeout, tolerance);
 }
 
 void turnFor(double raw, bool timeout, int time) 
@@ -545,17 +552,19 @@ void BASE_DRIVE::driveTo(double positionRev, int intakeSpeed, int timeout, doubl
       derivative = error - prevError;
       prevError = error;
       double volts = error * kP + integral * kI + derivative * kD;
+      if(volts > 12)
+        volts = 12;
       double thetaError = theta - Inertial.rotation();
       if(thetaError > thetaTolerance) // Tolerance needs to be tuned
       {
         double leftVolts = volts;
-        double rightVolts = volts*cos(thetaError/8); // Needs to be tuned
+        double rightVolts = volts*(5.5*cos(thetaError/8)+6); // Needs to be tuned
         l.spin(fwd, leftVolts, voltageUnits::volt);
         r.spin(fwd, rightVolts, voltageUnits::volt);
       }
       else if(thetaError < -thetaTolerance) // Tolerance needs to be tuned
       {
-        double leftVolts = volts*cos(thetaError/8); // Needs to be tuned
+        double leftVolts = volts*(5.5*cos(thetaError/8)+6); // Needs to be tuned
         double rightVolts = volts;
         l.spin(fwd, leftVolts, voltageUnits::volt);
         r.spin(fwd, rightVolts, voltageUnits::volt);
@@ -587,13 +596,13 @@ void BASE_DRIVE::driveTo(double positionRev, int intakeSpeed, int timeout, doubl
       if(thetaError > thetaTolerance) // Tolerance needs to be tuned
       {
         double leftVolts = volts;
-        double rightVolts = volts*cos(thetaError/8); // Needs to be tuned
+        double rightVolts = volts*(5.5*cos(thetaError/8)+6); // Needs to be tuned
         l.spin(fwd, leftVolts, voltageUnits::volt);
         r.spin(fwd, rightVolts, voltageUnits::volt);
       }
       else if(thetaError < -thetaTolerance) // Tolerance needs to be tuned
       {
-        double leftVolts = volts*cos(thetaError/8); // Needs to be tuned
+        double leftVolts = volts*(5.5*cos(thetaError/8)+6); // Needs to be tuned
         double rightVolts = volts;
         l.spin(fwd, leftVolts, voltageUnits::volt);
         r.spin(fwd, rightVolts, voltageUnits::volt);
@@ -783,12 +792,11 @@ void MECH_DRIVE::strafe(double revolutions, int intakeSpeed, int timeout, double
 
 //slew control
 const int accel_step = 9;
-const int deccel_step = 9; 
+const int deccel_step = 9; // Probabiliy needs to be reduced 
 static int leftSpeed = 0;
 static int rightSpeed = 0;
-static int driveSpeed = 0;
 
-void leftSlew(int leftTarget)
+int leftSlew(int leftTarget)
 {
   int step;
 
@@ -804,11 +812,11 @@ void leftSlew(int leftTarget)
   else
     leftSpeed = leftTarget;
 
-  l.spin(fwd, leftSpeed, velocityUnits::rpm);
+  return leftSpeed;
 }
 
 //slew control
-void rightSlew(int rightTarget)
+int rightSlew(int rightTarget)
 {
   int step;
 
@@ -824,26 +832,27 @@ void rightSlew(int rightTarget)
   else
     rightSpeed = rightTarget;
 
-  r.spin(fwd, rightSpeed, velocityUnits::rpm);
+  return rightSpeed;
 }
 
-int driveSlew(int driveTarget)
+int slew(int target, double iMotor)
 {
   int step;
+  int returnSpeed;
 
-  if(abs(driveSpeed) < abs(driveTarget))
+  if(std::abs(iMotor) < abs(target))
     step = accel_step;
   else
     step = deccel_step;
 
-  if(driveTarget > driveSpeed + step)
-    driveSpeed += step;
-  else if(driveTarget < driveSpeed - step)
-    driveSpeed -= step;
+  if(target > iMotor + step)
+    returnSpeed = iMotor + step;
+  else if(target < iMotor - step)
+    returnSpeed = iMotor - step;
   else
-    driveSpeed = driveTarget;
+    returnSpeed = target;
 
-  return driveSpeed;
+  return returnSpeed;
 }
 
 void pTurn(double degrees) //P loop turn code (better than the smartdrive methods once kP is tuned properly)
@@ -919,6 +928,11 @@ bool bot::ROBOT::allInstalled()
   return false;
 }
 
+double calc_turn_angle(double angle)
+{
+  return baseDiagonal * angle * M_PI / 360;
+}
+
 void IMU::getPositionY()
 {  
   double velocityY = 0;
@@ -934,6 +948,149 @@ void IMU::getPositionY()
     std::cout << positionY << std::endl;
     task::sleep(200);
   }
+}
+
+void PID::setPID(double p, double i, double d)
+{
+  kP = p;
+  kI = i;
+  kD = d;
+}
+
+bool PID::completed()
+{
+  return complete;
+}
+
+double PID::getTolerance()
+{
+  return tolerance;
+}
+
+double PID::getData()
+{
+  return data;
+}
+
+double PID::getTarget()
+{
+  return target;
+}
+
+void PID::setComplete(bool iComplete)
+{
+  complete = iComplete;
+}
+
+void PID::setParam(double iTarget, double iData, vex::motor iM, double iTolerance)
+{
+  target = iTarget;
+  data = iData;
+  m = iM;
+  tolerance = iTolerance;
+}
+
+double PID::calc_pidTo(double iTarget, double iData) 
+{
+  target = iTarget;
+  data = iData;
+  error = target - data;
+  integral = error;
+  prevError = error;
+  double derivative = error - prevError;
+  if (error > 0) 
+  {
+    error = target - data;
+    integral += error;
+    if (error <= 0) 
+    {
+      integral = 0;
+    }
+    derivative = error - prevError;
+    prevError = error;
+    double volts = error * kP + integral * kI + derivative * kD;
+    if(std::abs(volts) > 12)
+      volts = 12;
+    return volts;
+  }
+  else if (error < 0) 
+  {
+    error = target - data;
+    integral += error;
+    if (error >= 0) 
+    {
+      integral = 0;
+    }
+    derivative = error - prevError;
+    prevError = error;
+    double volts = error * kP + integral * kI + derivative * kD;
+    if(std::abs(volts) > 12)
+      volts = 12;
+    return volts;
+  }
+  else 
+    return 0;
+}
+
+int pidToCallback()
+{
+  while(!robot.pid.completed())
+  {
+    double volts = robot.pid.calc_pidTo(robot.pid.getTarget(), robot.pid.getData());
+    if(std::abs(volts) < std::abs(robot.pid.getTolerance()))
+    {
+      volts = 0;
+      robot.pid.setComplete(true);
+      this_thread::yield(); 
+    }
+    motor placeholder = robot.pid.getMotor();
+    placeholder.spin(fwd, volts, voltageUnits::volt);
+    this_thread::sleep_for(20);
+  }
+  this_thread::yield();
+  return 0;
+}
+
+void PID::pidTo()
+{
+  while(!complete)
+  {
+    double volts = calc_pidTo(target, data);
+    if(std::abs(volts) < std::abs(getTolerance()))
+    {
+      volts = 0;
+      complete = true;
+      this_thread::yield(); 
+    }
+    m.spin(fwd, volts, voltageUnits::volt);
+    this_thread::sleep_for(20);
+  }
+}
+
+void PID::pidTo(double iTarget, double iData, vex::motor iM, double iTolerance)
+{
+  target = iTarget;
+  data = iData;
+  m = iM;
+  tolerance = iTolerance;
+  while(!complete)
+  {
+    double volts = calc_pidTo(target, data);
+    if(volts < tolerance)
+    {
+      volts = 0;
+      complete = true;
+      this_thread::yield(); 
+    }
+    m.spin(fwd, volts, voltageUnits::volt);
+    this_thread::sleep_for(20);
+  }
+}
+
+void PID::async_pidTo(double iTarget, double iData, motor iM, double iTolerance) 
+{
+  setParam(iTarget, iData, iM, iTolerance);
+  thread async_pid = thread(pidToCallback);
 }
 
 /*

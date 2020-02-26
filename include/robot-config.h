@@ -46,4 +46,7 @@ extern bool isStacking;
 extern double driveSpeedFactor;
 extern double turnSpeedFactor;
 extern double tileInch;
+extern double trackWidth;
+extern double wheelBase;
+extern double baseDiagonal;
 extern int tempStatus;
