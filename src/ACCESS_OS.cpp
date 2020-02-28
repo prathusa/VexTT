@@ -84,28 +84,28 @@ int ACCESS_OS::keyPressed()
 /*------------------------------------------------------------------------------------------------------
 [TO BE UPGRADED] currStatus > Returns 0 (Disabled), 1 (Auton), or 2 (Driver)
 ------------------------------------------------------------------------------------------------------*/
-int ACCESS_OS::currStatus()
-{
-	int status;
-	if (Competition.isEnabled()) //If robot is enabled, check what mode/period the match is in
-	{
-		if (Competition.isAutonomous()) {
-			status = modeAuton; //Robot is in Autonomous mode
-		}
-		else if (Competition.isDriverControl()) {
-			status = modeDriver; //Robot is in Driver Control mode
-		}
-		else
-		{
-			status = modeError; //ERROR MODE
-		}
-	}
-	else
-	{
-		status = modeDisabled; //Robot is Disabled
-	}
-	return status;
-}
+// int ACCESS_OS::currStatus()
+// {
+// 	int status;
+// 	if (Competition.isEnabled()) //If robot is enabled, check what mode/period the match is in
+// 	{
+// 		if (Competition.isAutonomous()) {
+// 			status = modeAuton; //Robot is in Autonomous mode
+// 		}
+// 		else if (Competition.isDriverControl()) {
+// 			status = modeDriver; //Robot is in Driver Control mode
+// 		}
+// 		else
+// 		{
+// 			status = modeError; //ERROR MODE
+// 		}
+// 	}
+// 	else
+// 	{
+// 		status = modeDisabled; //Robot is Disabled
+// 	}
+// 	return status;
+// }
 
 /*------------------------------------------------------------------------------------------------------
 [UPGRADED] clearLine > ACCESS_OS replacement for the controller's Screen.clearLine

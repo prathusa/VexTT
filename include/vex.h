@@ -10,15 +10,29 @@
 #include <fstream>
 #include "v5_vcs.h"
 #include "robot-config.h"
-#include "usercontrol.h"
-#include "record.h"
-#include "controls.h"
-#include "play.h"
 #include "manual.h"
 #include "drivefunctions.h"
-#include "autonomous.h"
-#include "gui.h"
 #include "ACCESS_OS.h"
+using namespace vex;
+
+// guiC.cpp
+void pre_auton(void);
+
+// play.cpp
+void play(void);
+void splay(void);
+
+// usercontrol.cpp
+void usercontrol(void);
+
+// record.cpp
+void record(void);
+
+// controls.cpp
+void controls(void);
+
+//autonomous.cpp
+void autonomous(void);
 
 //port 3&4&10&11 ded
 extern ACCESS_OS os;

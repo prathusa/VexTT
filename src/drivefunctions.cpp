@@ -7,14 +7,13 @@ LIFTER::LIFTER(){};
 TILTER::TILTER(){};
 bot::ROBOT::ROBOT(){};
 PID::PID(){};
+
 PID::PID(double iKP, double iKI, double iKD)
 {
   kP = iKP;
   kI = iKI;
   kD = iKD;
 };
-
-PID callbackPID;
 
 void IMU::setPID(double p, double i, double d)
 {
@@ -165,7 +164,7 @@ void TILTER::tiltTo(int potentiometerPCT, double volts, bool slowDown)
 
     vex::task::sleep(20);
   }
-  // Not completed yet don't use!
+  // Not isComplete yet don't use!
   while (std::abs(error) > 0 && slowDown) 
   {
     controls();
@@ -283,7 +282,7 @@ void LIFTER::liftTo(int potentiometerPCT, double volts)
   while (std::abs(error) > 0) 
   {
     controls();
-    liftTiltCheck();
+    // liftTiltCheck();
     if (error > 0) 
     {
       error = target - lift.value(percentUnits::pct);
@@ -328,7 +327,7 @@ void LIFTER::liftTo(int potentiometerPCT)
     while (std::abs(error) > 0 && (motionless < time || !timeout)) 
     {
       controls();
-      liftTiltCheck();
+      // liftTiltCheck();
       error = potentiometerPCT - lift.value(pct);
       integral += error;
       derivative = error - prevError;
@@ -347,7 +346,7 @@ void LIFTER::liftTo(int potentiometerPCT)
     while (std::abs(error) > 0 && (motionless < time || !timeout)) 
     {
       controls();
-      liftTiltCheck();
+      // liftTiltCheck();
       error = potentiometerPCT - lift.value(pct);
       integral += error;
       derivative = error - prevError;
@@ -793,8 +792,8 @@ void MECH_DRIVE::strafe(double revolutions, int intakeSpeed, int timeout, double
 }
 
 //slew control
-const int accel_step = 9;
-const int deccel_step = 9; // Probabiliy needs to be reduced 
+int accel_step = 12;
+int deccel_step = 12; // Probabiliy needs to be reduced 
 static int leftSpeed = 0;
 static int rightSpeed = 0;
 
@@ -952,6 +951,25 @@ void IMU::getPositionY()
   }
 }
 
+  double PID::dT = .02;
+  double PID::kP = 0;
+  double PID::kI = 0;
+  double PID::kD = 0;
+  double PID::target = 0;
+  //motor PID::mData = vex::motor(vex::PORT1, vex::gearSetting::ratio18_1, false);
+  //motor_group PID::mgData = vex::motor_group();
+  //pot PID::pData = pot(Brain.ThreeWirePort.A);
+  //encoder PID::eData = encoder(Brain.ThreeWirePort.A);
+  double PID::error = 0;
+  double PID::max = 12;
+  double PID::min = 2;
+  vex::motor PID::m = vex::motor(vex::PORT1, vex::gearSetting::ratio18_1, false);
+  vex::motor_group PID::mg = vex::motor_group();
+  double PID::integral = 0;
+  double PID::prevError = 0;
+  bool PID::motorGroup = false;
+  bool PID::complete = false;
+
 void PID::setPID(double p, double i, double d)
 {
   kP = p;
@@ -959,50 +977,46 @@ void PID::setPID(double p, double i, double d)
   kD = d;
 }
 
-bool PID::completed()
-{
-  return complete;
-}
+// void PID::update_data(void *iData)
+// {
+//   while(1)
+//   {
+//     data = iData;
+//     this_thread::sleep_for(20);
+//   }
+// }
 
-double PID::getTolerance()
-{
-  return tolerance;
-}
-
-double PID::getData()
-{
-  return data;
-}
-
-double PID::getTarget()
-{
-  return target;
-}
-
-void PID::setComplete(bool iComplete)
-{
-  complete = iComplete;
-}
-
-void PID::setParam(double iTarget, double iData, vex::motor iM, double iTolerance)
+void PID::setParam(double iTarget, vex::motor iM)
 {
   target = iTarget;
-  data = iData;
+  // thread updateData = thread(update_data, &iData);
   m = iM;
-  tolerance = iTolerance;
+  motorGroup = false;
 }
 
-double PID::calc_pidTo(double iTarget, double iData) 
+void PID::setParam(double iTarget, vex::motor_group iMG)
 {
   target = iTarget;
-  data = iData;
-  error = target - data;
+  // thread updateData = thread(update_data, &iData);
+  mg = iMG;
+  motorGroup = true;
+}
+
+double PID::calc_pidTo() 
+{
+  double position;
+  if(!motorGroup)
+    position = m.position(rev);
+  else
+    position = mg.position(rev);
+
+  error = target - position;
   integral = error;
   prevError = error;
   double derivative = error - prevError;
   if (error > 0) 
   {
-    error = target - data;
+    error = target - position;
     integral += error;
     if (error <= 0) 
     {
@@ -1017,7 +1031,7 @@ double PID::calc_pidTo(double iTarget, double iData)
   }
   else if (error < 0) 
   {
-    error = target - data;
+    error = target - position;
     integral += error;
     if (error >= 0) 
     {
@@ -1034,65 +1048,152 @@ double PID::calc_pidTo(double iTarget, double iData)
     return 0;
 }
 
-int pidToCallback()
+double PID::calc_pidLib()
 {
-  while(!callbackPID.completed())
-  {
-    double volts = callbackPID.calc_pidTo(callbackPID.getTarget(), callbackPID.getData());
-    if(std::abs(volts) < std::abs(callbackPID.getTolerance()))
+  
+    // Calculate error
+    double position;
+    if(!motorGroup)
+      position = m.position(rev);
+    else
+      position = mg.position(rev);
+
+    error = target - position;
+
+    // Proportional term
+    double Pout = kP * error;
+
+    // Integral term
+    integral += error * dT;
+    double Iout = kI * integral;
+
+    // Derivative term
+    double derivative = (error - prevError) / dT;
+    double Dout = kD * derivative;
+
+    // Calculate total output
+    double output = Pout + Iout + Dout;
+
+    // Restrict to max/min
+    if( output > max )
+        output = max;
+    else if( output < min )
+        output = min;
+
+    // Save error to previous error
+    prevError = error;
+
+    if(std::abs(error) < 0.05)
     {
-      volts = 0;
-      callbackPID.setComplete(true);
-      this_thread::yield(); 
+      return 0;
     }
-    motor placeholder = callbackPID.getMotor();
-    placeholder.spin(fwd, volts, voltageUnits::volt);
-    this_thread::sleep_for(20);
-  }
-  this_thread::yield();
-  return 0;
+    if(error < 0)
+      return -output;
+    else
+      return output;
 }
 
 void PID::pidTo()
 {
-  while(!complete)
+  while(1)
   {
-    double volts = calc_pidTo(target, data);
-    if(std::abs(volts) < std::abs(getTolerance()))
-    {
-      volts = 0;
-      complete = true;
-      this_thread::yield(); 
-    }
-    m.spin(fwd, volts, voltageUnits::volt);
+    double volts = calc_pidTo();
+    if(!motorGroup)
+      m.spin(fwd, volts, voltageUnits::volt);
+    else
+      mg.spin(fwd, volts, voltageUnits::volt);
     this_thread::sleep_for(20);
   }
 }
 
-void PID::pidTo(double iTarget, double iData, vex::motor iM, double iTolerance)
+void PID::pidLib()
 {
-  target = iTarget;
-  data = iData;
-  m = iM;
-  tolerance = iTolerance;
-  while(!complete)
+  while(1)
   {
-    double volts = calc_pidTo(target, data);
-    if(volts < tolerance)
+    double volts = calc_pidLib();
+    complete = false;
+    if(volts == 0)
     {
-      volts = 0;
+      if(!motorGroup)
+        m.stop();
+      else
+        mg.stop();
       complete = true;
-      this_thread::yield(); 
+      break;
     }
-    m.spin(fwd, volts, voltageUnits::volt);
+    if(!motorGroup)
+      m.spin(fwd, volts, voltageUnits::volt);
+    else
+      mg.spin(fwd, volts, voltageUnits::volt);
     this_thread::sleep_for(20);
   }
 }
 
-void PID::async_pidTo(double iTarget, double iData, motor iM, double iTolerance) 
+void PID::async_pidTo(bool waitForPrevious)
 {
-  callbackPID.setParam(iTarget, iData, iM, iTolerance);
-  thread async_pid = thread(pidToCallback);
+  while(waitForPrevious&&!complete)
+  {
+    task::sleep(20);
+  }
+  thread async_pid = vex::thread(pidTo);
+}
+
+void PID::async_pidLib(bool waitForPrevious)
+{
+  while(waitForPrevious&&!complete)
+  {
+    task::sleep(20);
+  }
+  thread async_pid = vex::thread(pidLib);
+}
+
+double HOLD::holder = 0;
+encoder HOLD::e_empty = encoder(Brain.ThreeWirePort.A);
+encoder *HOLD::e = &e_empty;
+pot HOLD::p_empty = pot(Brain.ThreeWirePort.A);
+pot *HOLD::p = &p_empty;
+
+HOLD::HOLD(encoder en)
+{
+  e = &en;
+}
+
+HOLD::HOLD(pot po)
+{
+  p = &po;
+}
+
+void HOLD::set_e_pos()
+{
+  while(1)
+  {
+    holder = (*(encoder *)e).value();
+    this_thread::sleep_for(20);
+  }
+}
+
+void HOLD::set_p_pos()
+{
+  while(1)
+  {
+    holder = (*(pot *)p).value(pct);
+    this_thread::sleep_for(20);
+  }
+}
+
+void HOLD::update_e_pos()
+{
+  thread encoder_update = thread(set_e_pos);
+}
+
+void HOLD::update_p_pos()
+{
+  thread pot_update = thread(set_p_pos);
+}
+
+double HOLD::get_holder()
+{
+  return holder;
 }
 
 /*

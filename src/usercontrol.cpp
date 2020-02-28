@@ -38,12 +38,12 @@ void usercontrol(void)
         if(Controller1.ButtonUp.pressing())
         {
             Lift.spin(directionType::fwd, 100, velocityUnits::pct);
-            liftTiltCheck();
+            // liftTiltCheck();
         }
         else if(Controller1.ButtonDown.pressing() && lift.value(pct) > liftMin)
         {
             Lift.spin(directionType::rev, 100, velocityUnits::pct);
-            liftTiltCheck();
+            // liftTiltCheck();
         }
         else
         {

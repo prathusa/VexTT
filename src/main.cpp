@@ -1,4 +1,22 @@
 #include "vex.h"
+using namespace vex;
+using namespace std;
+
+// void read()
+// {
+//   while(1)
+//   {
+//     std::cout << "Calc: ";
+//     std::cout << robot.pid.calc_pidLib() << std::endl;
+//     std::cout << "Position: ";
+//     std::cout << d.position(rev) << std::endl;
+//     std::cout << "Target: ";
+//     std::cout << robot.pid.target << std::endl;
+//     std::cout << "Error: ";
+//     std::cout << robot.pid.error << std::endl;
+//     task::sleep(100);
+//   }
+// }
 
 int main() 
 {

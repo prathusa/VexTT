@@ -18,37 +18,57 @@ class IMU
   void getPositionY();
 };
 
-class PID
+
+class HOLD
 {
   private:
-  double kP = 0;
-  double kI = 0;
-  double kD = 0;
-  double target = 0;
-  double error = 0;
-  double data = 0;
-  vex::motor m = vex::motor(vex::PORT1, vex::gearSetting::ratio18_1, false);
-  double tolerance = 0.1;
-  double integral = 0;
-  double prevError = 0;
-  bool complete = false;
+  static double holder;
+  static vex::encoder e_empty;
+  static vex::pot p_empty;
+  static vex::encoder *e;
+  static vex::pot *p;
+  static void set_e_pos();
+  static void set_p_pos();
+  public:
+  HOLD(vex::encoder e);
+  HOLD(vex::pot p);
+  void update_e_pos();
+  void update_p_pos();
+  double get_holder();
+};
+
+class PID // : private HOLD
+{
+  private:
+  static double kP;
+  static double kI;
+  static double kD;
+  static double dT;
+  static double max;
+  static double min;
+  static vex::motor m;
+  static vex::motor_group mg;
+  static double target;
+  static double error;
+  static double integral;
+  static double prevError;
+  static bool motorGroup;
+  static bool complete;
+  // enum Units {rev, deg, pct};
   public:
   PID();
   PID(double kP, double kI, double kD);
-  bool completed();
-  double getTolerance();
-  double getData();
-  double getTarget();
-  vex::motor getMotor();
-  void setComplete(bool iComplete);
+  PID(double dt, double max, double min, double Kp, double Kd, double Ki);
   void setPID(double kP, double kI, double kD);
-  void setParam(double target, double iData, vex::motor m, double tolerance = 0.1);
-  void pidTo();
-  void pidTo(double target, double iData, vex::motor m, double tolerance = 0.1);
-  void async_pidTo(double target, double iData, vex::motor m, double tolerance = 0.1);
-  double calc_pidTo(double target, double iData);
+  void setParam(double iTarget, vex::motor iM);
+  void setParam(double iTarget, vex::motor_group iMG);
+  static void pidTo();
+  static void pidLib();
+  void async_pidTo(bool waitForPrevious = false);
+  void async_pidLib(bool waitForPrevious = false);
+  static double calc_pidTo();
+  static double calc_pidLib();
 };
-
 
 class BASE_DRIVE : public IMU
 {
@@ -142,6 +162,9 @@ namespace bot
     void resetEncoders(void);
   };
 }
+
+extern int accel_step;
+extern int decel_step;
 
 int leftSlew(int leftTarget);
 int rightSlew(int rightTarget);
