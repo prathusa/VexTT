@@ -141,10 +141,11 @@ class LIFTER
   private:
   public:
   LIFTER();
+  static PID pid;
   void liftTo(int potentiometerPCT, double volts);
   void liftFor(int potentiometerPCT, double volts);
-  void liftTo(int potentiometerPCT);
-  void liftFor(int potentiometerPCT);
+//   void liftTo(int potentiometerPCT);
+//   void liftFor(int potentiometerPCT);
   void towerLow(void);
   void towerMid(void);
 };
