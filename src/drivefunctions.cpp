@@ -325,6 +325,8 @@ void tiltIntakeCheck()
   }
 }
 
+PID LIFTER::pid = PID(0, 0, 0, "potH", Lift);
+
 void LIFTER::liftTo(int potentiometerPCT, double volts) 
 {
   double target = potentiometerPCT; // In revolutions
@@ -362,65 +364,65 @@ void LIFTER::liftFor(int potentiometerPCT, double volts)
   liftTo(target, volts);
 }
 
-void LIFTER::liftTo(int potentiometerPCT) 
-{
-  bool timeout = true;
-  int time = 14; //if no movement in 15ms after no movement then task breaks
-  double error = potentiometerPCT - lift.value(pct);
-  double integral = error;
-  double prevError = error;
-  double derivative = error - prevError;
-  double kP = .55;    // 0.15
-  double kI = 0.0066;    // 0.03
-  double kD = 0.04;    // 0.1
-  int motionless = 0;
-  if (error > 0) 
-  {
-    while (std::abs(error) > 0 && (motionless < time || !timeout)) 
-    {
-      controls();
-      // liftTiltCheck();
-      error = potentiometerPCT - lift.value(pct);
-      integral += error;
-      derivative = error - prevError;
-      prevError = error;
-      double volts = error * kP + integral * kI + derivative * kD;
-      Lift.spin(fwd, volts, voltageUnits::volt);
-      if(Lift.velocity(percentUnits::pct) == 0)
-      {
-        motionless+=20;
-      }
-      vex::task::sleep(20);
-    }
-  }
-  else if (error < 0) 
-  {
-    while (std::abs(error) > 0 && (motionless < time || !timeout)) 
-    {
-      controls();
-      // liftTiltCheck();
-      error = potentiometerPCT - lift.value(pct);
-      integral += error;
-      derivative = error - prevError;
-      prevError = error;
-      double volts = error * kP + integral * kI + derivative * kD;
-      Lift.spin(fwd, volts, voltageUnits::volt);
-      if(Lift.velocity(percentUnits::pct) == 0)
-      {
-        motionless+=20;
-      }
-      vex::task::sleep(20);
-    }
-  }
-}
+// void LIFTER::liftTo(int potentiometerPCT) 
+// {
+//   bool timeout = true;
+//   int time = 14; //if no movement in 15ms after no movement then task breaks
+//   double error = potentiometerPCT - lift.value(pct);
+//   double integral = error;
+//   double prevError = error;
+//   double derivative = error - prevError;
+//   double kP = .55;    // 0.15
+//   double kI = 0.0066;    // 0.03
+//   double kD = 0.04;    // 0.1
+//   int motionless = 0;
+//   if (error > 0) 
+//   {
+//     while (std::abs(error) > 0 && (motionless < time || !timeout)) 
+//     {
+//       controls();
+//       // liftTiltCheck();
+//       error = potentiometerPCT - lift.value(pct);
+//       integral += error;
+//       derivative = error - prevError;
+//       prevError = error;
+//       double volts = error * kP + integral * kI + derivative * kD;
+//       Lift.spin(fwd, volts, voltageUnits::volt);
+//       if(Lift.velocity(percentUnits::pct) == 0)
+//       {
+//         motionless+=20;
+//       }
+//       vex::task::sleep(20);
+//     }
+//   }
+//   else if (error < 0) 
+//   {
+//     while (std::abs(error) > 0 && (motionless < time || !timeout)) 
+//     {
+//       controls();
+//       // liftTiltCheck();
+//       error = potentiometerPCT - lift.value(pct);
+//       integral += error;
+//       derivative = error - prevError;
+//       prevError = error;
+//       double volts = error * kP + integral * kI + derivative * kD;
+//       Lift.spin(fwd, volts, voltageUnits::volt);
+//       if(Lift.velocity(percentUnits::pct) == 0)
+//       {
+//         motionless+=20;
+//       }
+//       vex::task::sleep(20);
+//     }
+//   }
+// }
 
-void LIFTER::liftFor(int potentiometerPCT) 
-{
-  int start = lift.value(pct);
-  int distance = potentiometerPCT;
-  double target = distance + start;
-  liftTo(target);
-}
+// void LIFTER::liftFor(int potentiometerPCT) 
+// {
+//   int start = lift.value(pct);
+//   int distance = potentiometerPCT;
+//   double target = distance + start;
+//   liftTo(target);
+// }
 
 
 void bot::ROBOT::flipOut() 
@@ -1112,7 +1114,7 @@ void PID::update_position()
     position = encoderH.position(rotationUnits::rev);
 }
 
-double PID::calc_pid()
+double PID::calc()
 {
   
     // Calculate error
@@ -1152,11 +1154,11 @@ double PID::calc_pid()
       return output;
 }
 
-void PID::pid()
+void PID::to()
 {
   while(1)
   {
-    double volts = calc_pid();
+    double volts = calc();
     complete = false;
     if(volts == 0)
     {
@@ -1175,21 +1177,21 @@ void PID::pid()
   }
 }
 
-void PID::pid(double iTarget)
+void PID::to(double iTarget)
 {
   target = iTarget;
-  pid();
+  to();
 }
 
-void PID::async_pid()
+void PID::async()
 {
-  thread async_pid = vex::thread(pid);
+  thread async = vex::thread(to);
 }
 
-void PID::async_pid(double iTarget)
+void PID::async(double iTarget)
 {
   target = iTarget;
-  async_pid();
+  async();
 }
 
 /*
