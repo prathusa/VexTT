@@ -1,4 +1,4 @@
-#include "vex.h"
+#include "main.h"
 
 //start lined up with 2 cubes in front 
 void p3()

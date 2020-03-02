@@ -16,7 +16,7 @@ extern vex::motor_group ld;
 extern vex::motor_group rd;
 extern vex::motor_group d;
 extern vex::inertial Inertial;
-extern vex::gyro Gyro;
+// extern vex::gyro Gyro;
 extern vex::pot tilt;
 extern vex::pot lift;
 extern vex::limit Test;

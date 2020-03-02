@@ -1,4 +1,4 @@
-#include "vex.h"
+#include "main.h"
 
 vex::brain Brain;
 vex::motor Lift (vex::PORT11, vex::gearSetting::ratio36_1, true);
@@ -16,8 +16,8 @@ vex::motor_group ld(LeftFrontMotor, RightRearMotor);
 vex::motor_group rd(RightFrontMotor, LeftRearMotor);
 vex::motor_group d(LeftFrontMotor, LeftRearMotor, RightFrontMotor, RightRearMotor);
 vex::inertial Inertial(vex::PORT2);
-vex::gyro Gyro (Brain.ThreeWirePort.G);
-vex::pot tilt(Brain.ThreeWirePort.F);
+// vex::gyro Gyro (Brain.ThreeWirePort.G);
+vex::pot tilt(Brain.ThreeWirePort.G);
 vex::pot lift(Brain.ThreeWirePort.H);
 vex::limit Test (Brain.ThreeWirePort.B);
 vex::limit Debug (Brain.ThreeWirePort.D);

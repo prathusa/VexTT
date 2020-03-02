@@ -18,25 +18,6 @@ class IMU
   void getPositionY();
 };
 
-
-class HOLD
-{
-  private:
-  static double holder;
-  static vex::encoder e_empty;
-  static vex::pot p_empty;
-  static vex::encoder *e;
-  static vex::pot *p;
-  static void set_e_pos();
-  static void set_p_pos();
-  public:
-  HOLD(vex::encoder e);
-  HOLD(vex::pot p);
-  void update_e_pos();
-  void update_p_pos();
-  double get_holder();
-};
-
 class PID // : private HOLD
 {
   private:
@@ -48,26 +29,52 @@ class PID // : private HOLD
   static double min;
   static vex::motor m;
   static vex::motor_group mg;
+  static vex::pot potA;
+  static vex::pot potB;
+  static vex::pot potC;
+  static vex::pot potD;
+  static vex::pot potE;
+  static vex::pot potF;
+  static vex::pot potG;
+  static vex::pot potH;
+  static vex::encoder encoderA;
+  static vex::encoder encoderB;
+  static vex::encoder encoderC;
+  static vex::encoder encoderD;
+  static vex::encoder encoderE;
+  static vex::encoder encoderF;
+  static vex::encoder encoderG;
+  static vex::encoder encoderH;
+  // static vex::pot p;
+  static std::string threeWireDevice;
   static double target;
   static double error;
   static double integral;
   static double prevError;
   static bool motorGroup;
   static bool complete;
+  static double position;
+  static void update_position();
   // enum Units {rev, deg, pct};
   public:
   PID();
   PID(double kP, double kI, double kD);
   PID(double dt, double max, double min, double Kp, double Kd, double Ki);
+  PID(vex::motor iM);
+  PID(vex::motor_group iMG);
+  PID(double iKP, double iKI, double iKD, vex::motor iM);
+  PID(double iKP, double iKI, double iKD, vex::motor_group iMG);
+  PID(double iKP, double iKI, double iKD, std::string iThreeWireDevice, vex::motor iM);
+  PID(double iKP, double iKI, double iKD, std::string iThreeWireDevice, vex::motor_group iMG);
   void setPID(double kP, double kI, double kD);
+  void setTarget(double iTarget);
   void setParam(double iTarget, vex::motor iM);
   void setParam(double iTarget, vex::motor_group iMG);
-  static void pidTo();
-  static void pidLib();
-  void async_pidTo(bool waitForPrevious = false);
-  void async_pidLib(bool waitForPrevious = false);
-  static double calc_pidTo();
-  static double calc_pidLib();
+  static double calc_pid();
+  static void pid();
+  static void pid(double iTarget);
+  void async_pid();
+  void async_pid(double iTarget);
 };
 
 class BASE_DRIVE : public IMU
@@ -114,16 +121,15 @@ namespace track
   };
 }
 
-class TILTER
+class TILTER : private PID
 {
   private:
   public:
   TILTER();
+  static PID pid;
+  void stack();
   void tiltTo(int potentiometerPCT, double volts, bool slowDown = false);
   void tiltFor(int potentiometerPCT, double volts);
-  void tiltTo(int potentiometerPCT);
-  void tiltFor(int potentiometerPCT);
-  void stack(int intakeSpeed = 0);
 };
 
 
@@ -152,6 +158,8 @@ namespace bot
     ROBOT();
     IMU imu;
     PID pid;
+    TILTER tilter;
+    LIFTER lifter;
     BASE_DRIVE base;
     MECH_DRIVE mech;
     void fadeAway();
