@@ -1,4 +1,4 @@
-#include "main.h"
+#include "vex.h"
 
 void autonomous(void) 
 {

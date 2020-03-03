@@ -16,7 +16,7 @@ extern vex::motor_group ld;
 extern vex::motor_group rd;
 extern vex::motor_group d;
 extern vex::inertial Inertial;
-// extern vex::gyro Gyro;
+extern vex::gyro Gyro;
 extern vex::pot tilt;
 extern vex::pot lift;
 extern vex::limit Test;
@@ -24,7 +24,7 @@ extern vex::limit Debug;
 extern vex::smartdrive sdt;
 extern vex::drivetrain dt;
 extern vex::controller Controller1;
-//extern vex::competition Competition;
+extern vex::competition Competition;
 
 extern int liftMax;
 extern int liftTowerMid;

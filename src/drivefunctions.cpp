@@ -1,5 +1,5 @@
-#include "main.h"
-using namespace std;
+#include "vex.h"
+
 BASE_DRIVE::BASE_DRIVE(){};
 IMU::IMU(){};
 MECH_DRIVE::MECH_DRIVE(){};
@@ -13,56 +13,6 @@ PID::PID(double iKP, double iKI, double iKD)
   kP = iKP;
   kI = iKI;
   kD = iKD;
-};
-
-PID::PID(vex::motor iM)
-{
-  m = iM;
-  motorGroup = false;
-};
-
-PID::PID(vex::motor_group iMG)
-{
-  mg = iMG;
-  motorGroup = true;
-};
-
-PID::PID(double iKP, double iKI, double iKD, vex::motor iM)
-{
-  kP = iKP;
-  kI = iKI;
-  kD = iKD;
-  m = iM;
-  motorGroup = false;
-};
-
-PID::PID(double iKP, double iKI, double iKD, vex::motor_group iMG)
-{
-  kP = iKP;
-  kI = iKI;
-  kD = iKD;
-  mg = iMG;
-  motorGroup = true;
-};
-
-PID::PID(double iKP, double iKI, double iKD, std::string iThreeWireDevice, vex::motor iM)
-{
-  kP = iKP;
-  kI = iKI;
-  kD = iKD;
-  threeWireDevice = iThreeWireDevice;
-  m = iM;
-  motorGroup = false;
-};
-
-PID::PID(double iKP, double iKI, double iKD, std::string iThreeWireDevice, vex::motor_group iMG)
-{
-  kP = iKP;
-  kI = iKI;
-  kD = iKD;
-  threeWireDevice = iThreeWireDevice;
-  mg = iMG;
-  motorGroup = true;
 };
 
 void IMU::setPID(double p, double i, double d)
@@ -103,7 +53,7 @@ void IMU::turnTo(double raw, int intakeSpeed, int timeout, double tolerance)
       prevError = error;
       double volts = error * kP + integral * kI + derivative * kD;
       l.spin(fwd, volts, voltageUnits::volt);
-      r.spin(vex::reverse, volts, voltageUnits::volt);
+      r.spin(reverse, volts, voltageUnits::volt);
       if(std::abs(dt.velocity(percentUnits::pct)) >= tolerance)
         motionless+=20;
       if(std::abs(dt.velocity(percentUnits::pct)) < tolerance)
@@ -160,7 +110,7 @@ void turnFor(double raw, bool timeout, int time)
         prevError = error;
         double volts = error * kP + integral * kI + derivative * kD;
         l.spin(fwd, volts, voltageUnits::volt);
-        r.spin(vex::reverse, volts, voltageUnits::volt);
+        r.spin(reverse, volts, voltageUnits::volt);
         if(dt.velocity(percentUnits::pct) == 0)
         motionless+=20;
       if(dt.velocity(percentUnits::pct) != 0)
@@ -189,8 +139,6 @@ void IMU::turnToHeading(double target, int timeout)
   }
   turnTo(target, timeout);
 }
-
-PID TILTER::pid = PID(0, 0, 0, "potG", Tilt);
 
 void TILTER::tiltTo(int potentiometerPCT, double volts, bool slowDown) 
 {
@@ -246,60 +194,60 @@ void TILTER::tiltFor(int potentiometerPCT, double volts)
   robot.tiltTo(target, volts);
 }
 
-// void TILTER::tiltTo(int potentiometerPCT) 
-// {
-//   double error = potentiometerPCT - tilt.value(pct);
-//   double integral = error;
-//   double prevError = error;
-//   double derivative = error - prevError;
-//   double kP = .55;    // 0.15
-//   double kI = 0.002;    // 0.03
-//   double kD = 0.04;    // 0.1
-//   if (error > 0) 
-//   {
-//     while (std::abs(error) > 0) 
-//     {
-//       controls();
-//       error = potentiometerPCT - tilt.value(pct);
-//       integral += error;
-//       if (error <= 0) 
-//       {
-//         integral = 0;
-//       }
-//       derivative = error - prevError;
-//       prevError = error;
-//       double volts = error * kP + integral * kI + derivative * kD;
-//       Tilt.spin(fwd, volts, voltageUnits::volt);
-//       vex::task::sleep(20);
-//     }
-//   }
-//   else if (error < 0) 
-//   {
-//     while (std::abs(error) > 0) 
-//     {
-//       controls();
-//       error = potentiometerPCT - tilt.value(pct);
-//       integral += error;
-//       if (error >= 0) 
-//       {
-//         integral = 0;
-//       }
-//       derivative = error - prevError;
-//       prevError = error;
-//       double volts = error * kP + integral * kI + derivative * kD;
-//       Tilt.spin(fwd, volts, voltageUnits::volt);
-//       vex::task::sleep(20);
-//     }
-//   }
-// }
+void TILTER::tiltTo(int potentiometerPCT) 
+{
+  double error = potentiometerPCT - tilt.value(pct);
+  double integral = error;
+  double prevError = error;
+  double derivative = error - prevError;
+  double kP = .55;    // 0.15
+  double kI = 0.002;    // 0.03
+  double kD = 0.04;    // 0.1
+  if (error > 0) 
+  {
+    while (std::abs(error) > 0) 
+    {
+      controls();
+      error = potentiometerPCT - tilt.value(pct);
+      integral += error;
+      if (error <= 0) 
+      {
+        integral = 0;
+      }
+      derivative = error - prevError;
+      prevError = error;
+      double volts = error * kP + integral * kI + derivative * kD;
+      Tilt.spin(fwd, volts, voltageUnits::volt);
+      vex::task::sleep(20);
+    }
+  }
+  else if (error < 0) 
+  {
+    while (std::abs(error) > 0) 
+    {
+      controls();
+      error = potentiometerPCT - tilt.value(pct);
+      integral += error;
+      if (error >= 0) 
+      {
+        integral = 0;
+      }
+      derivative = error - prevError;
+      prevError = error;
+      double volts = error * kP + integral * kI + derivative * kD;
+      Tilt.spin(fwd, volts, voltageUnits::volt);
+      vex::task::sleep(20);
+    }
+  }
+}
 
-// void TILTER::tiltFor(int potentiometerPCT) 
-// {
-//   int start = tilt.value(pct);
-//   int distance = potentiometerPCT;
-//   double target = distance + start;
-//   tiltTo(target);
-// }
+void TILTER::tiltFor(int potentiometerPCT) 
+{
+  int start = tilt.value(pct);
+  int distance = potentiometerPCT;
+  double target = distance + start;
+  tiltTo(target);
+}
 
 void liftTiltCheck() 
 {
@@ -324,8 +272,6 @@ void tiltIntakeCheck()
     RightIntake.setBrake(coast);
   }
 }
-
-PID LIFTER::pid = PID(0, 0, 0, "potH", Lift);
 
 void LIFTER::liftTo(int potentiometerPCT, double volts) 
 {
@@ -364,65 +310,65 @@ void LIFTER::liftFor(int potentiometerPCT, double volts)
   liftTo(target, volts);
 }
 
-// void LIFTER::liftTo(int potentiometerPCT) 
-// {
-//   bool timeout = true;
-//   int time = 14; //if no movement in 15ms after no movement then task breaks
-//   double error = potentiometerPCT - lift.value(pct);
-//   double integral = error;
-//   double prevError = error;
-//   double derivative = error - prevError;
-//   double kP = .55;    // 0.15
-//   double kI = 0.0066;    // 0.03
-//   double kD = 0.04;    // 0.1
-//   int motionless = 0;
-//   if (error > 0) 
-//   {
-//     while (std::abs(error) > 0 && (motionless < time || !timeout)) 
-//     {
-//       controls();
-//       // liftTiltCheck();
-//       error = potentiometerPCT - lift.value(pct);
-//       integral += error;
-//       derivative = error - prevError;
-//       prevError = error;
-//       double volts = error * kP + integral * kI + derivative * kD;
-//       Lift.spin(fwd, volts, voltageUnits::volt);
-//       if(Lift.velocity(percentUnits::pct) == 0)
-//       {
-//         motionless+=20;
-//       }
-//       vex::task::sleep(20);
-//     }
-//   }
-//   else if (error < 0) 
-//   {
-//     while (std::abs(error) > 0 && (motionless < time || !timeout)) 
-//     {
-//       controls();
-//       // liftTiltCheck();
-//       error = potentiometerPCT - lift.value(pct);
-//       integral += error;
-//       derivative = error - prevError;
-//       prevError = error;
-//       double volts = error * kP + integral * kI + derivative * kD;
-//       Lift.spin(fwd, volts, voltageUnits::volt);
-//       if(Lift.velocity(percentUnits::pct) == 0)
-//       {
-//         motionless+=20;
-//       }
-//       vex::task::sleep(20);
-//     }
-//   }
-// }
+void LIFTER::liftTo(int potentiometerPCT) 
+{
+  bool timeout = true;
+  int time = 14; //if no movement in 15ms after no movement then task breaks
+  double error = potentiometerPCT - lift.value(pct);
+  double integral = error;
+  double prevError = error;
+  double derivative = error - prevError;
+  double kP = .55;    // 0.15
+  double kI = 0.0066;    // 0.03
+  double kD = 0.04;    // 0.1
+  int motionless = 0;
+  if (error > 0) 
+  {
+    while (std::abs(error) > 0 && (motionless < time || !timeout)) 
+    {
+      controls();
+      // liftTiltCheck();
+      error = potentiometerPCT - lift.value(pct);
+      integral += error;
+      derivative = error - prevError;
+      prevError = error;
+      double volts = error * kP + integral * kI + derivative * kD;
+      Lift.spin(fwd, volts, voltageUnits::volt);
+      if(Lift.velocity(percentUnits::pct) == 0)
+      {
+        motionless+=20;
+      }
+      vex::task::sleep(20);
+    }
+  }
+  else if (error < 0) 
+  {
+    while (std::abs(error) > 0 && (motionless < time || !timeout)) 
+    {
+      controls();
+      // liftTiltCheck();
+      error = potentiometerPCT - lift.value(pct);
+      integral += error;
+      derivative = error - prevError;
+      prevError = error;
+      double volts = error * kP + integral * kI + derivative * kD;
+      Lift.spin(fwd, volts, voltageUnits::volt);
+      if(Lift.velocity(percentUnits::pct) == 0)
+      {
+        motionless+=20;
+      }
+      vex::task::sleep(20);
+    }
+  }
+}
 
-// void LIFTER::liftFor(int potentiometerPCT) 
-// {
-//   int start = lift.value(pct);
-//   int distance = potentiometerPCT;
-//   double target = distance + start;
-//   liftTo(target);
-// }
+void LIFTER::liftFor(int potentiometerPCT) 
+{
+  int start = lift.value(pct);
+  int distance = potentiometerPCT;
+  double target = distance + start;
+  liftTo(target);
+}
 
 
 void bot::ROBOT::flipOut() 
@@ -433,30 +379,25 @@ void bot::ROBOT::flipOut()
   //vex::task::sleep(500);
 }
 
-void TILTER::stack() 
+void TILTER::stack(int intakeSpeed) 
 {
-  pid.async(tiltStack);
+  double target = tiltStack; // In revolutions
+  double error = target - tilt.value(percentUnits::pct);
+  while (error > 0) 
+  {
+    isStacking = true;
+    intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
+    tiltIntakeCheck();
+    controls();
+    error = target - tilt.value(percentUnits::pct);
+    double volts = .4 * error + 2.5; //.15 * error + 2; //.2 * error + 2 (2.550s)
+    Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
+    vex::task::sleep(20);
+  }
+  isStacking = false;
+  intake.stop();
+  Tilt.stop();
 }
-
-// void TILTER::stack(int intakeSpeed) 
-// {
-//   double target = tiltStack; // In revolutions
-//   double error = target - tilt.value(percentUnits::pct);
-//   while (error > 0) 
-//   {
-//     isStacking = true;
-//     intake.spin(directionType::rev, intakeSpeed, percentUnits::pct);
-//     tiltIntakeCheck();
-//     controls();
-//     error = target - tilt.value(percentUnits::pct);
-//     double volts = .4 * error + 2.5; //.15 * error + 2; //.2 * error + 2 (2.550s)
-//     Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
-//     vex::task::sleep(20);
-//   }
-//   isStacking = false;
-//   intake.stop();
-//   Tilt.stop();
-// }
 
 void LIFTER::towerLow(void) 
 {
@@ -1015,30 +956,15 @@ void IMU::getPositionY()
   double PID::kI = 0;
   double PID::kD = 0;
   double PID::target = 0;
+  //motor PID::mData = vex::motor(vex::PORT1, vex::gearSetting::ratio18_1, false);
+  //motor_group PID::mgData = vex::motor_group();
+  //pot PID::pData = pot(Brain.ThreeWirePort.A);
+  //encoder PID::eData = encoder(Brain.ThreeWirePort.A);
   double PID::error = 0;
   double PID::max = 12;
   double PID::min = 2;
   vex::motor PID::m = vex::motor(vex::PORT1, vex::gearSetting::ratio18_1, false);
   vex::motor_group PID::mg = vex::motor_group();
-  // pot PID::p = pot(Brain.ThreeWirePort.A);
-  vex::pot PID::potA = pot(Brain.ThreeWirePort.A);
-  vex::pot PID::potB = pot(Brain.ThreeWirePort.B);
-  vex::pot PID::potC = pot(Brain.ThreeWirePort.C);
-  vex::pot PID::potD = pot(Brain.ThreeWirePort.D);
-  vex::pot PID::potE = pot(Brain.ThreeWirePort.E);
-  vex::pot PID::potF = pot(Brain.ThreeWirePort.F);
-  vex::pot PID::potG = pot(Brain.ThreeWirePort.G);
-  vex::pot PID::potH = pot(Brain.ThreeWirePort.H);
-  vex::encoder PID::encoderA = encoder(Brain.ThreeWirePort.A);
-  vex::encoder PID::encoderB = encoder(Brain.ThreeWirePort.B);
-  vex::encoder PID::encoderC = encoder(Brain.ThreeWirePort.C);
-  vex::encoder PID::encoderD = encoder(Brain.ThreeWirePort.D);
-  vex::encoder PID::encoderE = encoder(Brain.ThreeWirePort.E);
-  vex::encoder PID::encoderF = encoder(Brain.ThreeWirePort.F);
-  vex::encoder PID::encoderG = encoder(Brain.ThreeWirePort.G);
-  vex::encoder PID::encoderH = encoder(Brain.ThreeWirePort.H);
-  std::string PID::threeWireDevice = "";
-  double PID::position = 0;
   double PID::integral = 0;
   double PID::prevError = 0;
   bool PID::motorGroup = false;
@@ -1051,14 +977,19 @@ void PID::setPID(double p, double i, double d)
   kD = d;
 }
 
-void PID::setTarget(double iTarget)
-{
-  target = iTarget;
-}
+// void PID::update_data(void *iData)
+// {
+//   while(1)
+//   {
+//     data = iData;
+//     this_thread::sleep_for(20);
+//   }
+// }
 
 void PID::setParam(double iTarget, vex::motor iM)
 {
   target = iTarget;
+  // thread updateData = thread(update_data, &iData);
   m = iM;
   motorGroup = false;
 }
@@ -1066,57 +997,67 @@ void PID::setParam(double iTarget, vex::motor iM)
 void PID::setParam(double iTarget, vex::motor_group iMG)
 {
   target = iTarget;
+  // thread updateData = thread(update_data, &iData);
   mg = iMG;
   motorGroup = true;
 }
 
-// void PID::update_position()
-// {
-//   double position;
-//   if(!motorGroup)
-//     position = m.position(rev);
-//   else
-//     position = mg.position(rev);
+double PID::calc_pidTo() 
+{
+  double position;
+  if(!motorGroup)
+    position = m.position(rev);
+  else
+    position = mg.position(rev);
 
-//   if(threeWireDevice == "potA")
-//     position = potA.value(pct);
-//   else if(threeWireDevice == "potB")
-//     position = potB.value(pct);
-//   else if(threeWireDevice == "potC")
-//     position = potC.value(pct);
-//   else if(threeWireDevice == "potD")
-//     position = potD.value(pct);
-//   else if(threeWireDevice == "potE")
-//     position = potE.value(pct);
-//   else if(threeWireDevice == "potF")
-//     position = potF.value(pct);
-//   else if(threeWireDevice == "potG")
-//     position = potG.value(pct);
-//   else if(threeWireDevice == "potH")
-//     position = potH.value(pct);
-//   else if(threeWireDevice == "encoderA")
-//     position = encoderA.position(rotationUnits::rev);
-//   else if(threeWireDevice == "encoderB")
-//     position = encoderB.position(rotationUnits::rev);
-//   else if(threeWireDevice == "encoderC")
-//     position = encoderC.position(rotationUnits::rev);
-//   else if(threeWireDevice == "encoderD")
-//     position = encoderD.position(rotationUnits::rev);
-//   else if(threeWireDevice == "encoderE")
-//     position = encoderE.position(rotationUnits::rev);
-//   else if(threeWireDevice == "encoderF")
-//     position = encoderF.position(rotationUnits::rev);
-//   else if(threeWireDevice == "encoderG")
-//     position = encoderG.position(rotationUnits::rev);
-//   else if(threeWireDevice == "encoderH")
-//     position = encoderH.position(rotationUnits::rev);
-// }
+  error = target - position;
+  integral = error;
+  prevError = error;
+  double derivative = error - prevError;
+  if (error > 0) 
+  {
+    error = target - position;
+    integral += error;
+    if (error <= 0) 
+    {
+      integral = 0;
+    }
+    derivative = error - prevError;
+    prevError = error;
+    double volts = error * kP + integral * kI + derivative * kD;
+    if(std::abs(volts) > 12)
+      volts = 12;
+    return volts;
+  }
+  else if (error < 0) 
+  {
+    error = target - position;
+    integral += error;
+    if (error >= 0) 
+    {
+      integral = 0;
+    }
+    derivative = error - prevError;
+    prevError = error;
+    double volts = error * kP + integral * kI + derivative * kD;
+    if(std::abs(volts) > 12)
+      volts = 12;
+    return volts;
+  }
+  else 
+    return 0;
+}
 
-double PID::calc()
+double PID::calc_pidLib()
 {
   
     // Calculate error
-    // update_position();
+    double position;
+    if(!motorGroup)
+      position = m.position(rev);
+    else
+      position = mg.position(rev);
+
     error = target - position;
 
     // Proportional term
@@ -1152,11 +1093,24 @@ double PID::calc()
       return output;
 }
 
-void PID::to()
+void PID::pidTo()
 {
   while(1)
   {
-    double volts = calc();
+    double volts = calc_pidTo();
+    if(!motorGroup)
+      m.spin(fwd, volts, voltageUnits::volt);
+    else
+      mg.spin(fwd, volts, voltageUnits::volt);
+    this_thread::sleep_for(20);
+  }
+}
+
+void PID::pidLib()
+{
+  while(1)
+  {
+    double volts = calc_pidLib();
     complete = false;
     if(volts == 0)
     {
@@ -1175,21 +1129,71 @@ void PID::to()
   }
 }
 
-void PID::to(double iTarget)
+void PID::async_pidTo(bool waitForPrevious)
 {
-  target = iTarget;
-  to();
+  while(waitForPrevious&&!complete)
+  {
+    task::sleep(20);
+  }
+  thread async_pid = vex::thread(pidTo);
 }
 
-void PID::async()
+void PID::async_pidLib(bool waitForPrevious)
 {
-  thread async = thread(to);
+  while(waitForPrevious&&!complete)
+  {
+    task::sleep(20);
+  }
+  thread async_pid = vex::thread(pidLib);
 }
 
-void PID::async(double iTarget)
+double HOLD::holder = 0;
+encoder HOLD::e_empty = encoder(Brain.ThreeWirePort.A);
+encoder *HOLD::e = &e_empty;
+pot HOLD::p_empty = pot(Brain.ThreeWirePort.A);
+pot *HOLD::p = &p_empty;
+
+HOLD::HOLD(encoder en)
 {
-  target = iTarget;
-  async();
+  e = &en;
+}
+
+HOLD::HOLD(pot po)
+{
+  p = &po;
+}
+
+void HOLD::set_e_pos()
+{
+  while(1)
+  {
+    holder = (*(encoder *)e).value();
+    this_thread::sleep_for(20);
+  }
+}
+
+void HOLD::set_p_pos()
+{
+  while(1)
+  {
+    holder = (*(pot *)p).value(pct);
+    this_thread::sleep_for(20);
+  }
+}
+
+void HOLD::update_e_pos()
+{
+  thread encoder_update = thread(set_e_pos);
+}
+
+void HOLD::update_p_pos()
+{
+  thread pot_update = thread(set_p_pos);
+}
+
+double HOLD::get_holder()
+{
+  return holder;
 }
 
 /*
