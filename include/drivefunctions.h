@@ -48,26 +48,56 @@ class PID // : private HOLD
   static double min;
   static vex::motor m;
   static vex::motor_group mg;
+  static vex::pot potA;
+  static vex::pot potB;
+  static vex::pot potC;
+  static vex::pot potD;
+  static vex::pot potE;
+  static vex::pot potF;
+  static vex::pot potG;
+  static vex::pot potH;
+  static vex::encoder encoderA;
+  static vex::encoder encoderB;
+  static vex::encoder encoderC;
+  static vex::encoder encoderD;
+  static vex::encoder encoderE;
+  static vex::encoder encoderF;
+  static vex::encoder encoderG;
+  static vex::encoder encoderH;
+  // static vex::pot p;
+  static std::string threeWireDevice;
   static double target;
   static double error;
   static double integral;
   static double prevError;
   static bool motorGroup;
   static bool complete;
+  
+  static void update_position();
   // enum Units {rev, deg, pct};
-  public:
+  public:static double position;
   PID();
   PID(double kP, double kI, double kD);
   PID(double dt, double max, double min, double Kp, double Kd, double Ki);
+  PID(vex::motor iM);
+  PID(vex::motor_group iMG);
+  PID(double iKP, double iKI, double iKD, vex::motor iM);
+  PID(double iKP, double iKI, double iKD, vex::motor_group iMG);
+  PID(double iKP, double iKI, double iKD, std::string iThreeWireDevice, vex::motor iM);
+  PID(double iKP, double iKI, double iKD, std::string iThreeWireDevice, vex::motor_group iMG);
   void setPID(double kP, double kI, double kD);
+  void setTarget(double iTarget);
   void setParam(double iTarget, vex::motor iM);
   void setParam(double iTarget, vex::motor_group iMG);
-  static void pidTo();
-  static void pidLib();
-  void async_pidTo(bool waitForPrevious = false);
-  void async_pidLib(bool waitForPrevious = false);
-  static double calc_pidTo();
-  static double calc_pidLib();
+  static double calc();
+  static void to();
+  static void to(double iTarget);
+  void async();
+  void async(double iTarget);
+  void setLift();
+  void setPotDRLift();
+  void setEncDRLift();
+  void setTilt();
 };
 
 class BASE_DRIVE : public IMU
@@ -119,6 +149,7 @@ class TILTER
   private:
   public:
   TILTER();
+  PID pid = PID();
   void tiltTo(int potentiometerPCT, double volts, bool slowDown = false);
   void tiltFor(int potentiometerPCT, double volts);
   void tiltTo(int potentiometerPCT);
@@ -135,6 +166,7 @@ class LIFTER
   private:
   public:
   LIFTER();
+  PID pid = PID();
   void liftTo(int potentiometerPCT, double volts);
   void liftFor(int potentiometerPCT, double volts);
   void liftTo(int potentiometerPCT);
@@ -154,6 +186,8 @@ namespace bot
     PID pid;
     BASE_DRIVE base;
     MECH_DRIVE mech;
+    TILTER tilter;
+    LIFTER lifter;
     void fadeAway();
     void fadeAwayMid();
     void flipOut();

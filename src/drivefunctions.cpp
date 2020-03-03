@@ -15,6 +15,56 @@ PID::PID(double iKP, double iKI, double iKD)
   kD = iKD;
 };
 
+PID::PID(vex::motor iM)
+{
+  m = iM;
+  motorGroup = false;
+};
+
+PID::PID(vex::motor_group iMG)
+{
+  mg = iMG;
+  motorGroup = true;
+};
+
+PID::PID(double iKP, double iKI, double iKD, vex::motor iM)
+{
+  kP = iKP;
+  kI = iKI;
+  kD = iKD;
+  m = iM;
+  motorGroup = false;
+};
+
+PID::PID(double iKP, double iKI, double iKD, vex::motor_group iMG)
+{
+  kP = iKP;
+  kI = iKI;
+  kD = iKD;
+  mg = iMG;
+  motorGroup = true;
+};
+
+PID::PID(double iKP, double iKI, double iKD, std::string iThreeWireDevice, vex::motor iM)
+{
+  kP = iKP;
+  kI = iKI;
+  kD = iKD;
+  threeWireDevice = iThreeWireDevice;
+  m = iM;
+  motorGroup = false;
+};
+
+PID::PID(double iKP, double iKI, double iKD, std::string iThreeWireDevice, vex::motor_group iMG)
+{
+  kP = iKP;
+  kI = iKI;
+  kD = iKD;
+  threeWireDevice = iThreeWireDevice;
+  mg = iMG;
+  motorGroup = true;
+};
+
 void IMU::setPID(double p, double i, double d)
 {
   kP = p;
@@ -956,19 +1006,61 @@ void IMU::getPositionY()
   double PID::kI = 0;
   double PID::kD = 0;
   double PID::target = 0;
-  //motor PID::mData = vex::motor(vex::PORT1, vex::gearSetting::ratio18_1, false);
-  //motor_group PID::mgData = vex::motor_group();
-  //pot PID::pData = pot(Brain.ThreeWirePort.A);
-  //encoder PID::eData = encoder(Brain.ThreeWirePort.A);
   double PID::error = 0;
   double PID::max = 12;
-  double PID::min = 2;
+  double PID::min = 0;
   vex::motor PID::m = vex::motor(vex::PORT1, vex::gearSetting::ratio18_1, false);
   vex::motor_group PID::mg = vex::motor_group();
+  // pot PID::p = pot(Brain.ThreeWirePort.A);
+  vex::pot PID::potA = pot(Brain.ThreeWirePort.A);
+  vex::pot PID::potB = pot(Brain.ThreeWirePort.B);
+  vex::pot PID::potC = pot(Brain.ThreeWirePort.C);
+  vex::pot PID::potD = pot(Brain.ThreeWirePort.D);
+  vex::pot PID::potE = pot(Brain.ThreeWirePort.E);
+  vex::pot PID::potF = pot(Brain.ThreeWirePort.F);
+  vex::pot PID::potG = pot(Brain.ThreeWirePort.G);
+  vex::pot PID::potH = pot(Brain.ThreeWirePort.H);
+  vex::encoder PID::encoderA = encoder(Brain.ThreeWirePort.A);
+  vex::encoder PID::encoderB = encoder(Brain.ThreeWirePort.B);
+  vex::encoder PID::encoderC = encoder(Brain.ThreeWirePort.C);
+  vex::encoder PID::encoderD = encoder(Brain.ThreeWirePort.D);
+  vex::encoder PID::encoderE = encoder(Brain.ThreeWirePort.E);
+  vex::encoder PID::encoderF = encoder(Brain.ThreeWirePort.F);
+  vex::encoder PID::encoderG = encoder(Brain.ThreeWirePort.G);
+  vex::encoder PID::encoderH = encoder(Brain.ThreeWirePort.H);
+  std::string PID::threeWireDevice = "";
+  double PID::position = 0;
   double PID::integral = 0;
   double PID::prevError = 0;
   bool PID::motorGroup = false;
   bool PID::complete = false;
+
+void PID::setTarget(double iTarget)
+{
+  target = iTarget;
+}
+
+void PID::setEncDRLift()
+{
+  kP = 12;
+  kI = 16;
+  kD = .8;
+  min = 3;
+  mg = intake;
+  threeWireDevice = "";
+  motorGroup = true;
+}
+
+void PID::setPotDRLift()
+{
+  kP = .05;
+  kI = .06;
+  kD = .002;
+  min = 3;
+  mg = intake;
+  threeWireDevice = "potH";
+  motorGroup = true;
+}
 
 void PID::setPID(double p, double i, double d)
 {
@@ -976,15 +1068,6 @@ void PID::setPID(double p, double i, double d)
   kI = i;
   kD = d;
 }
-
-// void PID::update_data(void *iData)
-// {
-//   while(1)
-//   {
-//     data = iData;
-//     this_thread::sleep_for(20);
-//   }
-// }
 
 void PID::setParam(double iTarget, vex::motor iM)
 {
@@ -1002,61 +1085,47 @@ void PID::setParam(double iTarget, vex::motor_group iMG)
   motorGroup = true;
 }
 
-double PID::calc_pidTo() 
+double PID::calc()
 {
-  double position;
-  if(!motorGroup)
+  
+    // Calculate error
+    if(!motorGroup)
     position = m.position(rev);
   else
     position = mg.position(rev);
 
-  error = target - position;
-  integral = error;
-  prevError = error;
-  double derivative = error - prevError;
-  if (error > 0) 
-  {
-    error = target - position;
-    integral += error;
-    if (error <= 0) 
-    {
-      integral = 0;
-    }
-    derivative = error - prevError;
-    prevError = error;
-    double volts = error * kP + integral * kI + derivative * kD;
-    if(std::abs(volts) > 12)
-      volts = 12;
-    return volts;
-  }
-  else if (error < 0) 
-  {
-    error = target - position;
-    integral += error;
-    if (error >= 0) 
-    {
-      integral = 0;
-    }
-    derivative = error - prevError;
-    prevError = error;
-    double volts = error * kP + integral * kI + derivative * kD;
-    if(std::abs(volts) > 12)
-      volts = 12;
-    return volts;
-  }
-  else 
-    return 0;
-}
-
-double PID::calc_pidLib()
-{
-  
-    // Calculate error
-    double position;
-    if(!motorGroup)
-      position = m.position(rev);
-    else
-      position = mg.position(rev);
+  if(threeWireDevice == "potA")
+    position = potA.value(pct);
+  else if(threeWireDevice == "potB")
+    position = potB.value(pct);
+  else if(threeWireDevice == "potC")
+    position = potC.value(pct);
+  else if(threeWireDevice == "potD")
+    position = potD.value(pct);
+  else if(threeWireDevice == "potE")
+    position = potE.value(pct);
+  else if(threeWireDevice == "potF")
+    position = potF.value(pct);
+  else if(threeWireDevice == "potG")
+    position = potG.value(pct);
+  else if(threeWireDevice == "potH")
+   position = potH.value(pct);
+  else if(threeWireDevice == "encoderA")
+    position = encoderA.position(rotationUnits::rev);
+  else if(threeWireDevice == "encoderB")
+    position = encoderB.position(rotationUnits::rev);
+  else if(threeWireDevice == "encoderC")
+    position = encoderC.position(rotationUnits::rev);
+  else if(threeWireDevice == "encoderD")
+    position = encoderD.position(rotationUnits::rev);
+  else if(threeWireDevice == "encoderE")
+    position = encoderE.position(rotationUnits::rev);
+  else if(threeWireDevice == "encoderF")
+    position = encoderF.position(rotationUnits::rev);
+  else if(threeWireDevice == "encoderG")
+    position = encoderG.position(rotationUnits::rev);
+  else if(threeWireDevice == "encoderH")
+    position = encoderH.position(rotationUnits::rev);
 
     error = target - position;
 
@@ -1083,34 +1152,21 @@ double PID::calc_pidLib()
     // Save error to previous error
     prevError = error;
 
-    if(std::abs(error) < 0.05)
+    if(std::abs(error) < 0.02)
     {
-      return 0;
+      integral = 0;
     }
-    if(error < 0)
-      return -output;
-    else
+    // if(error < 0)
+    //   return -output;
+    // else
       return output;
 }
 
-void PID::pidTo()
+void PID::to()
 {
   while(1)
   {
-    double volts = calc_pidTo();
-    if(!motorGroup)
-      m.spin(fwd, volts, voltageUnits::volt);
-    else
-      mg.spin(fwd, volts, voltageUnits::volt);
-    this_thread::sleep_for(20);
-  }
-}
-
-void PID::pidLib()
-{
-  while(1)
-  {
-    double volts = calc_pidLib();
+    double volts = calc();
     complete = false;
     if(volts == 0)
     {
@@ -1129,22 +1185,21 @@ void PID::pidLib()
   }
 }
 
-void PID::async_pidTo(bool waitForPrevious)
+void PID::to(double iTarget)
 {
-  while(waitForPrevious&&!complete)
-  {
-    task::sleep(20);
-  }
-  thread async_pid = vex::thread(pidTo);
+  target = iTarget;
+  to();
 }
 
-void PID::async_pidLib(bool waitForPrevious)
+void PID::async()
 {
-  while(waitForPrevious&&!complete)
-  {
-    task::sleep(20);
-  }
-  thread async_pid = vex::thread(pidLib);
+  thread async_pid = vex::thread(to);
+}
+
+void PID::async(double iTarget)
+{
+  target = iTarget;
+  async();
 }
 
 double HOLD::holder = 0;
