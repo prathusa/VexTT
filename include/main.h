@@ -8,6 +8,9 @@
 #include <unistd.h>
 #include <iostream>
 #include <fstream>
+// #include <thread>
+#include <vector>
+#include <pthread.h>
 // #include <vex_triport.h>
 #include "v5_vcs.h"
 #include "robot-config.h"

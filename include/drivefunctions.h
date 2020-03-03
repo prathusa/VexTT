@@ -70,11 +70,11 @@ class PID // : private HOLD
   void setTarget(double iTarget);
   void setParam(double iTarget, vex::motor iM);
   void setParam(double iTarget, vex::motor_group iMG);
-  static double calc_pid();
-  static void pid();
-  static void pid(double iTarget);
-  void async_pid();
-  void async_pid(double iTarget);
+  static double calc();
+  static void to();
+  static void to(double iTarget);
+  void async();
+  void async(double iTarget);
 };
 
 class BASE_DRIVE : public IMU

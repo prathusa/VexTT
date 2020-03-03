@@ -1,5 +1,5 @@
 #include "main.h"
-
+using namespace std;
 BASE_DRIVE::BASE_DRIVE(){};
 IMU::IMU(){};
 MECH_DRIVE::MECH_DRIVE(){};
@@ -19,13 +19,13 @@ PID::PID(vex::motor iM)
 {
   m = iM;
   motorGroup = false;
-}
+};
 
 PID::PID(vex::motor_group iMG)
 {
   mg = iMG;
   motorGroup = true;
-}
+};
 
 PID::PID(double iKP, double iKI, double iKD, vex::motor iM)
 {
@@ -34,7 +34,7 @@ PID::PID(double iKP, double iKI, double iKD, vex::motor iM)
   kD = iKD;
   m = iM;
   motorGroup = false;
-}
+};
 
 PID::PID(double iKP, double iKI, double iKD, vex::motor_group iMG)
 {
@@ -43,7 +43,7 @@ PID::PID(double iKP, double iKI, double iKD, vex::motor_group iMG)
   kD = iKD;
   mg = iMG;
   motorGroup = true;
-}
+};
 
 PID::PID(double iKP, double iKI, double iKD, std::string iThreeWireDevice, vex::motor iM)
 {
@@ -53,7 +53,7 @@ PID::PID(double iKP, double iKI, double iKD, std::string iThreeWireDevice, vex::
   threeWireDevice = iThreeWireDevice;
   m = iM;
   motorGroup = false;
-}
+};
 
 PID::PID(double iKP, double iKI, double iKD, std::string iThreeWireDevice, vex::motor_group iMG)
 {
@@ -63,7 +63,7 @@ PID::PID(double iKP, double iKI, double iKD, std::string iThreeWireDevice, vex::
   threeWireDevice = iThreeWireDevice;
   mg = iMG;
   motorGroup = true;
-}
+};
 
 void IMU::setPID(double p, double i, double d)
 {
@@ -103,7 +103,7 @@ void IMU::turnTo(double raw, int intakeSpeed, int timeout, double tolerance)
       prevError = error;
       double volts = error * kP + integral * kI + derivative * kD;
       l.spin(fwd, volts, voltageUnits::volt);
-      r.spin(reverse, volts, voltageUnits::volt);
+      r.spin(vex::reverse, volts, voltageUnits::volt);
       if(std::abs(dt.velocity(percentUnits::pct)) >= tolerance)
         motionless+=20;
       if(std::abs(dt.velocity(percentUnits::pct)) < tolerance)
@@ -160,7 +160,7 @@ void turnFor(double raw, bool timeout, int time)
         prevError = error;
         double volts = error * kP + integral * kI + derivative * kD;
         l.spin(fwd, volts, voltageUnits::volt);
-        r.spin(reverse, volts, voltageUnits::volt);
+        r.spin(vex::reverse, volts, voltageUnits::volt);
         if(dt.velocity(percentUnits::pct) == 0)
         motionless+=20;
       if(dt.velocity(percentUnits::pct) != 0)
@@ -435,7 +435,7 @@ void bot::ROBOT::flipOut()
 
 void TILTER::stack() 
 {
-  pid.async_pid(tiltStack);
+  pid.async(tiltStack);
 }
 
 // void TILTER::stack(int intakeSpeed) 
@@ -1059,7 +1059,6 @@ void PID::setTarget(double iTarget)
 void PID::setParam(double iTarget, vex::motor iM)
 {
   target = iTarget;
-  // thread updateData = thread(update_data, &iData);
   m = iM;
   motorGroup = false;
 }
@@ -1067,58 +1066,57 @@ void PID::setParam(double iTarget, vex::motor iM)
 void PID::setParam(double iTarget, vex::motor_group iMG)
 {
   target = iTarget;
-  // thread updateData = thread(update_data, &iData);
   mg = iMG;
   motorGroup = true;
 }
 
-void PID::update_position()
-{
-  double position;
-  if(!motorGroup)
-    position = m.position(rev);
-  else
-    position = mg.position(rev);
+// void PID::update_position()
+// {
+//   double position;
+//   if(!motorGroup)
+//     position = m.position(rev);
+//   else
+//     position = mg.position(rev);
 
-  if(threeWireDevice == "potA")
-    position = potA.value(pct);
-  else if(threeWireDevice == "potB")
-    position = potB.value(pct);
-  else if(threeWireDevice == "potC")
-    position = potC.value(pct);
-  else if(threeWireDevice == "potD")
-    position = potD.value(pct);
-  else if(threeWireDevice == "potE")
-    position = potE.value(pct);
-  else if(threeWireDevice == "potF")
-    position = potF.value(pct);
-  else if(threeWireDevice == "potG")
-    position = potG.value(pct);
-  else if(threeWireDevice == "potH")
-    position = potH.value(pct);
-  else if(threeWireDevice == "encoderA")
-    position = encoderA.position(rotationUnits::rev);
-  else if(threeWireDevice == "encoderB")
-    position = encoderB.position(rotationUnits::rev);
-  else if(threeWireDevice == "encoderC")
-    position = encoderC.position(rotationUnits::rev);
-  else if(threeWireDevice == "encoderD")
-    position = encoderD.position(rotationUnits::rev);
-  else if(threeWireDevice == "encoderE")
-    position = encoderE.position(rotationUnits::rev);
-  else if(threeWireDevice == "encoderF")
-    position = encoderF.position(rotationUnits::rev);
-  else if(threeWireDevice == "encoderG")
-    position = encoderG.position(rotationUnits::rev);
-  else if(threeWireDevice == "encoderH")
-    position = encoderH.position(rotationUnits::rev);
-}
+//   if(threeWireDevice == "potA")
+//     position = potA.value(pct);
+//   else if(threeWireDevice == "potB")
+//     position = potB.value(pct);
+//   else if(threeWireDevice == "potC")
+//     position = potC.value(pct);
+//   else if(threeWireDevice == "potD")
+//     position = potD.value(pct);
+//   else if(threeWireDevice == "potE")
+//     position = potE.value(pct);
+//   else if(threeWireDevice == "potF")
+//     position = potF.value(pct);
+//   else if(threeWireDevice == "potG")
+//     position = potG.value(pct);
+//   else if(threeWireDevice == "potH")
+//     position = potH.value(pct);
+//   else if(threeWireDevice == "encoderA")
+//     position = encoderA.position(rotationUnits::rev);
+//   else if(threeWireDevice == "encoderB")
+//     position = encoderB.position(rotationUnits::rev);
+//   else if(threeWireDevice == "encoderC")
+//     position = encoderC.position(rotationUnits::rev);
+//   else if(threeWireDevice == "encoderD")
+//     position = encoderD.position(rotationUnits::rev);
+//   else if(threeWireDevice == "encoderE")
+//     position = encoderE.position(rotationUnits::rev);
+//   else if(threeWireDevice == "encoderF")
+//     position = encoderF.position(rotationUnits::rev);
+//   else if(threeWireDevice == "encoderG")
+//     position = encoderG.position(rotationUnits::rev);
+//   else if(threeWireDevice == "encoderH")
+//     position = encoderH.position(rotationUnits::rev);
+// }
 
 double PID::calc()
 {
   
     // Calculate error
-    update_position();
+    // update_position();
     error = target - position;
 
     // Proportional term
@@ -1185,7 +1183,7 @@ void PID::to(double iTarget)
 
 void PID::async()
 {
-  thread async = vex::thread(to);
+  thread async = thread(to);
 }
 
 void PID::async(double iTarget)

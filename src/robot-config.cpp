@@ -6,8 +6,8 @@ vex::motor Tilt (vex::PORT10, vex::gearSetting::ratio36_1, false);
 vex::motor LeftIntake (vex::PORT5, vex::gearSetting::ratio18_1, true);
 vex::motor RightIntake (vex::PORT14, vex::gearSetting::ratio18_1, false);
 vex::motor RightRearMotor (vex::PORT20, vex::gearSetting::ratio18_1, true); // 20
-vex::motor RightFrontMotor (vex::PORT9, vex::gearSetting::ratio18_1, true); // 19
-vex::motor LeftFrontMotor (vex::PORT1, vex::gearSetting::ratio18_1, false); // 15
+vex::motor RightFrontMotor (vex::PORT19, vex::gearSetting::ratio18_1, true); // 9
+vex::motor LeftFrontMotor (vex::PORT15, vex::gearSetting::ratio18_1, false); // 1
 vex::motor LeftRearMotor (vex::PORT12, vex::gearSetting::ratio18_1, false); // 12
 vex::motor_group intake(LeftIntake, RightIntake);
 vex::motor_group l(LeftFrontMotor, LeftRearMotor);
@@ -24,7 +24,7 @@ vex::limit Debug (Brain.ThreeWirePort.D);
 vex::smartdrive sdt(l, r, Inertial, 12.56, 9, 10, distanceUnits::in);
 vex::drivetrain dt(l, r);
 vex::controller Controller1;
-vex::competition Competition;
+//vex::competition Competition;
 ACCESS_OS os;
 bot::ROBOT robot;
 

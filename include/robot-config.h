@@ -24,7 +24,7 @@ extern vex::limit Debug;
 extern vex::smartdrive sdt;
 extern vex::drivetrain dt;
 extern vex::controller Controller1;
-extern vex::competition Competition;
+//extern vex::competition Competition;
 
 extern int liftMax;
 extern int liftTowerMid;
