@@ -18,15 +18,8 @@ using namespace vex;
 // guiC.cpp
 void pre_auton(void);
 
-// play.cpp
-void play(void);
-void splay(void);
-
 // usercontrol.cpp
 void usercontrol(void);
-
-// record.cpp
-void record(void);
 
 // controls.cpp
 void controls(void);

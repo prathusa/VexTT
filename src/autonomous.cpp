@@ -3,17 +3,7 @@
 void autonomous(void) 
 {
     //If configuration[1] is 0 (Front row), 1 (Back row), or 2 (Skills), run the correct auton
-	if(!robot.allInstalled())
-  {
-    if(robot.driveInstalled())
-    {
-      if(os.getValues(POSITION) == FRONT)
-      {
-
-      }
-    }
-  }
-  else if(os.getValues(POSITION) == BRAIN)
+  if(os.getValues(POSITION) == BRAIN)
     goto Brain;
   else if (os.getValues(POSITION) == FRONT) 
   {

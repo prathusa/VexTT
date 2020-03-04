@@ -36,33 +36,10 @@ void controls()
   RightFrontMotor.spin(vex::forward, slew(forward - strafe - turn, RightFrontMotor.velocity(percentUnits::pct)), vex::percent);
   RightRearMotor.spin(vex::forward, slew(forward + strafe - turn, RightRearMotor.velocity(percentUnits::pct)), vex::percent);
 
-  
-  /*
-  // Vanilla Drive Code
-  LeftFrontMotor.spin(vex::forward, (forward + strafe + turn), vex::percent);
-  LeftRearMotor.spin(vex::forward, (forward - strafe + turn), vex::percent);
-  RightFrontMotor.spin(vex::forward, (forward - strafe - turn), vex::percent);
-  RightRearMotor.spin(vex::forward, (forward + strafe - turn), vex::percent);
-  */
-
   LeftFrontMotor.setBrake(coast);
   RightFrontMotor.setBrake(coast);
   LeftRearMotor.setBrake(coast);
   RightRearMotor.setBrake(coast);
-  
-  /*
-  // Regular Split-Arcade Control
-  LeftFrontMotor.spin(directionType::fwd, (Controller1.Axis3.value() + Controller1.Axis1.value() * turnSpeedFactor) / (driveSpeedFactor), velocityUnits::pct); //(Axis3+Axis4)/2;
-  LeftRearMotor.spin(directionType::fwd, (Controller1.Axis3.value() + Controller1.Axis1.value() * turnSpeedFactor) / (driveSpeedFactor), velocityUnits::pct); //(Axis3+Axis4)/2;
-  RightFrontMotor.spin(directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value() * turnSpeedFactor) / (driveSpeedFactor), velocityUnits::pct); //(Axis3-Axis4)/2;
-  RightRearMotor.spin(directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value() * turnSpeedFactor) / (driveSpeedFactor), velocityUnits::pct); //(Axis3-Axis4)/2;
-
-  // Tank Control
-  LeftFrontMotor.spin(vex::directionType::fwd,Controller1.Axis3.value() / driveSpeedFactor,vex::velocityUnits::pct);
-  RightFrontMotor.spin(vex::directionType::fwd, Controller1.Axis2.value() / driveSpeedFactor, vex::velocityUnits::pct);
-  RightRearMotor.spin(vex::directionType::fwd, Controller1.Axis2.value() / driveSpeedFactor, vex::velocityUnits::pct);
-  LeftRearMotor.spin(vex::directionType::fwd, Controller1.Axis3.value() / driveSpeedFactor, vex::velocityUnits::pct);
-   */
 
   if (lift.value(pct) >= liftTowerLow - 2) 
     turnSpeedFactor = 1.3;
@@ -91,15 +68,7 @@ void controls()
   if (Controller1.ButtonL1.pressing() && lift.value(percentUnits::pct) < liftTowerLow-2) 
   {
     intake.spin(directionType::fwd, 40, pct);
-  } 
-  //else if (Controller1.ButtonL1.pressing() && lift.value(percentUnits::pct) > liftTowerLow-2 && lift.value(percentUnits::pct) < liftTowerMid-2) 
-  //{
-  //  intake.spin(directionType::fwd, 40, pct);
-  //} 
-  //else if (Controller1.ButtonL1.pressing() && lift.value(percentUnits::pct) > liftTowerMid-2) 
-  //{
-  //  intake.spin(directionType::fwd, 40, pct);
-  //} 
+  }
   else if (Controller1.ButtonL2.pressing() && lift.value(pct) < liftTowerMid) 
   {
     intake.spin(directionType::rev, 100, pct);
@@ -154,4 +123,5 @@ void controls()
   } 
   else 
     Tilt.stop(hold);
+  
 }
