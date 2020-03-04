@@ -1,42 +1,5 @@
 #pragma once
 
-class IMU
-{
-  private:
-  double kP = 0.45;    // 0.45
-  double kI = 0.00006; // 0.00006
-  double kD = 0.50;    // 0.45
-  public:
-  IMU();
-  void resetPID();
-  void setPID(double kP, double kI, double kD);
-  void turnTo(double raw, int intakeSpeed, int timeout = 1, double tolerance = 0.1);
-  void turnToHeading(double target, int timeout = 250);
-  void turn(double raw, int intakeSpeed = 0, int timeout = 1, double marginOfError = 1.0);
-  void turnFor(double raw, bool timeout = false, int time = 250);
-  void turnTo(double degrees);
-  void getPositionY();
-};
-
-
-class HOLD
-{
-  private:
-  static double holder;
-  static vex::encoder e_empty;
-  static vex::pot p_empty;
-  static vex::encoder *e;
-  static vex::pot *p;
-  static void set_e_pos();
-  static void set_p_pos();
-  public:
-  HOLD(vex::encoder e);
-  HOLD(vex::pot p);
-  void update_e_pos();
-  void update_p_pos();
-  double get_holder();
-};
-
 class PID // : private HOLD
 {
   private:
@@ -48,59 +11,86 @@ class PID // : private HOLD
   static double min;
   static vex::motor m;
   static vex::motor_group mg;
-  static vex::pot potA;
-  static vex::pot potB;
-  static vex::pot potC;
-  static vex::pot potD;
-  static vex::pot potE;
-  static vex::pot potF;
-  static vex::pot potG;
-  static vex::pot potH;
-  static vex::encoder encoderA;
-  static vex::encoder encoderB;
-  static vex::encoder encoderC;
-  static vex::encoder encoderD;
-  static vex::encoder encoderE;
-  static vex::encoder encoderF;
-  static vex::encoder encoderG;
-  static vex::encoder encoderH;
-  // static vex::pot p;
-  static std::string threeWireDevice;
-  static double target;
-  static double error;
-  static double integral;
-  static double prevError;
+  static vex::inertial imu;
+  static void *pos_device;
+  static int type_device;
+  
   static bool motorGroup;
   static bool complete;
-  
-  static void update_position();
   // enum Units {rev, deg, pct};
-  public:static double position;
+  public:
   PID();
   PID(double kP, double kI, double kD);
   PID(double dt, double max, double min, double Kp, double Kd, double Ki);
-  PID(vex::motor iM);
-  PID(vex::motor_group iMG);
-  PID(double iKP, double iKI, double iKD, vex::motor iM);
-  PID(double iKP, double iKI, double iKD, vex::motor_group iMG);
-  PID(double iKP, double iKI, double iKD, std::string iThreeWireDevice, vex::motor iM);
-  PID(double iKP, double iKI, double iKD, std::string iThreeWireDevice, vex::motor_group iMG);
+  static double position;
+  static double target;
+  static double error;
+  static double integral;
+  static double derivative;
+  static double prevError;
+  static double Pout;
+  static double Iout;
+  static double Dout;
+  static double output;
+  static double tolerance;
   void setPID(double kP, double kI, double kD);
   void setTarget(double iTarget);
-  void setParam(double iTarget, vex::motor iM);
-  void setParam(double iTarget, vex::motor_group iMG);
+  void setParam(vex::motor iM);
+  void setParam(vex::motor_group iMG);
+  void setParam(double iKP, double iKI, double iKD, vex::motor iM);
+  void setParam(double iKP, double iKI, double iKD, vex::motor_group iMG);
+  void setParam(double iKP, double iKI, double iKD, vex::motor iM, vex::pot iP);
+  void setParam(double iKP, double iKI, double iKD, vex::motor_group iMG, vex::pot iP);
+  void setParam(double iKP, double iKI, double iKD, vex::motor iM, vex::encoder iE);
+  void setParam(double iKP, double iKI, double iKD, vex::motor_group iMG, vex::encoder iE);
+  void setParam(double iKP, double iKI, double iKD, vex::motor iM, vex::inertial iIMU);
+  void setParam(double iKP, double iKI, double iKD, vex::motor_group iMG, vex::inertial iIMU);
   static double calc();
-  static void to();
-  static void to(double iTarget);
-  void async();
-  void async(double iTarget);
+  static double calc(double iTarget);
+  static double calc(double iTarget, vex::motor iM);
+  static double calc(double iTarget, vex::motor_group iMG);
+  static double calc(double iTarget, vex::pot iP);
+  static double calc(double iTarget, vex::encoder iE);
+  static double calc(double iTarget, vex::inertial iIMU);
+  static void To();
+  static void For();
+  static void To(double iTarget);
+  static void For(double iTarget);
+  void aTo();
+  void aFor();
+  void aTo(double iTarget);
+  void aFor(double iTarget);
+  void setPotDR();
+  void setEncDR();
   void setLift();
-  void setPotDRLift();
-  void setEncDRLift();
   void setTilt();
+  void setBase();
+  void setMech();
 };
 
-class BASE_DRIVE : public IMU
+class IMU //: private PID
+{
+  private:
+  double kP = 0.45;    // 0.45
+  double kI = 0.00006; // 0.00006
+  double kD = 0.50;    // 0.45
+  public:
+  IMU();
+  // PID pid = PID();
+  // static double target;
+  // void To(double iTarget);
+  // void setIMU();
+  void resetPID();
+  void setPID(double kP, double kI, double kD);
+  void turnTo(double raw, int intakeSpeed, int timeout = 1, double tolerance = 0.1);
+  void turnToHeading(double target, int timeout = 250);
+  void turn(double raw, int intakeSpeed = 0, int timeout = 1, double marginOfError = 1.0);
+  void turnFor(double raw, bool timeout = false, int time = 250);
+  void turnTo(double degrees);
+  void getPositionY();
+};
+
+class BASE_DRIVE : public IMU, public PID
 {
     private:
     double kP = 2;
@@ -110,6 +100,7 @@ class BASE_DRIVE : public IMU
     double thetaTolerance = 1;
     public:
     BASE_DRIVE();
+    PID pid = PID();
     void resetPID();
     void setPID(double kP, double kI, double kD);
     void setTheta(double angle, double angleTolerance);
@@ -126,6 +117,7 @@ class MECH_DRIVE : public BASE_DRIVE
   double kD = 6;
   public:
   MECH_DRIVE();
+  PID pid = PID();
   void setPID(double kP, double kI, double kD);
   void strafe(double revolutions, int intakeSpeed = 0, int timeout = 10, double tolerance = 0.1);
   void strafeTo(double revolutions, int intakeSpeed = 0, int timeout = 10, double tolerance = 0.1);
@@ -167,6 +159,8 @@ class LIFTER
   public:
   LIFTER();
   PID pid = PID();
+  void setPotDRLift();
+  void setEncDRLift();
   void liftTo(int potentiometerPCT, double volts);
   void liftFor(int potentiometerPCT, double volts);
   void liftTo(int potentiometerPCT);
@@ -177,13 +171,12 @@ class LIFTER
 
 namespace bot
 {
-  class ROBOT : public MECH_DRIVE, public LIFTER, public TILTER, public PID
+  class ROBOT
   {
     private:
     public:
     ROBOT();
     IMU imu;
-    PID pid;
     BASE_DRIVE base;
     MECH_DRIVE mech;
     TILTER tilter;

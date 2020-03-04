@@ -11,7 +11,7 @@ void usercontrol(void)
         if(Controller1.ButtonY.pressing() && lift.value(pct) < liftTilter)
         {
           Brain.Timer.reset();
-          robot.stack();
+          robot.tilter.stack();
           Tilt.stop(brake);
           Controller1.rumble("..");
           Controller1.Screen.clearLine(3);
@@ -20,7 +20,7 @@ void usercontrol(void)
         }
         if(Controller1.ButtonY.pressing() && tilt.value(percentUnits::pct) >= tiltStack - 2 && lift.value(pct) < liftTilter)
         {
-          robot.tiltTo(tiltMin, 12);
+          robot.tilter.tiltTo(tiltMin, 12);
         }
 
         //Fade away
@@ -54,15 +54,15 @@ void usercontrol(void)
         // -----------------------------Toggle Lift Positions
         if(Controller1.ButtonLeft.pressing() && lift.value(percentUnits::pct) < liftTowerLow)
         {
-          robot.liftTo(liftTowerLow, 12);
+          robot.lifter.liftTo(liftTowerLow, 12);
         }
         else if(Controller1.ButtonLeft.pressing() && std::abs(lift.value(percentUnits::pct) - liftTowerMid) <= 2)
         {
-          robot.liftTo(liftMin, 12);
+          robot.lifter.liftTo(liftMin, 12);
         }
         else if(Controller1.ButtonLeft.pressing() && std::abs(lift.value(percentUnits::pct) - liftTowerLow) <= 2 && !(std::abs(lift.value(percentUnits::pct) - liftTowerMid) <= 2))
         {
-          robot.liftTo(liftTowerMid, 12);
+          robot.lifter.liftTo(liftTowerMid, 12);
         }
 
         /*

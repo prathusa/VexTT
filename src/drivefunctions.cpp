@@ -1,4 +1,5 @@
 #include "vex.h"
+using namespace std;
 
 BASE_DRIVE::BASE_DRIVE(){};
 IMU::IMU(){};
@@ -15,55 +16,38 @@ PID::PID(double iKP, double iKI, double iKD)
   kD = iKD;
 };
 
-PID::PID(vex::motor iM)
-{
-  m = iM;
-  motorGroup = false;
-};
+// double IMU::target = 0;
 
-PID::PID(vex::motor_group iMG)
-{
-  mg = iMG;
-  motorGroup = true;
-};
-
-PID::PID(double iKP, double iKI, double iKD, vex::motor iM)
-{
-  kP = iKP;
-  kI = iKI;
-  kD = iKD;
-  m = iM;
-  motorGroup = false;
-};
-
-PID::PID(double iKP, double iKI, double iKD, vex::motor_group iMG)
-{
-  kP = iKP;
-  kI = iKI;
-  kD = iKD;
-  mg = iMG;
-  motorGroup = true;
-};
-
-PID::PID(double iKP, double iKI, double iKD, std::string iThreeWireDevice, vex::motor iM)
-{
-  kP = iKP;
-  kI = iKI;
-  kD = iKD;
-  threeWireDevice = iThreeWireDevice;
-  m = iM;
-  motorGroup = false;
-};
-
-PID::PID(double iKP, double iKI, double iKD, std::string iThreeWireDevice, vex::motor_group iMG)
-{
-  kP = iKP;
-  kI = iKI;
-  kD = iKD;
-  threeWireDevice = iThreeWireDevice;
-  mg = iMG;
-  motorGroup = true;
-};
+// void IMU::To(double iTarget)
+// {
+//   pid.setParam(3, .01, .006, l, Inertial);
+//   pid.setTarget(2);
+//   while(1)
+//   {
+//     double volts = pid.calc();
+//     std::cout << "Calc: ";
+//     std::cout << pid.output << std::endl;
+//     std::cout << "Position: ";
+//     std::cout << pid.position << std::endl;
+//     std::cout << "Error: ";
+//     std::cout << pid.Pout << std::endl;
+//     std::cout << "Integral: ";
+//     std::cout << pid.Iout << std::endl;
+//     std::cout << "Derivative: ";
+//     std::cout << pid.Dout << std::endl;
+//     cout << std::endl;
+//     if(volts == 0 /*|| dt.velocity(velocityUnits::pct) < pid.tolerance*/)
+//     {
+//       l.stop();
+//       r.stop();
+//       // this_thread::yield();
+//       break;
+//     }
+//     l.spin(fwd, volts, voltageUnits::volt);
+//     r.spin(fwd, -volts, voltageUnits::volt);
+//     this_thread::sleep_for(20);
+//   }
+// }
 
 void IMU::setPID(double p, double i, double d)
 {
@@ -103,7 +87,7 @@ void IMU::turnTo(double raw, int intakeSpeed, int timeout, double tolerance)
       prevError = error;
       double volts = error * kP + integral * kI + derivative * kD;
       l.spin(fwd, volts, voltageUnits::volt);
-      r.spin(reverse, volts, voltageUnits::volt);
+      r.spin(vex::reverse, volts, voltageUnits::volt);
       if(std::abs(dt.velocity(percentUnits::pct)) >= tolerance)
         motionless+=20;
       if(std::abs(dt.velocity(percentUnits::pct)) < tolerance)
@@ -160,7 +144,7 @@ void turnFor(double raw, bool timeout, int time)
         prevError = error;
         double volts = error * kP + integral * kI + derivative * kD;
         l.spin(fwd, volts, voltageUnits::volt);
-        r.spin(reverse, volts, voltageUnits::volt);
+        r.spin(vex::reverse, volts, voltageUnits::volt);
         if(dt.velocity(percentUnits::pct) == 0)
         motionless+=20;
       if(dt.velocity(percentUnits::pct) != 0)
@@ -241,7 +225,7 @@ void TILTER::tiltFor(int potentiometerPCT, double volts)
   int start = tilt.value(pct);
   int distance = potentiometerPCT;
   double target = distance + start;
-  robot.tiltTo(target, volts);
+  robot.tilter.tiltTo(target, volts);
 }
 
 void TILTER::tiltTo(int potentiometerPCT) 
@@ -306,11 +290,11 @@ void liftTiltCheck()
   Tilt.setBrake(hold);
   if (lift.value(pct) > 32 && tilt.value(percentUnits::pct) < 37) 
   {
-    robot.tiltTo(37, 12);
+    robot.tilter.tiltTo(37, 12);
   } 
   else if (lift.value(pct) <= 32 && tilt.value(percentUnits::pct) >= 37) 
   {
-    robot.tiltTo(tiltMin, 12);
+    robot.tilter.tiltTo(tiltMin, 12);
   }
 }
 
@@ -423,9 +407,9 @@ void LIFTER::liftFor(int potentiometerPCT)
 
 void bot::ROBOT::flipOut() 
 {
-  liftTo(liftTowerLow-5, 12);
+  lifter.liftTo(liftTowerLow-5, 12);
   //vex::task::sleep(200);
-  liftTo(liftMin, 12);
+  lifter.liftTo(liftMin, 12);
   //vex::task::sleep(500);
 }
 
@@ -1008,58 +992,31 @@ void IMU::getPositionY()
   double PID::target = 0;
   double PID::error = 0;
   double PID::max = 12;
-  double PID::min = 0;
-  vex::motor PID::m = vex::motor(vex::PORT1, vex::gearSetting::ratio18_1, false);
-  vex::motor_group PID::mg = vex::motor_group();
-  // pot PID::p = pot(Brain.ThreeWirePort.A);
-  vex::pot PID::potA = pot(Brain.ThreeWirePort.A);
-  vex::pot PID::potB = pot(Brain.ThreeWirePort.B);
-  vex::pot PID::potC = pot(Brain.ThreeWirePort.C);
-  vex::pot PID::potD = pot(Brain.ThreeWirePort.D);
-  vex::pot PID::potE = pot(Brain.ThreeWirePort.E);
-  vex::pot PID::potF = pot(Brain.ThreeWirePort.F);
-  vex::pot PID::potG = pot(Brain.ThreeWirePort.G);
-  vex::pot PID::potH = pot(Brain.ThreeWirePort.H);
-  vex::encoder PID::encoderA = encoder(Brain.ThreeWirePort.A);
-  vex::encoder PID::encoderB = encoder(Brain.ThreeWirePort.B);
-  vex::encoder PID::encoderC = encoder(Brain.ThreeWirePort.C);
-  vex::encoder PID::encoderD = encoder(Brain.ThreeWirePort.D);
-  vex::encoder PID::encoderE = encoder(Brain.ThreeWirePort.E);
-  vex::encoder PID::encoderF = encoder(Brain.ThreeWirePort.F);
-  vex::encoder PID::encoderG = encoder(Brain.ThreeWirePort.G);
-  vex::encoder PID::encoderH = encoder(Brain.ThreeWirePort.H);
-  std::string PID::threeWireDevice = "";
+  double PID::min = -12;
+  vex::motor PID::m = vex::motor(vex::PORT1);
+  vex::motor_group PID::mg;
+  vex::inertial PID::imu = vex::inertial(PORT10);
+  void *PID::pos_device;
+  int PID::type_device = 0; 
+  //                     0 is Motor
+  //                     1 is Motor_group
+  //                     2 is Pot 
+  //                     3 is Encoder
   double PID::position = 0;
+  double PID::Pout = 0;
   double PID::integral = 0;
+  double PID::Iout = 0;
+  double PID::derivative = 0;
+  double PID::Dout = 0;
+  double PID::output = 0;
   double PID::prevError = 0;
+  double PID::tolerance = 0.02;
   bool PID::motorGroup = false;
   bool PID::complete = false;
 
 void PID::setTarget(double iTarget)
 {
   target = iTarget;
-}
-
-void PID::setEncDRLift()
-{
-  kP = 12;
-  kI = 16;
-  kD = .8;
-  min = 3;
-  mg = intake;
-  threeWireDevice = "";
-  motorGroup = true;
-}
-
-void PID::setPotDRLift()
-{
-  kP = .05;
-  kI = .06;
-  kD = .002;
-  min = 3;
-  mg = intake;
-  threeWireDevice = "potH";
-  motorGroup = true;
 }
 
 void PID::setPID(double p, double i, double d)
@@ -1069,112 +1026,216 @@ void PID::setPID(double p, double i, double d)
   kD = d;
 }
 
-void PID::setParam(double iTarget, vex::motor iM)
+void PID::setParam(vex::motor iM)
 {
-  target = iTarget;
-  // thread updateData = thread(update_data, &iData);
   m = iM;
   motorGroup = false;
 }
 
-void PID::setParam(double iTarget, vex::motor_group iMG)
+void PID::setParam(vex::motor_group iMG)
 {
-  target = iTarget;
-  // thread updateData = thread(update_data, &iData);
   mg = iMG;
+  motorGroup = true;
+}
+
+void PID::setParam(double iKP, double iKI, double iKD, vex::motor iM)
+{
+  kP = iKP;
+  kI = iKI;
+  kD = iKD;
+  m = iM;
+  type_device = 0;
+  motorGroup = false;
+}
+
+void PID::setParam(double iKP, double iKI, double iKD, vex::motor_group iMG)
+{
+  kP = iKP;
+  kI = iKI;
+  kD = iKD;
+  mg = iMG;
+  type_device = 1;
+  motorGroup = true;
+}
+
+void PID::setParam(double iKP, double iKI, double iKD, vex::motor iM, vex::pot iP)
+{
+  kP = iKP;
+  kI = iKI;
+  kD = iKD;
+  pos_device = &iP;
+  m = iM;
+  type_device = 2;
+  motorGroup = false;
+}
+
+void PID::setParam(double iKP, double iKI, double iKD, vex::motor_group iMG, vex::pot iP)
+{
+  kP = iKP;
+  kI = iKI;
+  kD = iKD;
+  pos_device = &iP;
+  mg = iMG;
+  type_device = 2;
+  motorGroup = true;
+}
+
+void PID::setParam(double iKP, double iKI, double iKD, vex::motor iM, vex::encoder iE)
+{
+  kP = iKP;
+  kI = iKI;
+  kD = iKD;
+  pos_device = &iE;
+  m = iM;
+  type_device = 3;
+  motorGroup = false;
+}
+
+void PID::setParam(double iKP, double iKI, double iKD, vex::motor_group iMG, vex::encoder iE)
+{
+  kP = iKP;
+  kI = iKI;
+  kD = iKD;
+  pos_device = &iE;
+  mg = iMG;
+  type_device = 3;
+  motorGroup = true;
+}
+
+void PID::setParam(double iKP, double iKI, double iKD, vex::motor iM, vex::inertial iIMU)
+{
+  kP = iKP;
+  kI = iKI;
+  kD = iKD;
+  imu = iIMU;
+  m = iM;
+  type_device = 4;
+  motorGroup = false;
+}
+
+void PID::setParam(double iKP, double iKI, double iKD, vex::motor_group iMG, vex::inertial iIMU)
+{
+  kP = iKP;
+  kI = iKI;
+  kD = iKD;
+  imu = iIMU;
+  mg = iMG;
+  type_device = 4;
   motorGroup = true;
 }
 
 double PID::calc()
 {
-  
-    // Calculate error
-    if(!motorGroup)
+  // Calculate error
+  if(type_device == 0)
     position = m.position(rev);
-  else
+  else if(type_device == 1)
     position = mg.position(rev);
-
-  if(threeWireDevice == "potA")
-    position = potA.value(pct);
-  else if(threeWireDevice == "potB")
-    position = potB.value(pct);
-  else if(threeWireDevice == "potC")
-    position = potC.value(pct);
-  else if(threeWireDevice == "potD")
-    position = potD.value(pct);
-  else if(threeWireDevice == "potE")
-    position = potE.value(pct);
-  else if(threeWireDevice == "potF")
-    position = potF.value(pct);
-  else if(threeWireDevice == "potG")
-    position = potG.value(pct);
-  else if(threeWireDevice == "potH")
-   position = potH.value(pct);
-  else if(threeWireDevice == "encoderA")
-    position = encoderA.position(rotationUnits::rev);
-  else if(threeWireDevice == "encoderB")
-    position = encoderB.position(rotationUnits::rev);
-  else if(threeWireDevice == "encoderC")
-    position = encoderC.position(rotationUnits::rev);
-  else if(threeWireDevice == "encoderD")
-    position = encoderD.position(rotationUnits::rev);
-  else if(threeWireDevice == "encoderE")
-    position = encoderE.position(rotationUnits::rev);
-  else if(threeWireDevice == "encoderF")
-    position = encoderF.position(rotationUnits::rev);
-  else if(threeWireDevice == "encoderG")
-    position = encoderG.position(rotationUnits::rev);
-  else if(threeWireDevice == "encoderH")
-    position = encoderH.position(rotationUnits::rev);
+  else if(type_device == 2)
+    position = (*(pot *) pos_device).value(pct);
+  else if(type_device == 3)
+    position = (*(encoder *) pos_device).position(rev);
+  else if(type_device == 4)
+    position = imu.rotation(deg);
 
     error = target - position;
 
     // Proportional term
-    double Pout = kP * error;
+    Pout = kP * error;
 
     // Integral term
     integral += error * dT;
-    double Iout = kI * integral;
+    Iout = kI * integral;
 
     // Derivative term
-    double derivative = (error - prevError) / dT;
-    double Dout = kD * derivative;
+    derivative = (error - prevError) / dT;
+    Dout = kD * derivative;
 
     // Calculate total output
-    double output = Pout + Iout + Dout;
+    output = Pout + Iout + Dout;
 
     // Restrict to max/min
-    if( output > max )
+    if(output > max)
         output = max;
-    else if( output < min )
+    else if(output < min)
         output = min;
+    
+    double integralCap = 6;
+
+    if(Iout > integralCap)
+        Iout = integralCap;
+    else if (Iout < -integralCap)
+        Iout = -integralCap;
+    if(std::abs(error) < tolerance)
+    {
+      integral = 0;
+      output = 0;
+    }
 
     // Save error to previous error
     prevError = error;
-
-    if(std::abs(error) < 0.02)
-    {
-      integral = 0;
-    }
-    // if(error < 0)
-    //   return -output;
-    // else
-      return output;
+    
+    return output;
 }
 
-void PID::to()
+double PID::calc(double iTarget)
+{
+  target = iTarget;
+  return calc();
+}
+
+double PID::calc(double iTarget, motor iM)
+{
+  target = iTarget;
+  m = iM;
+  type_device = 0;
+  return calc();
+}
+
+double PID::calc(double iTarget, motor_group iMG)
+{
+  target = iTarget;
+  mg = iMG;
+  type_device = 1;
+  return calc();
+}
+
+double PID::calc(double iTarget, pot iP)
+{
+  target = iTarget;
+  pos_device = &iP;
+  type_device = 2;
+  return calc();
+}
+
+double PID::calc(double iTarget, encoder iE)
+{
+  target = iTarget;
+  pos_device = &iE;
+  type_device = 3;
+  return calc();
+}
+
+double PID::calc(double iTarget, inertial iIMU)
+{
+  target = iTarget;
+  imu = iIMU;
+  type_device = 4;
+  return calc();
+}
+
+void PID::To()
 {
   while(1)
   {
     double volts = calc();
-    complete = false;
     if(volts == 0)
     {
       if(!motorGroup)
         m.stop();
       else
         mg.stop();
-      complete = true;
+      this_thread::yield();
       break;
     }
     if(!motorGroup)
@@ -1185,70 +1246,124 @@ void PID::to()
   }
 }
 
-void PID::to(double iTarget)
+void PID::For()
+{
+  if(type_device == 0)
+    position = m.position(rev);
+  else if(type_device == 1)
+    position = mg.position(rev);
+  else if(type_device == 2)
+    position = (*(pot *) pos_device).value(pct);
+  else if(type_device == 3)
+    position = (*(encoder *) pos_device).position(rev);
+  else if(type_device == 4)
+    position = imu.rotation(deg);
+  
+  target += position;
+  To();
+}
+
+void PID::To(double iTarget)
 {
   target = iTarget;
-  to();
+  To();
 }
 
-void PID::async()
-{
-  thread async_pid = vex::thread(to);
-}
-
-void PID::async(double iTarget)
+void PID::For(double iTarget)
 {
   target = iTarget;
-  async();
+  For();
 }
 
-double HOLD::holder = 0;
-encoder HOLD::e_empty = encoder(Brain.ThreeWirePort.A);
-encoder *HOLD::e = &e_empty;
-pot HOLD::p_empty = pot(Brain.ThreeWirePort.A);
-pot *HOLD::p = &p_empty;
-
-HOLD::HOLD(encoder en)
+void PID::aTo()
 {
-  e = &en;
+  thread async_pid = vex::thread(To);
 }
 
-HOLD::HOLD(pot po)
+void PID::aFor()
 {
-  p = &po;
+  thread async_pid = vex::thread(For);
 }
 
-void HOLD::set_e_pos()
+void PID::aTo(double iTarget)
 {
-  while(1)
-  {
-    holder = (*(encoder *)e).value();
-    this_thread::sleep_for(20);
-  }
+  target = iTarget;
+  aTo();
 }
 
-void HOLD::set_p_pos()
+void PID::aFor(double iTarget)
 {
-  while(1)
-  {
-    holder = (*(pot *)p).value(pct);
-    this_thread::sleep_for(20);
-  }
+  target = iTarget;
+  aFor();
 }
 
-void HOLD::update_e_pos()
+//PID Presets
+
+void PID::setEncDR()
 {
-  thread encoder_update = thread(set_e_pos);
+  kP = 12;
+  kI = 16;
+  kD = 0.8;
+  mg = intake;
+  motorGroup = true;
+  type_device = 0;
+  tolerance = 0;
 }
 
-void HOLD::update_p_pos()
+void PID::setPotDR()
 {
-  thread pot_update = thread(set_p_pos);
+  kP = .3;
+  kI = .3;
+  kD = 0;
+  mg = intake;
+  motorGroup = true;
+  pos_device = &lift;
+  type_device = 2;
+  tolerance = 0;
 }
 
-double HOLD::get_holder()
+void PID::setLift()
 {
-  return holder;
+  kP = .3;
+  kI = .3;
+  kD = 0;
+  m = Lift;
+  motorGroup = false;
+  pos_device = &lift;
+  type_device = 2;
+  tolerance = 0;
+}
+
+void PID::setTilt()
+{
+  kP = .3;
+  kI = .3;
+  kD = 0;
+  m = Tilt;
+  motorGroup = false;
+  pos_device = &tilt;
+  type_device = 2;
+}
+
+void PID::setBase()
+{
+  kP = 6;
+  kI = 8;
+  kD = 1;
+  mg = d;
+  motorGroup = true;
+  type_device = 1;
+}
+
+void PID::setMech()
+{
+  kP = .3;
+  kI = .3;
+  kD = 0;
+  m = Tilt;
+  motorGroup = false;
+  pos_device = &tilt;
+  type_device = 2;
 }
 
 /*

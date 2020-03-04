@@ -15,7 +15,7 @@ vex::motor_group r(RightFrontMotor, RightRearMotor);
 vex::motor_group ld(LeftFrontMotor, RightRearMotor);
 vex::motor_group rd(RightFrontMotor, LeftRearMotor);
 vex::motor_group d(LeftFrontMotor, LeftRearMotor, RightFrontMotor, RightRearMotor);
-vex::inertial Inertial(vex::PORT2);
+vex::inertial Inertial(vex::PORT17);
 // vex::gyro Gyro (Brain.ThreeWirePort.G);
 vex::pot tilt(Brain.ThreeWirePort.G);
 vex::pot lift(Brain.ThreeWirePort.H);

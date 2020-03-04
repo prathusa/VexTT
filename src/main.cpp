@@ -2,19 +2,35 @@
 using namespace vex;
 using namespace std;
 
+void readTest(void *arg)
+{
+  while(1)
+  {
+    cout << (*(pot *) arg).value(pct) << endl;
+    this_thread::sleep_for(100);
+  }
+}
+
 void read()
 {
   while(1)
   {
     std::cout << "Calc: ";
-    std::cout << robot.lifter.pid.calc() << std::endl;
+    std::cout << robot.base.pid.output << std::endl;
     std::cout << "Position: ";
-    std::cout << robot.lifter.pid.position /*pot(Brain.ThreeWirePort.H).value(pct)*/ << std::endl;
+    std::cout << robot.base.pid.position << std::endl;
+    std::cout << "Error: ";
+    std::cout << robot.base.pid.Pout << std::endl;
+    std::cout << "Integral: ";
+    std::cout << robot.base.pid.Iout << std::endl;
+    std::cout << "Derivative: ";
+    std::cout << robot.base.pid.Dout << std::endl;
+    cout << std::endl;
     // std::cout << "Target: ";
     // std::cout << robot.pid.target << std::endl;
     // std::cout << "Error: ";
     // std::cout << robot.pid.error << std::endl;
-    task::sleep(100);
+    this_thread::sleep_for(100);
   }
 }
 
@@ -22,10 +38,25 @@ int main()
 {
   // // Run the pre-autonomous function.
   // pre_auton();
-  thread a = thread(read);
-  //robot.lifter.pid.setPID(3, 0.3, .05);
-  robot.lifter.pid.setEncDRLift();
-  robot.lifter.pid.async(.7);
+  // robot.lifter.pid.setPotDRLift();
+  // robot.lifter.pid.setTarget(62);
+  // robot.lifter.pid.setPotDR();
+  // robot.lifter.pid.async(57);
+  // thread a = thread(read);
+  // thread a = thread(read);
+
+  Inertial.calibrate(1000);
+  vex::task::sleep(1000);
+  // robot.imu.turn(45, 0);
+  // sdt.turnFor(90, rotationUnits::deg);
+
+  // //robot.lifter.pid.setPID(3, 0.3, .05);
+  // robot.lifter.pid.setEncDRLift();
+  // robot.lifter.pid.async(.7);
+
+  // void *ptr;
+  // ptr = &lift;
+  // thread pointer_thread = thread(readTest, ptr);
   
   // // Set up callbacks for autonomous and driver control periods.
   // Competition.autonomous(autonomous);
