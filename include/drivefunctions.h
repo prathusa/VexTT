@@ -1,6 +1,6 @@
 #pragma once
 
-class PID // : private HOLD
+class PID
 {
   private:
   static double kP;
@@ -14,7 +14,6 @@ class PID // : private HOLD
   static vex::inertial imu;
   static void *pos_device;
   static int type_device;
-  
   static bool motorGroup;
   static bool complete;
   // enum Units {rev, deg, pct};

@@ -16,88 +16,9 @@ PID::PID(double iKP, double iKI, double iKD)
   kD = iKD;
 };
 
-// Added Controller and Brain feedback when autonomous is selected.
-void autonController() 
-{
-  Controller1.Screen.clearScreen();
-  Controller1.Screen.setCursor(1, 1);
-  if (rojo) 
-  {
-    Controller1.Screen.print("RED");
-  }
-
-  if (azul) 
-  {
-    Controller1.Screen.print("BLUE");
-  }
-
-  if (skills) 
-  {
-    Controller1.Screen.print(" SK");
-  }
-
-  if (slow) 
-  {
-    Controller1.Screen.print(" SLOW");
-  }
-
-  if (test) 
-  {
-    Controller1.Screen.print(" TEST");
-  }
-}
-
-void autonBrain() 
-{
-  int row = 1;
-  Brain.Screen.clearScreen();
-  Brain.Screen.setFont(fontType::mono60);
-  Brain.Screen.setCursor(1, row);
-
-  if (rojo) 
-  {
-    Brain.Screen.setFillColor(red);
-    Brain.Screen.print("RED");
-    row += 1;
-    Brain.Screen.setCursor(row, 0);
-  }
-
-  if (azul) 
-  {
-    Brain.Screen.setFillColor(blue);
-    Brain.Screen.print("BLUE");
-    row += 1;
-    Brain.Screen.setCursor(row, 0);
-  }
-
-  if (skills) 
-  {
-    Brain.Screen.setFillColor(yellow);
-    Brain.Screen.print("SKILLS");
-    row += 1;
-    Brain.Screen.setCursor(row, 0);
-  }
-
-  if (slow) 
-  {
-    Brain.Screen.setFillColor(orange);
-    Brain.Screen.print("SLOW MODE");
-    row += 1;
-    Brain.Screen.setCursor(row, 0);
-  }
-
-  if (test) 
-  {
-    Brain.Screen.setFillColor(purple);
-    Brain.Screen.print("TEST MODE");
-    row += 1;
-    Brain.Screen.setCursor(row, 0);
-  }
-}
-
 //slew control
 int accel_step = 12;
-int deccel_step = 12; // Probabiliy needs to be reduced 
+int deccel_step = 12; // Probabily needs to be reduced 
 
 int slew(int target, double iMotor)
 {
