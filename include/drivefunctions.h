@@ -2,7 +2,7 @@
 
 class PID
 {
-  private:
+  protected:
   static double kP;
   static double kI;
   static double kD;
@@ -59,12 +59,6 @@ class PID
   void aFor();
   void aTo(double iTarget);
   void aFor(double iTarget);
-  void setPotDR();
-  void setEncDR();
-  void setLift();
-  void setTilt();
-  void setBase();
-  void setMech();
 };
 
 class IMU : public PID
@@ -72,20 +66,49 @@ class IMU : public PID
   private:
   public:
   IMU();
+  static void setIMU();
+  static void To();
+  static void For();
+  static void To(double iTarget);
+  static void For(double iTarget);
+  void aTo();
+  void aFor();
+  void aTo(double iTarget);
+  void aFor(double iTarget);
 };
 
 class BASE_DRIVE : public PID
 {
-    private:
-    public:
-    BASE_DRIVE();
+  private:
+  public:
+  BASE_DRIVE();
+  static void setBase();
+  static void To();
+  static void For();
+  static void To(double iTarget);
+  static void For(double iTarget);
+  void aTo();
+  void aFor();
+  void aTo(double iTarget);
+  void aFor(double iTarget);
 };
+
 
 class MECH_DRIVE : public PID
 {
   private:
   public:
   MECH_DRIVE();
+  static void setMech();
+  static void setBase();
+  static void ToX();
+  static void ForX();
+  static void ToX(double iTarget);
+  static void ForX(double iTarget);
+  void aToX();
+  void aForX();
+  void aToX(double iTarget);
+  void aForX(double iTarget);
 };
 
 class TILTER : public PID
@@ -93,13 +116,15 @@ class TILTER : public PID
   private:
   public:
   TILTER();
+  void setTilt();
 };
 
-class LIFTER
+class LIFTER : public PID
 {
   private:
   public:
   LIFTER();
+  void setLift();
 };
 
 namespace bot

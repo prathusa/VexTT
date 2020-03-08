@@ -16,6 +16,65 @@ PID::PID(double iKP, double iKI, double iKD)
   kD = iKD;
 };
 
+//PID Presets
+
+void IMU::setIMU() 
+{
+  kP = .15;
+  kI = .08;
+  kD = .009;
+  mg = d;
+  imu = Inertial;
+  motorGroup = true;
+  tolerance = .1;
+  type_device = 4;
+}
+
+void BASE_DRIVE::setBase()
+{
+  kP = 6;
+  kI = 8;
+  kD = 1;
+  mg = d;
+  motorGroup = true;
+  type_device = 1;
+}
+
+void MECH_DRIVE::setMech()
+{
+  kP = .3;
+  kI = .3;
+  kD = 0;
+  m = Tilt;
+  motorGroup = false;
+  pos_device = &tilt;
+  type_device = 2;
+}
+
+void LIFTER::setLift()
+{
+  kP = .3;
+  kI = .3;
+  kD = 0;
+  m = Lift;
+  motorGroup = false;
+  pos_device = &lift;
+  type_device = 2;
+  tolerance = 0;
+}
+
+void TILTER::setTilt()
+{
+  kP = .3;
+  kI = .3;
+  kD = 0;
+  m = Tilt;
+  motorGroup = false;
+  pos_device = &tilt;
+  type_device = 2;
+  tolerance = 0;
+}
+
 //slew control
 int accel_step = 12;
 int deccel_step = 12; // Probabily needs to be reduced 
@@ -45,34 +104,34 @@ double calc_turn_angle(double angle)
   return baseDiagonal * angle * M_PI / 360;
 }
 
-  double PID::dT = .02;
-  double PID::kP = 0;
-  double PID::kI = 0;
-  double PID::kD = 0;
-  double PID::target = 0;
-  double PID::error = 0;
-  double PID::max = 12;
-  double PID::min = -12;
-  vex::motor PID::m = vex::motor(vex::PORT1);
-  vex::motor_group PID::mg;
-  vex::inertial PID::imu = vex::inertial(PORT10);
-  void *PID::pos_device;
-  int PID::type_device = 0; 
-  //                     0 is Motor
-  //                     1 is Motor_group
-  //                     2 is Pot 
-  //                     3 is Encoder
-  double PID::position = 0;
-  double PID::Pout = 0;
-  double PID::integral = 0;
-  double PID::Iout = 0;
-  double PID::derivative = 0;
-  double PID::Dout = 0;
-  double PID::output = 0;
-  double PID::prevError = 0;
-  double PID::tolerance = 0.02;
-  bool PID::motorGroup = false;
-  bool PID::complete = false;
+double PID::dT = .02;
+double PID::kP = 0;
+double PID::kI = 0;
+double PID::kD = 0;
+double PID::target = 0;
+double PID::error = 0;
+double PID::max = 12;
+double PID::min = -12;
+vex::motor PID::m = vex::motor(vex::PORT1);
+vex::motor_group PID::mg;
+vex::inertial PID::imu = vex::inertial(PORT10);
+void *PID::pos_device;
+int PID::type_device = -1;
+//                      0 is Motor
+//                      1 is Motor_group
+//                      2 is Pot
+//                      3 is Encoder
+double PID::position = 0;
+double PID::Pout = 0;
+double PID::integral = 0;
+double PID::Iout = 0;
+double PID::derivative = 0;
+double PID::Dout = 0;
+double PID::output = 0;
+double PID::prevError = 0;
+double PID::tolerance = 0.02;
+bool PID::motorGroup = false;
+bool PID::complete = false;
 
 void PID::setTarget(double iTarget)
 {
@@ -184,58 +243,64 @@ void PID::setParam(double iKP, double iKI, double iKD, vex::motor_group iMG, vex
   motorGroup = true;
 }
 
-double PID::calc()
+double PID::calc() 
 {
   // Calculate error
-  if(type_device == 0)
+  if (type_device == 0)
     position = m.position(rev);
-  else if(type_device == 1)
+  else if (type_device == 1)
     position = mg.position(rev);
-  else if(type_device == 2)
-    position = (*(pot *) pos_device).value(pct);
-  else if(type_device == 3)
-    position = (*(encoder *) pos_device).position(rev);
-  else if(type_device == 4)
+  else if (type_device == 2) 
+  {
+    if ((*(pot *)pos_device).value(pct) == 0) // Avoid starting/ending the Pot at PCT 0 because it can cause issues
+      position = 0; // with the operation of the Potentiometer since latency and
+                // over/under rotation of the pot can occur
+    else
+      position = (*(pot *)pos_device).value(pct);
+  } 
+  else if (type_device == 3)
+    position = (*(encoder *)pos_device).position(rev);
+  else if (type_device == 4)
     position = imu.rotation(deg);
 
-    error = target - position;
+  error = target - position;
 
-    // Proportional term
-    Pout = kP * error;
+  // Proportional term
+  Pout = kP * error;
 
-    // Integral term
-    integral += error * dT;
-    Iout = kI * integral;
+  // Integral term
+  integral += error * dT;
+  Iout = kI * integral;
 
-    // Derivative term
-    derivative = (error - prevError) / dT;
-    Dout = kD * derivative;
+  // Derivative term
+  derivative = (error - prevError) / dT;
+  Dout = kD * derivative;
 
-    // Calculate total output
-    output = Pout + Iout + Dout;
+  // Calculate total output
+  output = Pout + Iout + Dout;
 
-    // Restrict to max/min
-    if(output > max)
-        output = max;
-    else if(output < min)
-        output = min;
-    
-    double integralCap = 6;
+  // Restrict to max/min
+  if (output > max)
+    output = max;
+  else if (output < min)
+    output = min;
 
-    if(Iout > integralCap)
-        Iout = integralCap;
-    else if (Iout < -integralCap)
-        Iout = -integralCap;
-    if(std::abs(error) < tolerance)
-    {
-      integral = 0;
-      output = 0;
-    }
+  double integralCap = 4;
 
-    // Save error to previous error
-    prevError = error;
-    
-    return output;
+  if (Iout > integralCap)
+    Iout = integralCap;
+  else if (Iout < -integralCap)
+    Iout = -integralCap;
+  if (std::abs(error) < tolerance) 
+  {
+    integral = 0;
+    output = 0;
+  }
+
+  // Save error to previous error
+  prevError = error;
+
+  return output;
 }
 
 double PID::calc(double iTarget)
@@ -308,15 +373,21 @@ void PID::To()
 
 void PID::For()
 {
-  if(type_device == 0)
+  if (type_device == 0)
     position = m.position(rev);
-  else if(type_device == 1)
+  else if (type_device == 1)
     position = mg.position(rev);
-  else if(type_device == 2)
-    position = (*(pot *) pos_device).value(pct);
-  else if(type_device == 3)
-    position = (*(encoder *) pos_device).position(rev);
-  else if(type_device == 4)
+  else if (type_device == 2) 
+  {
+    if ((*(pot *)pos_device).value(pct) == 0) // Avoid starting/ending the Pot at PCT 0 because it can cause issues
+      position = 0; // with the operation of the Potentiometer since latency and
+                // over/under rotation of the pot can occur
+    else
+      position = (*(pot *)pos_device).value(pct);
+  } 
+  else if (type_device == 3)
+    position = (*(encoder *)pos_device).position(rev);
+  else if (type_device == 4)
     position = imu.rotation(deg);
   
   target += position;
@@ -357,71 +428,263 @@ void PID::aFor(double iTarget)
   aFor();
 }
 
-//PID Presets
-
-void PID::setEncDR()
+void IMU::To() 
 {
-  kP = 12;
-  kI = 16;
-  kD = 0.8;
-  mg = intake;
-  motorGroup = true;
-  type_device = 0;
-  tolerance = 0;
+  while (1) 
+  {
+    double volts = calc();
+    if (volts == 0) 
+    {
+      mg.stop();
+      this_thread::yield();
+      break;
+    }
+    l.spin(fwd, volts, voltageUnits::volt);
+    r.spin(fwd, -volts, voltageUnits::volt);
+    this_thread::sleep_for(20);
+  }
 }
 
-void PID::setPotDR()
+void IMU::For() 
 {
-  kP = .3;
-  kI = .3;
-  kD = 0;
-  mg = intake;
-  motorGroup = true;
-  pos_device = &lift;
-  type_device = 2;
-  tolerance = 0;
+  position = imu.rotation(deg);
+  target += position;
+  To();
 }
 
-void PID::setLift()
+void IMU::To(double iTarget)
 {
-  kP = .3;
-  kI = .3;
-  kD = 0;
-  m = Lift;
-  motorGroup = false;
-  pos_device = &lift;
-  type_device = 2;
-  tolerance = 0;
+  target = iTarget;
+  To();
 }
 
-void PID::setTilt()
+void IMU::For(double iTarget) 
 {
-  kP = .3;
-  kI = .3;
-  kD = 0;
-  m = Tilt;
-  motorGroup = false;
-  pos_device = &tilt;
-  type_device = 2;
+  target = iTarget;
+  For();
 }
 
-void PID::setBase()
+void IMU::aTo() { thread async_pid = vex::thread(To); }
+
+void IMU::aFor() { thread async_pid = vex::thread(For); }
+
+void IMU::aTo(double iTarget) 
 {
-  kP = 6;
-  kI = 8;
-  kD = 1;
-  mg = d;
-  motorGroup = true;
-  type_device = 1;
+  target = iTarget;
+  aTo();
 }
 
-void PID::setMech()
+void IMU::aFor(double iTarget) 
 {
-  kP = .3;
-  kI = .3;
-  kD = 0;
-  m = Tilt;
-  motorGroup = false;
-  pos_device = &tilt;
-  type_device = 2;
+  target = iTarget;
+  aFor();
+}
+
+void BASE_DRIVE::To() 
+{
+  int time = 0;
+  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
+    setBase(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  while (1) 
+  {
+    double volts = calc();
+    if (volts == 0) 
+    {
+      mg.stop();
+      this_thread::yield();
+      break;
+    } 
+    else if (abs(mg.velocity(percentUnits::pct)) < 2 && target > .5) // else if makes sure that the volts aren't 0
+    {
+      time += 15;
+    } 
+    else if (abs(mg.velocity(percentUnits::pct)) < .1) 
+    {
+      time += 10;
+    }
+    if(time >= 40)
+    {
+      mg.stop();
+      this_thread::yield();
+      break;
+    }
+    mg.spin(fwd, volts, volt);
+    this_thread::sleep_for(20);
+  }
+}
+
+void BASE_DRIVE::For() 
+{
+  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
+    setBase(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  if (type_device == 0)
+    position = m.position(rev);
+  else if (type_device == 1)
+    position = mg.position(rev);
+  else if (type_device == 2) 
+  {
+    if ((*(pot *)pos_device).value(pct) == 0) // Avoid starting/ending the Pot at PCT 0 because it can cause issues
+      position = 0; // with the operation of the Potentiometer since latency and
+                // over/under rotation of the pot can occur
+    else
+      position = (*(pot *)pos_device).value(pct);
+  } 
+  else if (type_device == 3)
+    position = (*(encoder *)pos_device).position(rev);
+  else if (type_device == 4)
+    position = imu.rotation(deg);
+
+  target += position;
+  To();
+}
+
+void BASE_DRIVE::To(double iTarget) 
+{
+  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
+    setBase(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  target = iTarget;
+  To();
+}
+
+void BASE_DRIVE::For(double iTarget) 
+{
+  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
+    setBase(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  target = iTarget;
+  For();
+}
+
+void BASE_DRIVE::aTo() 
+{
+  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
+    setBase(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  thread async_pid = vex::thread(To);
+}
+
+void BASE_DRIVE::aFor() 
+{
+  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
+    setBase(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  thread async_pid = vex::thread(For);
+}
+
+void BASE_DRIVE::aTo(double iTarget) 
+{
+  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
+    setBase(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  target = iTarget;
+  aTo();
+}
+
+void BASE_DRIVE::aFor(double iTarget) 
+{
+  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
+    setBase(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  target = iTarget;
+  aFor();
+}
+
+void MECH_DRIVE::ToX() 
+{
+  int time = 0;
+  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
+    setMech(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  while (1) 
+  {
+    double volts = calc();
+    if (volts == 0) 
+    {
+      mg.stop();
+      this_thread::yield();
+      break;
+    } 
+    else if (abs(mg.velocity(percentUnits::pct)) < 2 && target > .5) // else if makes sure that the volts aren't 0
+    {
+      time += 15;
+    } 
+    else if (abs(mg.velocity(percentUnits::pct)) < .1) 
+    {
+      time += 10;
+    }
+    if(time >= 40)
+    {
+      mg.stop();
+      this_thread::yield();
+      break;
+    }
+    ld.spin(fwd, volts, volt);
+    rd.spin(fwd, -volts, volt);
+    this_thread::sleep_for(20);
+  }
+}
+
+void MECH_DRIVE::ForX() 
+{
+  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
+    setMech(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  if (type_device == 0)
+    position = m.position(rev);
+  else if (type_device == 1)
+    position = mg.position(rev);
+  else if (type_device == 2) 
+  {
+    if ((*(pot *)pos_device).value(pct) == 0) // Avoid starting/ending the Pot at PCT 0 because it can cause issues
+      position = 0; // with the operation of the Potentiometer since latency and
+                // over/under rotation of the pot can occur
+    else
+      position = (*(pot *)pos_device).value(pct);
+  } 
+  else if (type_device == 3)
+    position = (*(encoder *)pos_device).position(rev);
+  else if (type_device == 4)
+    position = imu.rotation(deg);
+
+  target += position;
+  To();
+}
+
+void MECH_DRIVE::ToX(double iTarget) 
+{
+  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
+    setMech(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  target = iTarget;
+  To();
+}
+
+void MECH_DRIVE::ForX(double iTarget) 
+{
+  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
+    setMech(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  target = iTarget;
+  For();
+}
+
+void MECH_DRIVE::aToX() 
+{
+  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
+    setMech(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  thread async_pid = vex::thread(To);
+}
+
+void MECH_DRIVE::aForX() 
+{
+  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
+    setMech(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  thread async_pid = vex::thread(For);
+}
+
+void MECH_DRIVE::aToX(double iTarget) 
+{
+  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
+    setMech(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  target = iTarget;
+  aTo();
+}
+
+void MECH_DRIVE::aForX(double iTarget) 
+{
+  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
+    setMech(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  target = iTarget;
+  aFor();
 }
