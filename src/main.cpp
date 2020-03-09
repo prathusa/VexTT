@@ -10,6 +10,8 @@ void read()
     std::cout << robot.base.output << std::endl;
     std::cout << "Position: ";
     std::cout << robot.base.position << std::endl;
+    std::cout << "Inertial Position: ";
+    std::cout << Inertial.rotation() << std::endl;
     std::cout << "Error: ";
     std::cout << robot.base.Pout << std::endl;
     std::cout << "Integral: ";

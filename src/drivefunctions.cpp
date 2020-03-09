@@ -20,13 +20,13 @@ PID::PID(double iKP, double iKI, double iKD)
 
 void IMU::setIMU() 
 {
-  kP = .15;
-  kI = .08;
-  kD = .009;
+  kP = 0.2;
+  kI = 0.09;
+  kD = 0.02;
   mg = d;
   imu = Inertial;
   motorGroup = true;
-  tolerance = .1;
+  tolerance = 0;
   type_device = 4;
 }
 
@@ -129,14 +129,14 @@ double PID::derivative = 0;
 double PID::Dout = 0;
 double PID::output = 0;
 double PID::prevError = 0;
+double PID::prevPosition = 0;
+double PID::prevDeriv = 0;
+double PID::acceleration = 0;
 double PID::tolerance = 0.02;
 bool PID::motorGroup = false;
 bool PID::complete = false;
 
-void PID::setTarget(double iTarget)
-{
-  target = iTarget;
-}
+void PID::setTarget(double iTarget) { target = iTarget; }
 
 void PID::setPID(double p, double i, double d)
 {
@@ -253,8 +253,7 @@ double PID::calc()
   else if (type_device == 2) 
   {
     if ((*(pot *)pos_device).value(pct) == 0) // Avoid starting/ending the Pot at PCT 0 because it can cause issues
-      position = 0; // with the operation of the Potentiometer since latency and
-                // over/under rotation of the pot can occur
+      return 0; // with the operation of the Potentiometer since latency and over/under rotation of the pot can occur
     else
       position = (*(pot *)pos_device).value(pct);
   } 
@@ -264,7 +263,6 @@ double PID::calc()
     position = imu.rotation(deg);
 
   error = target - position;
-
   // Proportional term
   Pout = kP * error;
 
@@ -273,7 +271,11 @@ double PID::calc()
   Iout = kI * integral;
 
   // Derivative term
-  derivative = (error - prevError) / dT;
+  derivative = (error - prevError)/dT; //-(position - prevPosition) / dT; // Subtracting from 0 rather than error helps prevent Derivative kick
+  if(abs(derivative) > abs(acceleration + prevDeriv) && prevDeriv != 0)
+  {
+    derivative = acceleration + prevDeriv;
+  }
   Dout = kD * derivative;
 
   // Calculate total output
@@ -285,7 +287,7 @@ double PID::calc()
   else if (output < min)
     output = min;
 
-  double integralCap = 4;
+  double integralCap = 3;
 
   if (Iout > integralCap)
     Iout = integralCap;
@@ -298,6 +300,9 @@ double PID::calc()
   }
 
   // Save error to previous error
+  acceleration = derivative - prevDeriv;
+  prevDeriv = derivative;
+  prevPosition = position;
   prevError = error;
 
   return output;
@@ -380,8 +385,7 @@ void PID::For()
   else if (type_device == 2) 
   {
     if ((*(pot *)pos_device).value(pct) == 0) // Avoid starting/ending the Pot at PCT 0 because it can cause issues
-      position = 0; // with the operation of the Potentiometer since latency and
-                // over/under rotation of the pot can occur
+      position = 0; // with the operation of the Potentiometer since latency and over/under rotation of the pot can occur
     else
       position = (*(pot *)pos_device).value(pct);
   } 
@@ -433,7 +437,8 @@ void IMU::To()
   while (1) 
   {
     double volts = calc();
-    if (volts == 0) 
+    double angleTolerance = 1;
+    if (volts == 0 || error < angleTolerance) 
     {
       mg.stop();
       this_thread::yield();
@@ -441,7 +446,7 @@ void IMU::To()
     }
     l.spin(fwd, volts, voltageUnits::volt);
     r.spin(fwd, -volts, voltageUnits::volt);
-    this_thread::sleep_for(20);
+    this_thread::sleep_for(21);
   }
 }
 
@@ -483,8 +488,8 @@ void IMU::aFor(double iTarget)
 void BASE_DRIVE::To() 
 {
   int time = 0;
-  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
-    setBase(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  if (type_device == -1 || type_device == 0 || type_device == 2 || type_device == 4)      // This is just here to check if Base was set, if it was not set
+    setBase(); // , which it tells by type_device being equal to -1, 0, 2, 4, then it set's it as the default base
   while (1) 
   {
     double volts = calc();
@@ -515,8 +520,8 @@ void BASE_DRIVE::To()
 
 void BASE_DRIVE::For() 
 {
-  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
-    setBase(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  if (type_device == -1 || type_device == 0 || type_device == 2 || type_device == 4)      // This is just here to check if Base was set, if it was not set
+    setBase(); // , which it tells by type_device being equal to -1, 0, 2, 4, then it set's it as the default base
   if (type_device == 0)
     position = m.position(rev);
   else if (type_device == 1)
@@ -540,46 +545,46 @@ void BASE_DRIVE::For()
 
 void BASE_DRIVE::To(double iTarget) 
 {
-  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
-    setBase(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  if (type_device == -1 || type_device == 0 || type_device == 2 || type_device == 4)      // This is just here to check if Base was set, if it was not set
+    setBase(); // , which it tells by type_device being equal to -1, 0, 2, 4, then it set's it as the default base
   target = iTarget;
   To();
 }
 
 void BASE_DRIVE::For(double iTarget) 
 {
-  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
-    setBase(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  if (type_device == -1 || type_device == 0 || type_device == 2 || type_device == 4)      // This is just here to check if Base was set, if it was not set
+    setBase(); // , which it tells by type_device being equal to -1, 0, 2, 4, then it set's it as the default base
   target = iTarget;
   For();
 }
 
 void BASE_DRIVE::aTo() 
 {
-  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
-    setBase(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  if (type_device == -1 || type_device == 0 || type_device == 2 || type_device == 4)      // This is just here to check if Base was set, if it was not set
+    setBase(); // , which it tells by type_device being equal to -1, 0, 2, 4, then it set's it as the default base
   thread async_pid = vex::thread(To);
 }
 
 void BASE_DRIVE::aFor() 
 {
-  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
-    setBase(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  if (type_device == -1 || type_device == 0 || type_device == 2 || type_device == 4)      // This is just here to check if Base was set, if it was not set
+    setBase(); // , which it tells by type_device being equal to -1, 0, 2, 4, then it set's it as the default base
   thread async_pid = vex::thread(For);
 }
 
 void BASE_DRIVE::aTo(double iTarget) 
 {
-  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
-    setBase(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  if (type_device == -1 || type_device == 0 || type_device == 2 || type_device == 4)      // This is just here to check if Base was set, if it was not set
+    setBase(); // , which it tells by type_device being equal to -1, 0, 2, 4, then it set's it as the default base
   target = iTarget;
   aTo();
 }
 
 void BASE_DRIVE::aFor(double iTarget) 
 {
-  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
-    setBase(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  if (type_device == -1 || type_device == 0 || type_device == 2 || type_device == 4)      // This is just here to check if Base was set, if it was not set
+    setBase(); // , which it tells by type_device being equal to -1, 0, 2, 4, then it set's it as the default base
   target = iTarget;
   aFor();
 }
@@ -587,8 +592,8 @@ void BASE_DRIVE::aFor(double iTarget)
 void MECH_DRIVE::ToX() 
 {
   int time = 0;
-  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
-    setMech(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  if (type_device == -1 || type_device == 0 || type_device == 2 || type_device == 4)      // This is just here to check if Base was set, if it was not set
+    setMech(); // , which it tells by type_device being equal to -1, 0, 2, 4, then it set's it as the default base
   while (1) 
   {
     double volts = calc();
@@ -620,8 +625,8 @@ void MECH_DRIVE::ToX()
 
 void MECH_DRIVE::ForX() 
 {
-  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
-    setMech(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  if (type_device == -1 || type_device == 0 || type_device == 2 || type_device == 4)      // This is just here to check if Base was set, if it was not set
+    setMech(); // , which it tells by type_device being equal to -1, 0, 2, 4, then it set's it as the default base
   if (type_device == 0)
     position = m.position(rev);
   else if (type_device == 1)
@@ -645,46 +650,46 @@ void MECH_DRIVE::ForX()
 
 void MECH_DRIVE::ToX(double iTarget) 
 {
-  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
-    setMech(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  if (type_device == -1 || type_device == 0 || type_device == 2 || type_device == 4)      // This is just here to check if Base was set, if it was not set
+    setMech(); // , which it tells by type_device being equal to -1, 0, 2, 4, then it set's it as the default base
   target = iTarget;
   To();
 }
 
 void MECH_DRIVE::ForX(double iTarget) 
 {
-  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
-    setMech(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  if (type_device == -1 || type_device == 0 || type_device == 2 || type_device == 4)      // This is just here to check if Base was set, if it was not set
+    setMech(); // , which it tells by type_device being equal to -1, 0, 2, 4, then it set's it as the default base
   target = iTarget;
   For();
 }
 
 void MECH_DRIVE::aToX() 
 {
-  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
-    setMech(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  if (type_device == -1 || type_device == 0 || type_device == 2 || type_device == 4)      // This is just here to check if Base was set, if it was not set
+    setMech(); // , which it tells by type_device being equal to -1, 0, 2, 4, then it set's it as the default base
   thread async_pid = vex::thread(To);
 }
 
 void MECH_DRIVE::aForX() 
 {
-  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
-    setMech(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  if (type_device == -1 || type_device == 0 || type_device == 2 || type_device == 4)      // This is just here to check if Base was set, if it was not set
+    setMech(); // , which it tells by type_device being equal to -1, 0, 2, 4, then it set's it as the default base
   thread async_pid = vex::thread(For);
 }
 
 void MECH_DRIVE::aToX(double iTarget) 
 {
-  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
-    setMech(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  if (type_device == -1 || type_device == 0 || type_device == 2 || type_device == 4)      // This is just here to check if Base was set, if it was not set
+    setMech(); // , which it tells by type_device being equal to -1, 0, 2, 4, then it set's it as the default base
   target = iTarget;
   aTo();
 }
 
 void MECH_DRIVE::aForX(double iTarget) 
 {
-  if (type_device == -1 || type_device == 0 || type_device == 2)      // This is just here to check if Base was set, if it was not set
-    setMech(); // , which it tells by type_device being equal to -1, 0, 2, then it set's it as the default base
+  if (type_device == -1 || type_device == 0 || type_device == 2 || type_device == 4)      // This is just here to check if Base was set, if it was not set
+    setMech(); // , which it tells by type_device being equal to -1, 0, 2, 4, then it set's it as the default base
   target = iTarget;
   aFor();
 }

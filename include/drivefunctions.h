@@ -27,6 +27,9 @@ class PID
   static double integral;
   static double derivative;
   static double prevError;
+  static double prevPosition;
+  static double prevDeriv;
+  static double acceleration;
   static double Pout;
   static double Iout;
   static double Dout;
