@@ -1,7 +1,7 @@
 #include "vex.h"
 
 vex::brain Brain;
-vex::motor Lift(vex::PORT11, vex::gearSetting::ratio36_1, true);
+vex::motor Lift(vex::PORT4, vex::gearSetting::ratio36_1, true);
 vex::motor Tilt(vex::PORT6, vex::gearSetting::ratio36_1, true);
 vex::motor LeftIntake (vex::PORT9, vex::gearSetting::ratio18_1, true);
 vex::motor RightIntake (vex::PORT2, vex::gearSetting::ratio18_1, false);

@@ -32,11 +32,14 @@ int main()
   thread a = thread(read);
   // robot.base.setBase();
   // robot.base.For(-1.5);
-  // vex::task::sleep(100);
+  Inertial.calibrate(2000);
+  vex::task::sleep(2000);
   robot.imu.setIMU();
   robot.imu.To(90);
+  // vex::task::sleep(200);
+  // robot.imu.To(0);
   // robot.base.setBase();
-  // robot.base.For(3.5);
+  // robot.base.For(.5);
   // // Set up callbacks for autonomous and driver control periods.
   // Competition.autonomous(autonomous);
   // Competition.drivercontrol(usercontrol);

@@ -20,9 +20,9 @@ PID::PID(double iKP, double iKI, double iKD)
 
 void IMU::setIMU() 
 {
-  kP = 0.2;
-  kI = 0.09;
-  kD = 0.02;
+  kP = 0.25;
+  kI = 0.2;
+  kD = 0.01;
   mg = d;
   imu = Inertial;
   motorGroup = true;
@@ -272,10 +272,8 @@ double PID::calc()
 
   // Derivative term
   derivative = (error - prevError)/dT; //-(position - prevPosition) / dT; // Subtracting from 0 rather than error helps prevent Derivative kick
-  if(abs(derivative) > abs(acceleration + prevDeriv) && prevDeriv != 0)
-  {
-    derivative = acceleration + prevDeriv;
-  }
+  // if(abs(derivative) > abs(acceleration + prevDeriv) && prevDeriv != 0)
+  //   derivative = acceleration + prevDeriv;
   Dout = kD * derivative;
 
   // Calculate total output
@@ -438,7 +436,9 @@ void IMU::To()
   {
     double volts = calc();
     double angleTolerance = 1;
-    if (volts == 0 || error < angleTolerance) 
+    if(std::abs(error) < angleTolerance * abs(d.velocity(percentUnits::pct)) * .4)
+      integral = 0;
+    if(std::abs(error) < angleTolerance && abs(d.velocity(percentUnits::pct)) < 3)
     {
       mg.stop();
       this_thread::yield();
@@ -446,7 +446,7 @@ void IMU::To()
     }
     l.spin(fwd, volts, voltageUnits::volt);
     r.spin(fwd, -volts, voltageUnits::volt);
-    this_thread::sleep_for(21);
+    this_thread::sleep_for(30);
   }
 }
 
