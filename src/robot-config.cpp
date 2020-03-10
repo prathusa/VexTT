@@ -24,7 +24,7 @@ vex::limit Debug (Brain.ThreeWirePort.D);
 vex::smartdrive sdt(l, r, Inertial, 12.56, 9, 10, distanceUnits::in);
 vex::drivetrain dt(l, r);
 vex::controller Controller1;
-// vex::competition Competition;
+vex::competition Competition;
 ACCESS_OS os;
 bot::ROBOT robot;
 

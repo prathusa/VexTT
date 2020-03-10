@@ -36,9 +36,9 @@ void read()
 int main() 
 {
   // // Run the pre-autonomous function.
-  // pre_auton();
-  thread a = thread(read);
-  usercontrol();
+  pre_auton();
+  // thread a = thread(read);
+  // usercontrol();
   // robot.base.setBase();
   // robot.base.For(-1.5);
   // Inertial.calibrate(2000);
@@ -54,8 +54,8 @@ int main()
   // robot.base.setBase();
   // robot.base.For(.5);
   // // Set up callbacks for autonomous and driver control periods.
-  // Competition.autonomous(autonomous);
-  // Competition.drivercontrol(usercontrol);
+  Competition.autonomous(autonomous);
+  Competition.drivercontrol(usercontrol);
 
   // Prevent main from exiting with an infinite loop.
   while (1)
