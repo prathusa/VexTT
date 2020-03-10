@@ -34,7 +34,7 @@ class PID
   static double Iout;
   static double Dout;
   static double output;
-  static double tolerance;
+  // static double tolerance;
   void setPID(double kP, double kI, double kD);
   void setTarget(double iTarget);
   void setParam(vex::motor iM);

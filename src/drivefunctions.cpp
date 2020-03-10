@@ -20,21 +20,21 @@ PID::PID(double iKP, double iKI, double iKD)
 
 void IMU::setIMU() 
 {
-  kP = 0.25;
-  kI = 0.2;
-  kD = 0.01;
+  kP = 0.37;
+  kI = 0.16;
+  kD = 0.015;
   mg = d;
   imu = Inertial;
   motorGroup = true;
-  tolerance = 0;
+  // tolerance = 0;
   type_device = 4;
 }
 
 void BASE_DRIVE::setBase()
 {
-  kP = 6;
-  kI = 8;
-  kD = 1;
+  kP = 10;
+  kI = 1.5;
+  kD = .05;
   mg = d;
   motorGroup = true;
   type_device = 1;
@@ -60,7 +60,7 @@ void LIFTER::setLift()
   motorGroup = false;
   pos_device = &lift;
   type_device = 2;
-  tolerance = 0;
+  // tolerance = 0;
 }
 
 void TILTER::setTilt()
@@ -72,7 +72,7 @@ void TILTER::setTilt()
   motorGroup = false;
   pos_device = &tilt;
   type_device = 2;
-  tolerance = 0;
+  // tolerance = 0;
 }
 
 //slew control
@@ -132,7 +132,7 @@ double PID::prevError = 0;
 double PID::prevPosition = 0;
 double PID::prevDeriv = 0;
 double PID::acceleration = 0;
-double PID::tolerance = 0.02;
+// double PID::tolerance = 0.02;
 bool PID::motorGroup = false;
 bool PID::complete = false;
 
@@ -285,17 +285,17 @@ double PID::calc()
   else if (output < min)
     output = min;
 
-  double integralCap = 3;
+  double integralCap = 3.5;
 
   if (Iout > integralCap)
     Iout = integralCap;
   else if (Iout < -integralCap)
     Iout = -integralCap;
-  if (std::abs(error) < tolerance) 
-  {
-    integral = 0;
-    output = 0;
-  }
+  // if (std::abs(error) < tolerance) 
+  // {
+  //   integral = 0;
+  //   output = 0;
+  // }
 
   // Save error to previous error
   acceleration = derivative - prevDeriv;
@@ -436,10 +436,18 @@ void IMU::To()
   {
     double volts = calc();
     double angleTolerance = 1;
-    if(std::abs(error) < angleTolerance * abs(d.velocity(percentUnits::pct)) * .4)
+    if(std::abs(error) < angleTolerance * abs(derivative) * .09)
       integral = 0;
-    if(std::abs(error) < angleTolerance && abs(d.velocity(percentUnits::pct)) < 3)
+    if(abs(derivative) < 1 && std::abs(error) < angleTolerance * 3) 
+      goto kill;
+    // volts = calc();
+    // if((target != 0 && position/target < 0) || (position != 0 && target/position < 0))
+    // {
+    //   integral = 1.5;
+    // }
+    if(std::abs(error) < angleTolerance && abs(derivative) < 10)
     {
+      kill:
       mg.stop();
       this_thread::yield();
       break;
@@ -487,34 +495,38 @@ void IMU::aFor(double iTarget)
 
 void BASE_DRIVE::To() 
 {
-  int time = 0;
   if (type_device == -1 || type_device == 0 || type_device == 2 || type_device == 4)      // This is just here to check if Base was set, if it was not set
     setBase(); // , which it tells by type_device being equal to -1, 0, 2, 4, then it set's it as the default base
+  double volts;
+  int time = 0;
+  int timeout = 60;
   while (1) 
   {
-    double volts = calc();
-    if (volts == 0) 
+    volts = calc();
+    double tolerance = .03;
+    if(std::abs(error) < tolerance * abs(derivative))
+      integral = 0;
+    
+    // if((target != 0 && position/target < 0) || (position != 0 && target/position < 0))
+    // {
+    //   integral = 1.5;
+    // }
+    if(std::abs(error) < tolerance && abs(derivative) < 1)
     {
-      mg.stop();
-      this_thread::yield();
-      break;
-    } 
-    else if (abs(mg.velocity(percentUnits::pct)) < 2 && target > .5) // else if makes sure that the volts aren't 0
-    {
-      time += 15;
-    } 
-    else if (abs(mg.velocity(percentUnits::pct)) < .1) 
-    {
-      time += 10;
-    }
-    if(time >= 40)
-    {
+      kill:
       mg.stop();
       this_thread::yield();
       break;
     }
-    mg.spin(fwd, volts, volt);
-    this_thread::sleep_for(20);
+    if(abs(derivative) < 0.01)
+    {
+      if(time >= timeout)
+        goto kill;
+      else
+        time += 30;
+    }
+    mg.spin(fwd, volts, voltageUnits::volt);
+    this_thread::sleep_for(30);
   }
 }
 

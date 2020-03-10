@@ -1,5 +1,6 @@
 #include "vex.h"
 using namespace vex;
+using namespace std;
 
 void controls() 
 {
@@ -10,31 +11,31 @@ void controls()
   
   // Exponential Driver Control
   if(forward > 0)
-    forward = 0.000085 * pow(Controller1.Axis3.position(vex::percent)/(driveSpeedFactor), 3) + 15;
+    forward = 0.0085 * abs(Controller1.Axis3.position(vex::percent)/(driveSpeedFactor))*Controller1.Axis3.position(vex::percent)/(driveSpeedFactor) + 15;
   else if(forward < 0)
-    forward = 0.000085 * pow(Controller1.Axis3.position(vex::percent)/(driveSpeedFactor), 3) - 15;
+    forward = 0.0085 * abs(Controller1.Axis3.position(vex::percent)/(driveSpeedFactor))*Controller1.Axis3.position(vex::percent)/(driveSpeedFactor) - 15;
   else 
     forward = 0;
 
   if(strafe > 0)
-    strafe = 0.000085 * pow(Controller1.Axis4.position(vex::percent)/(driveSpeedFactor), 3) + 15;
+    strafe = 0.0085 * abs(Controller1.Axis4.position(vex::percent)/(driveSpeedFactor))*Controller1.Axis4.position(vex::percent)/(driveSpeedFactor) + 15;
   else if(strafe < 0)
-    strafe = 0.000085 * pow(Controller1.Axis4.position(vex::percent)/(driveSpeedFactor), 3) - 15;
+    strafe = 0.0085 * abs(Controller1.Axis4.position(vex::percent)/(driveSpeedFactor))*Controller1.Axis4.position(vex::percent)/(driveSpeedFactor) - 15;
   else 
     strafe = 0;
 
   if(turn > 0)
-    turn = 0.00008 * pow(Controller1.Axis1.position(vex::percent)/(driveSpeedFactor*turnSpeedFactor)/(driveSpeedFactor), 3) + 20;
+    turn = 0.01 * abs(Controller1.Axis1.position(vex::percent)/(driveSpeedFactor*turnSpeedFactor))*Controller1.Axis1.position(vex::percent)/(driveSpeedFactor*turnSpeedFactor) + 20;
   else if(turn < 0)
-    turn = 0.00008 * pow(Controller1.Axis1.position(vex::percent)/(driveSpeedFactor*turnSpeedFactor)/(driveSpeedFactor), 3) - 20;
+    turn = 0.01 * abs(Controller1.Axis1.position(vex::percent)/(driveSpeedFactor*turnSpeedFactor))*Controller1.Axis1.position(vex::percent)/(driveSpeedFactor*turnSpeedFactor) - 20;
   else 
     turn = 0;
 
   // Slew Control Drive
-  LeftFrontMotor.spin(vex::forward, slew(forward + strafe + turn, LeftFrontMotor.velocity(percentUnits::pct)), vex::percent);
-  LeftRearMotor.spin(vex::forward, slew(forward - strafe + turn, LeftRearMotor.velocity(percentUnits::pct)), vex::percent);
-  RightFrontMotor.spin(vex::forward, slew(forward - strafe - turn, RightFrontMotor.velocity(percentUnits::pct)), vex::percent);
-  RightRearMotor.spin(vex::forward, slew(forward + strafe - turn, RightRearMotor.velocity(percentUnits::pct)), vex::percent);
+  LeftFrontMotor.spin(vex::forward, (forward + strafe + turn), vex::percent);
+  LeftRearMotor.spin(vex::forward, (forward - strafe + turn), vex::percent);
+  RightFrontMotor.spin(vex::forward, (forward - strafe - turn), vex::percent);
+  RightRearMotor.spin(vex::forward, (forward + strafe - turn), vex::percent);
 
   LeftFrontMotor.setBrake(coast);
   RightFrontMotor.setBrake(coast);
@@ -73,11 +74,11 @@ void controls()
   {
     intake.spin(directionType::rev, 100, pct);
   } 
-  else if(isStacking)
-  {
-    LeftIntake.stop(brakeType::coast);
-    RightIntake.stop(brakeType::coast);
-  }
+  // else if(isStacking)
+  // {
+  //   LeftIntake.stop(brakeType::coast);
+  //   RightIntake.stop(brakeType::coast);
+  // }
   else
   {
     LeftIntake.stop(brakeType::brake);
@@ -85,43 +86,60 @@ void controls()
   }
 
   // -----------------------------Tilt Control
-  if (Controller1.ButtonR2.pressing() && tilt.value(percentUnits::pct) < tiltMax && lift.value(pct) < liftTowerLow) 
+  if(Controller1.ButtonR2.pressing() && tilt.value(percentUnits::pct) < tiltMax) 
   {
     double target = tiltStack; // In revolutions
     double error = target - tilt.value(percentUnits::pct);
     if (error > 0) 
     {
       error = target - tilt.value(percentUnits::pct);
-      double volts = .4 * error + 2.5;
+      double volts = .4 * error + 3;
       Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
       vex::task::sleep(20);
     } 
     else 
     {
       error = 0;
-      double volts = error + 2.5;
+      double volts = error + 3;
       Tilt.spin(directionType::fwd, volts, voltageUnits::volt);
     }
-  } 
-  else if (Controller1.ButtonR1.pressing() && tilt.value(percentUnits::pct) > tiltMin && lift.value(pct) < liftTowerLow) 
+  }
+  else if(Controller1.ButtonR1.pressing() && tilt.value(percentUnits::pct) > tiltMin) 
   {
     double target = tiltMax; // In revolutions
     double error = target - tilt.value(percentUnits::pct);
     if (error > 0) 
     {
       error = target - tilt.value(percentUnits::pct);
-      double volts = .4 * error + 2.5;
+      double volts = .4 * error + 3;
       Tilt.spin(directionType::rev, volts, voltageUnits::volt);
       vex::task::sleep(20);
     } 
     else 
     {
       error = 0;
-      double volts = error + 2.5;
+      double volts = error + 3;
       Tilt.spin(directionType::rev, volts, voltageUnits::volt);
     }
   } 
   else 
     Tilt.stop(hold);
+  
+  // -----------------------------Lift Control
+
+  if(Controller1.ButtonUp.pressing() && lift.value(pct) < liftMax)
+  {
+    Lift.spin(fwd, 100, pct);
+  }
+  else if(Controller1.ButtonDown.pressing() && lift.value(pct) > liftMin)
+  {
+    Lift.spin(directionType::rev, 100, pct);
+  }
+  else
+  {
+    robot.lifter.setLift();
+    robot.lifter.aTo(liftMin);
+    Lift.setBrake(hold);
+  }
   
 }
