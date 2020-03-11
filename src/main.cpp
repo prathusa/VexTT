@@ -37,16 +37,16 @@ int main()
 {
   // // Run the pre-autonomous function.
   thread reader = thread(read);
-  Inertial.calibrate(2000);
-  vex::task::sleep(2000);
-  robot.imu.setPrecise();
-  robot.imu.To(90);
+//   Inertial.calibrate(2000);
+//   vex::task::sleep(2000);
+//   robot.imu.setPrecise();
+//   robot.imu.To(90);
   // robot.base.setIntake();
   // robot.base.To(1);
   // d.spin(fwd, 1, pct);
   // pre_auton();
   // // thread a = thread(read);
-  // // usercontrol();
+  usercontrol();
   // // Inertial.calibrate(2000);
   // // vex::task::sleep(2000);
   
