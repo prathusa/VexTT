@@ -1,6 +1,10 @@
 #include "vex.h"
 using namespace vex;
 using namespace std;
+bool isY = false;
+bool isX = false;
+bool isLA = false;
+double liftHold = liftMin;
 
 void controls() 
 {
@@ -88,6 +92,7 @@ void controls()
   // -----------------------------Tilt Control
   if(Controller1.ButtonR2.pressing() && tilt.value(percentUnits::pct) < tiltMax) 
   {
+    isY = false;
     double target = tiltStack; // In revolutions
     double error = target - tilt.value(percentUnits::pct);
     if (error > 0) 
@@ -106,6 +111,7 @@ void controls()
   }
   else if(Controller1.ButtonR1.pressing() && tilt.value(percentUnits::pct) > tiltMin) 
   {
+    isY = false;
     double target = tiltMax; // In revolutions
     double error = target - tilt.value(percentUnits::pct);
     if (error > 0) 
@@ -121,25 +127,67 @@ void controls()
       double volts = error + 3;
       Tilt.spin(directionType::rev, volts, voltageUnits::volt);
     }
+  }
+  else if (Controller1.ButtonY.pressing() && tilt.value(pct) < tiltStack - 2) 
+  {
+    isY = true;
+    robot.tilter.aTo(tiltStack);
   } 
-  else 
+  else if (Controller1.ButtonY.pressing() && tilt.value(pct) >= tiltStack - 2) 
+  {
+    isY = true;
+    robot.tilter.aTo(tiltMin);
+  }
+  else if(!isY)
     Tilt.stop(hold);
   
   // -----------------------------Lift Control
 
   if(Controller1.ButtonUp.pressing() && lift.value(pct) < liftMax)
   {
+    isLA = false;
     Lift.spin(fwd, 100, pct);
+    if(lift.value(pct) > liftHold)
+      liftHold = lift.value(pct);
+  }
+  else if (Controller1.ButtonLeft.pressing() && lift.value(pct) < liftTowerLow) 
+  {
+    isLA = true;
+    robot.lifter.aTo(liftTowerLow);
+  } 
+  else if (Controller1.ButtonLeft.pressing() && lift.value(pct) < liftTowerMid) 
+  {
+    isLA = true;
+    robot.lifter.aTo(liftTowerMid);
+  }
+  else if (Controller1.ButtonLeft.pressing() && lift.value(pct) >= liftTowerMid)
+  {
+    isLA = true;
+    robot.lifter.aTo(liftMin);
   }
   else if(Controller1.ButtonDown.pressing() && lift.value(pct) > liftMin)
   {
+    isLA = false;
     Lift.spin(directionType::rev, 100, pct);
+    if(lift.value(pct) < liftHold)
+      liftHold = lift.value(pct);
   }
-  else
+  else if(!isLA)
   {
-    robot.lifter.setLift();
-    robot.lifter.aTo(liftMin);
-    Lift.setBrake(hold);
+    robot.lifter.aTo(liftHold);
   }
+
+  // -----------------------------Complete Autostack and Fadeaway Macro
+
+    if (Controller1.ButtonX.pressing()) 
+    {
+      robot.tilter.To(tiltStack);
+      d.spinFor(fwd, -1, rotationUnits::rev, 40, velocityUnits::pct);
+      intake.spinFor(fwd, 1, rotationUnits::rev, 40, velocityUnits::pct);
+    }
+
+    // -----------------------------Stack Macro
+
+    
   
 }

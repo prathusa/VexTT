@@ -24,7 +24,7 @@ vex::limit Debug (Brain.ThreeWirePort.D);
 vex::smartdrive sdt(l, r, Inertial, 12.56, 9, 10, distanceUnits::in);
 vex::drivetrain dt(l, r);
 vex::controller Controller1;
-vex::competition Competition;
+// vex::competition Competition;
 ACCESS_OS os;
 bot::ROBOT robot;
 
@@ -36,14 +36,6 @@ int liftMin = 23;
 int tiltMax = 76;
 int tiltStack = 55;
 int tiltMin = 32; 
-bool rojo = false;
-bool azul = false;
-bool slow = false;
-bool test = false;
-bool skills = false;
-bool rm = false;
-bool bm = false;
-bool manual = false;
 bool isStacking = false;
 double driveSpeedFactor = 1;
 double turnSpeedFactor = 1;
@@ -51,4 +43,3 @@ double tileInch = 23.6;
 double trackWidth = 9; // inches
 double wheelBase = 10; // inches
 double baseDiagonal = 13.45; // inches
-int tempStatus = 0;

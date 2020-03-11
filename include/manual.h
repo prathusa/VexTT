@@ -16,6 +16,12 @@ void tp5();
 //start lined up to the right of red / left of blue, pre load off to the side (not being used)
 void p6();
 
+void p7();
+
+void p8();
+
+void u3();
+
 void u4();
 
 void u5();
@@ -28,7 +34,7 @@ void ttu7();
 
 void u7();
 
-void p8();
+void u8();
 
 void s18();
 
