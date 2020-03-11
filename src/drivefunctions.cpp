@@ -62,7 +62,7 @@ void MECH_DRIVE::setMech()
 void LIFTER::setLift()
 {
   pid.kP = 1.7;
-  pid.kI = 0.09;
+  pid.kI = 0.04;
   pid.kD = 0;
 }
 
@@ -379,13 +379,16 @@ void LIFTER::To()
   while(1)
   {
     double volts = pid.calc(pid.target, lift.value(pct));
-    // if(error == 0)
+    // double tolerance = .03;
+    // if(std::abs(pid.error) < tolerance * abs(pid.derivative))
+    //   pid.integral = 0;
+    // if(std::abs(pid.error) < tolerance && abs(pid.derivative) < 1)
     // {
-    //   wasPressedL = false;
+    //   Lift.stop();
     //   this_thread::yield();
     //   break;
     // }
-    d.spin(fwd, volts, voltageUnits::volt);
+    Lift.spin(fwd, volts, voltageUnits::volt);
     this_thread::sleep_for(20);
   }
 }
@@ -442,11 +445,11 @@ void TILTER::To()
       pid.integral = 0;
     if(std::abs(pid.error) < tolerance && abs(pid.derivative) < 1)
     {
-      d.stop();
+      Tilt.stop();
       this_thread::yield();
       break;
     }
-    d.spin(fwd, volts, voltageUnits::volt);
+    Tilt.spin(fwd, volts, voltageUnits::volt);
     this_thread::sleep_for(20);
   }
 }

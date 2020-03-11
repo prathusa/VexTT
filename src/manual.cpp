@@ -1,5 +1,11 @@
 #include "vex.h"
 
+//flipout
+void flipout()
+{
+  intake.spinFor(directionType::fwd, 2, rev, 100, velocityUnits::pct);
+}
+
 //start lined up with 2 cubes in front 
 void p3()
 {

@@ -1,6 +1,9 @@
 //Autonomus Manual Code
 #pragma once
 
+//flipout
+void flipout();
+
 //start lined up with 2 cubes in front 
 void p3();
 

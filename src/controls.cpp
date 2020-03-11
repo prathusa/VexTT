@@ -29,9 +29,9 @@ void controls()
     strafe = 0;
 
   if(turn > 0)
-    turn = 0.01 * abs(Controller1.Axis1.position(vex::percent)/(driveSpeedFactor*turnSpeedFactor))*Controller1.Axis1.position(vex::percent)/(driveSpeedFactor*turnSpeedFactor) + 20;
+    turn = 0.008 * abs(Controller1.Axis1.position(vex::percent)/(driveSpeedFactor*turnSpeedFactor))*Controller1.Axis1.position(vex::percent)/(driveSpeedFactor*turnSpeedFactor) + 20;
   else if(turn < 0)
-    turn = 0.01 * abs(Controller1.Axis1.position(vex::percent)/(driveSpeedFactor*turnSpeedFactor))*Controller1.Axis1.position(vex::percent)/(driveSpeedFactor*turnSpeedFactor) - 20;
+    turn = 0.008 * abs(Controller1.Axis1.position(vex::percent)/(driveSpeedFactor*turnSpeedFactor))*Controller1.Axis1.position(vex::percent)/(driveSpeedFactor*turnSpeedFactor) - 20;
   else 
     turn = 0;
 
@@ -140,6 +140,18 @@ void controls()
   }
   else if(!isY)
     Tilt.stop(hold);
+
+  
+  // if(Controller1.ButtonUp.pressing() && lift.value(pct) < liftMax)
+  // {
+  //   Tilt.spin(fwd, 100, pct);
+  // }
+  // else if(Controller1.ButtonDown.pressing() && lift.value(pct) > liftMin)
+  // {
+  //   Tilt.spin(directionType::rev, 100, pct);
+  // }
+  // else 
+  //   Tilt.stop(hold);
   
   // -----------------------------Lift Control
 
@@ -177,13 +189,25 @@ void controls()
     robot.lifter.aTo(liftHold);
   }
 
+  // if(Controller1.ButtonUp.pressing() && lift.value(pct) < liftMax)
+  // {
+  //   Lift.spin(fwd, 100, pct);
+  // }
+  // else if(Controller1.ButtonDown.pressing() && lift.value(pct) > liftMin)
+  // {
+  //   Lift.spin(directionType::rev, 100, pct);
+  // }
+  // else 
+  //   Lift.stop(hold);
+
   // -----------------------------Complete Autostack and Fadeaway Macro
 
     if (Controller1.ButtonX.pressing()) 
     {
-      robot.tilter.To(tiltStack);
-      d.spinFor(fwd, -1, rotationUnits::rev, 40, velocityUnits::pct);
-      intake.spinFor(fwd, 1, rotationUnits::rev, 40, velocityUnits::pct);
+      flipout();
+      // robot.tilter.To(tiltStack);
+      // d.spinFor(fwd, -1, rotationUnits::rev, 40, velocityUnits::pct);
+      // intake.spinFor(fwd, 1, rotationUnits::rev, 40, velocityUnits::pct);
     }
 
     // -----------------------------Stack Macro

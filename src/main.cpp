@@ -7,25 +7,25 @@ void read()
   while(1)
   {
     std::cout << "Calc: ";
-    std::cout << robot.imu.pid.output << std::endl;
+    std::cout << robot.base.pid.output << std::endl;
     std::cout << "Position: ";
-    std::cout << robot.imu.pid.position << std::endl;
+    std::cout << robot.base.pid.position << std::endl;
     std::cout << "Drive Position: ";
     std::cout << d.position(rev) << std::endl;
     std::cout << "Inertial Position: ";
     std::cout << Inertial.rotation() << std::endl;
     std::cout << "Error: ";
-    std::cout << robot.imu.pid.error << std::endl;
+    std::cout << robot.base.pid.error << std::endl;
     std::cout << "Integral: ";
-    std::cout << robot.imu.pid.integral << std::endl;
+    std::cout << robot.base.pid.integral << std::endl;
     std::cout << "Derivative: ";
-    std::cout << robot.imu.pid.derivative << std::endl;
+    std::cout << robot.base.pid.derivative << std::endl;
     std::cout << "Pout: ";
-    std::cout << robot.imu.pid.Pout << std::endl;
+    std::cout << robot.base.pid.Pout << std::endl;
     std::cout << "Iout: ";
-    std::cout << robot.imu.pid.Iout << std::endl;
+    std::cout << robot.base.pid.Iout << std::endl;
     std::cout << "Dout: ";
-    std::cout << robot.imu.pid.Dout << std::endl;
+    std::cout << robot.base.pid.Dout << std::endl;
     std::cout << "Velocity: ";
     std::cout << d.velocity(percentUnits::pct) << std::endl;
     cout << std::endl;
