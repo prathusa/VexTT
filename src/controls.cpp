@@ -131,7 +131,7 @@ void controls()
   else if (Controller1.ButtonY.pressing() && tilt.value(pct) < tiltStack - 2) 
   {
     isY = true;
-    robot.tilter.aTo(tiltStack);
+    robot.tilter.aStack();
   } 
   else if (Controller1.ButtonY.pressing() && tilt.value(pct) >= tiltStack - 2) 
   {
@@ -190,13 +190,9 @@ void controls()
   }
 
   // if(Controller1.ButtonUp.pressing() && lift.value(pct) < liftMax)
-  // {
   //   Lift.spin(fwd, 100, pct);
-  // }
   // else if(Controller1.ButtonDown.pressing() && lift.value(pct) > liftMin)
-  // {
   //   Lift.spin(directionType::rev, 100, pct);
-  // }
   // else 
   //   Lift.stop(hold);
 
@@ -204,10 +200,10 @@ void controls()
 
     if (Controller1.ButtonX.pressing()) 
     {
-      flipout();
-      // robot.tilter.To(tiltStack);
-      // d.spinFor(fwd, -1, rotationUnits::rev, 40, velocityUnits::pct);
-      // intake.spinFor(fwd, 1, rotationUnits::rev, 40, velocityUnits::pct);
+      // flipout();
+      robot.tilter.Stack();
+      intake.spinFor(fwd, 1, rotationUnits::rev, 50, velocityUnits::pct);
+      d.spinFor(fwd, -1, rotationUnits::rev, 50, velocityUnits::pct);
     }
 
     // -----------------------------Stack Macro

@@ -18,7 +18,8 @@ PID::PID(double iKP, double iKI, double iKD)
 
 PID IMU::pid = PID();
 PID BASE_DRIVE::pid = PID();
-PID MECH_DRIVE::pid = PID();
+PID MECH_DRIVE::pidLD = PID();
+PID MECH_DRIVE::pidRD = PID();
 PID LIFTER::pid = PID();
 PID TILTER::pid = PID();
 
@@ -54,9 +55,12 @@ void BASE_DRIVE::setIntake()
 
 void MECH_DRIVE::setMech()
 {
-  pid.kP = 10;
-  pid.kI = 1.5;
-  pid.kD = .05;
+  pidLD.kP = 10;
+  pidRD.kP = 10;
+  pidLD.kI = 1.5;
+  pidRD.kI = 1.5;
+  pidLD.kD = .05;
+  pidRD.kD = .05;
 }
 
 void LIFTER::setLift()
@@ -199,13 +203,19 @@ void IMU::For()
 
 void IMU::To(double iTarget)
 {
-  pid.target = iTarget;
+  if(os.getValues(COLOR) == RED)
+    pid.target = iTarget;
+  else
+    pid.target = -iTarget;
   To();
 }
 
 void IMU::For(double iTarget) 
 {
-  pid.target = iTarget;
+  if(os.getValues(COLOR) == RED)
+    pid.target = iTarget;
+  else
+    pid.target = -iTarget;
   For();
 }
 
@@ -215,13 +225,19 @@ void IMU::aFor() { thread async_pid = vex::thread(For); }
 
 void IMU::aTo(double iTarget) 
 {
-  pid.target = iTarget;
+  if(os.getValues(COLOR) == RED)
+    pid.target = iTarget;
+  else
+    pid.target = -iTarget;
   aTo();
 }
 
 void IMU::aFor(double iTarget) 
 {
-  pid.target = iTarget;
+  if(os.getValues(COLOR) == RED)
+    pid.target = iTarget;
+  else
+    pid.target = -iTarget;
   aFor();
 }
 
@@ -301,53 +317,117 @@ void BASE_DRIVE::aFor(double iTarget)
   aFor();
 }
 
+void BASE_DRIVE::driveFor(double positionRev, int driveSpeed) 
+{
+  double error = positionRev - d.position(rotationUnits::rev);
+  double kP = driveSpeed/28.57;
+  int motionless = 0;
+  if (error > 0) 
+  {
+    while (error > 0 && motionless <= 40) 
+    {
+      error = positionRev - d.position(rotationUnits::rev);
+      double volts = (error * kP) + 2;
+      d.spin(fwd, volts, voltageUnits::volt);
+      if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=20;
+      if(dt.velocity(percentUnits::pct) != 0)
+        motionless+=0;
+      vex::task::sleep(20);
+    }
+  }
+  else if (error < 0) 
+  {
+    while (error < 0 && motionless <= 40) 
+    {
+      error = positionRev - d.position(rotationUnits::rev);
+      double volts = (error * kP) - 2;
+      d.spin(fwd, volts, voltageUnits::volt);
+      if(dt.velocity(percentUnits::pct) == 0)
+        motionless+=20;
+      if(dt.velocity(percentUnits::pct) != 0)
+        motionless+=0;
+      vex::task::sleep(20);
+    }
+  }
+  intake.stop();
+}
+
 void MECH_DRIVE::ToX() 
 {
-  int time = 0;
+  int timeLD = 0;
+  int timeRD = 0;
+  int timeoutLD = 60;
+  int timeoutRD = 60;
+  bool isDeadLD = false;
+  bool isDeadRD = false;
   while (1) 
   {
-    double volts = pid.calc(pid.target, d.position(rev));
-    if (volts == 0) 
+    double voltsLD = pidLD.calc(pidLD.target, ld.position(rev));
+    double voltsRD = pidRD.calc(pidRD.target, rd.position(rev));
+    double tolerance = .03;
+    if(std::abs(pidLD.error) < tolerance * abs(pidLD.derivative))
+      pidLD.integral = 0;
+    if(std::abs(pidRD.error) < tolerance * abs(pidRD.derivative))
+      pidRD.integral = 0;
+    if(std::abs(pidLD.error) < tolerance && abs(pidLD.derivative) < 1)
     {
-      d.stop();
-      this_thread::yield();
-      break;
-    } 
-    else if (abs(d.velocity(percentUnits::pct)) < 2 && pid.target > .5) // else if makes sure that the volts aren't 0
-    {
-      time += 15;
-    } 
-    else if (abs(d.velocity(percentUnits::pct)) < .1) 
-    {
-      time += 10;
+      killLD:
+      isDeadLD = true;
+      ld.stop();
     }
-    if(time >= 40)
+    if(std::abs(pidRD.error) < tolerance && abs(pidRD.derivative) < 1)
     {
-      d.stop();
-      this_thread::yield();
-      break;
+      killRD:
+      isDeadRD = true;
+      rd.stop();
     }
-    ld.spin(fwd, volts, volt);
-    rd.spin(fwd, -volts, volt);
+    if(abs(pidLD.derivative) < 0.01)
+    {
+      if(timeLD >= timeoutLD)
+        goto killLD;
+      else
+        timeLD += 20;
+    }
+    if(abs(pidRD.derivative) < 0.01)
+    {
+      if(timeRD >= timeoutRD)
+        goto killRD;
+      else
+        timeRD += 20;
+    }
+    ld.spin(fwd, voltsLD, volt);
+    rd.spin(fwd, voltsRD, volt);
     this_thread::sleep_for(20);
   }
 }
 
 void MECH_DRIVE::ForX() 
 {
-  pid.target += pid.position;
+  pidLD.target += pidLD.position;
+  pidRD.target += pidRD.position;
   ToX();
 }
 
 void MECH_DRIVE::ToX(double iTarget) 
 {
-  pid.target = iTarget;
+  if(os.getValues(COLOR) == RED)
+    iTarget = iTarget;
+  else
+    iTarget = -iTarget;
+  pidLD.target = iTarget;
+  pidRD.target = -iTarget;
   ToX();
 }
 
 void MECH_DRIVE::ForX(double iTarget) 
 {
-  pid.target = iTarget;
+  if(os.getValues(COLOR) == RED)
+    iTarget = iTarget;
+  else
+    iTarget = -iTarget;
+  pidLD.target = iTarget;
+  pidRD.target = -iTarget;
   ForX();
 }
 
@@ -363,13 +443,23 @@ void MECH_DRIVE::aForX()
 
 void MECH_DRIVE::aToX(double iTarget) 
 {
-  pid.target = iTarget;
+  if(os.getValues(COLOR) == RED)
+    iTarget = iTarget;
+  else
+    iTarget = -iTarget;
+  pidLD.target = iTarget;
+  pidRD.target = -iTarget;
   aToX();
 }
 
 void MECH_DRIVE::aForX(double iTarget) 
 {
-  pid.target = iTarget;
+  if(os.getValues(COLOR) == RED)
+    iTarget = iTarget;
+  else
+    iTarget = -iTarget;
+  pidLD.target = iTarget;
+  pidRD.target = -iTarget;
   aForX();
 }
 
@@ -493,6 +583,35 @@ void TILTER::aFor(double iTarget)
 {
   pid.target = iTarget;
   aFor();
+}
+
+void TILTER::Stack()
+{
+  setTilt();
+  while(1)
+  {
+    double volts = pid.calc(pid.target, tilt.value(pct));
+    double tolerance = .03;
+    if(std::abs(pid.error) < tolerance * abs(pid.derivative))
+      pid.integral = 0;
+    if(std::abs(pid.error) < tolerance && abs(pid.derivative) < 1)
+    {
+      Tilt.stop();
+      this_thread::yield();
+      break;
+    }
+    if(tilt.value(pct) > (tiltStack-tiltMin)*1/3 && tilt.value(pct) < (tiltStack-tiltMin)*3/4)
+    {
+      intake.spin(directionType::rev, 60, pct);
+    }
+    Tilt.spin(fwd, volts, voltageUnits::volt);
+    this_thread::sleep_for(20);
+  }
+}
+
+void TILTER::aStack()
+{
+  robot.tilter.aTo(tiltStack);
 }
 
 // -----------------------------PID Code template:

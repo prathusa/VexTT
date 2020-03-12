@@ -64,6 +64,7 @@ class BASE_DRIVE //: public PID
   void aFor();
   void aTo(double iTarget);
   void aFor(double iTarget);
+  void driveFor(double positionRev, int driveSpeed);
 };
 
 
@@ -72,9 +73,9 @@ class MECH_DRIVE //: public PID
   private:
   public:
   MECH_DRIVE();
-  static PID pid;
+  static PID pidLD;
+  static PID pidRD;
   static void setMech();
-  static void setBase();
   static void ToX();
   static void ForX();
   static void ToX(double iTarget);
@@ -100,6 +101,8 @@ class TILTER //: public PID
   void aFor();
   void aTo(double iTarget);
   void aFor(double iTarget);
+  void Stack();
+  void aStack();
 };
 
 class LIFTER //: public PID
