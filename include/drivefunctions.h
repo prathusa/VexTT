@@ -53,17 +53,19 @@ class BASE_DRIVE //: public PID
   private:
   public:
   BASE_DRIVE();
+  // static double thetaVolts;
+  static PID pidTheta;
   static PID pid;
   static void setPrecise();
   static void setIntake();
   static void To();
   static void For();
-  static void To(double iTarget);
-  static void For(double iTarget);
+  static void To(double target, double targetTheta);
+  static void For(double target, double targetTheta);
   void aTo();
   void aFor();
-  void aTo(double iTarget);
-  void aFor(double iTarget);
+  void aTo(double target, double targetTheta);
+  void aFor(double target, double targetTheta);
   void driveFor(double positionRev, int driveSpeed);
 };
 

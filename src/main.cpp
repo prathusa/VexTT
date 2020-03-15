@@ -8,11 +8,11 @@ void read()
   {
     std::cout << "Calc: ";
     std::cout << robot.base.pid.output << std::endl;
-    std::cout << "Position: ";
+    std::cout << "PID Pos: ";
     std::cout << robot.base.pid.position << std::endl;
-    std::cout << "Drive Position: ";
+    std::cout << "D Pos: ";
     std::cout << d.position(rev) << std::endl;
-    std::cout << "Inertial Position: ";
+    std::cout << "Inertial Pos: ";
     std::cout << Inertial.rotation() << std::endl;
     std::cout << "Error: ";
     std::cout << robot.base.pid.error << std::endl;
@@ -26,29 +26,56 @@ void read()
     std::cout << robot.base.pid.Iout << std::endl;
     std::cout << "Dout: ";
     std::cout << robot.base.pid.Dout << std::endl;
+    // std::cout << "Theta Volts: ";
+    // std::cout << robot.base.thetaVolts * 4 << std::endl;
     std::cout << "Velocity: ";
     std::cout << d.velocity(percentUnits::pct) << std::endl;
     cout << std::endl;
-    this_thread::sleep_for(20);
+    this_thread::sleep_for(30);
   }
 }
 
 int main() 
 {
   // // Run the pre-autonomous function.
+  Inertial.calibrate(2000);
+  vex::task::sleep(2000);
+  
+  Brain.Screen.clearScreen();
+  Brain.Screen.setFont(fontType::mono60);
+  Brain.Screen.setFillColor(RED);
+  cout << "3" << endl;
+  Brain.Screen.print("3");
+  Brain.Screen.clearScreen();
+  vex::task::sleep(100);
+  cout << "2" << endl;
+  Brain.Screen.print("2");
+  Brain.Screen.clearScreen();
+  vex::task::sleep(100);
+  cout << "1" << endl;
+  Brain.Screen.print("1");
+  vex::task::sleep(100);
+  Brain.Screen.clearScreen();
+  cout << "GO!" << endl;
+  Brain.Screen.print("GO!");
   thread reader = thread(read);
-//   Inertial.calibrate(2000);
-//   vex::task::sleep(2000);
+  
 //   robot.imu.setPrecise();
 //   robot.imu.To(90);
   // robot.base.setIntake();
-  // robot.base.To(1);
-  // d.spin(fwd, 1, pct);
+
+  // robot.imu.setPrecise();
+  robot.base.setPrecise();
+  robot.base.For(1, 0);
+  // robot.imu.To(90);
+  // robot.base.For(1, -90);
+  // robot.imu.To(270);
+  // robot.base.For(-1);
+  // robot.imu.To(180);
+  // d.spin(fwd, 20, pct);
   // pre_auton();
   // // thread a = thread(read);
-  usercontrol();
-  // // Inertial.calibrate(2000);
-  // // vex::task::sleep(2000);
+  // usercontrol();
   
   // // // Set up callbacks for autonomous and driver control periods.
   // Competition.autonomous(autonomous);

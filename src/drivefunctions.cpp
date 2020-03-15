@@ -18,6 +18,7 @@ PID::PID(double iKP, double iKI, double iKD)
 
 PID IMU::pid = PID();
 PID BASE_DRIVE::pid = PID();
+PID BASE_DRIVE::pidTheta = PID();
 PID MECH_DRIVE::pidLD = PID();
 PID MECH_DRIVE::pidRD = PID();
 PID LIFTER::pid = PID();
@@ -25,18 +26,18 @@ PID TILTER::pid = PID();
 
 //PID Presets
 
-void IMU::setPrecise()
+void IMU::setPrecise() // BASE_DRIVE::pidTheta needs to be updated when PID turn constants are changed
 {
-  pid.kP = 0.37;
+  pid.kP = 0.32;
   pid.kI = 0.16;
-  pid.kD = 0.015;
+  pid.kD = 0.0105;
 }
 
 void IMU::setFast()
 {
   pid.kP = 0.37;
   pid.kI = 0.16;
-  pid.kD = 0.015;
+  pid.kD = 0.0155;
 }
 
 void BASE_DRIVE::setPrecise()
@@ -241,18 +242,22 @@ void IMU::aFor(double iTarget)
   aFor();
 }
 
+// double BASE_DRIVE::thetaVolts = 0;
+
 void BASE_DRIVE::To() 
 {
+  double thetaVolts = 0;
+  pidTheta.setPID(0.3, 0.05, 0.011); // This needs to be updated when PID turn constants are changed
   double volts;
   int time = 0;
   int timeout = 60;
   while (1) 
   {
     volts = pid.calc(pid.target, d.position(rev));
-    double tolerance = .03;
+    thetaVolts = pidTheta.calc(pidTheta.target, Inertial.rotation(deg));
+    double tolerance = .01;
     if(std::abs(pid.error) < tolerance * abs(pid.derivative))
       pid.integral = 0;
-    
     // if((target != 0 && position/target < 0) || (position != 0 && target/position < 0))
     // {
     //   integral = 1.5;
@@ -271,7 +276,12 @@ void BASE_DRIVE::To()
       else
         time += 20;
     }
-    d.spin(fwd, volts, voltageUnits::volt);
+    if(abs(volts - thetaVolts) <= 12)
+      volts = volts - thetaVolts;
+    else
+      volts = volts + thetaVolts;
+    l.spin(fwd, volts + thetaVolts, voltageUnits::volt);
+    r.spin(fwd, volts - thetaVolts, voltageUnits::volt);
     this_thread::sleep_for(20);
   }
 }
@@ -283,14 +293,16 @@ void BASE_DRIVE::For()
   To();
 }
 
-void BASE_DRIVE::To(double iTarget) 
+void BASE_DRIVE::To(double iTarget, double iThetaTarget) 
 {
+  pidTheta.target = iThetaTarget;
   pid.target = iTarget;
   To();
 }
 
-void BASE_DRIVE::For(double iTarget) 
+void BASE_DRIVE::For(double iTarget, double iThetaTarget) 
 {
+  pidTheta.target = iThetaTarget;
   pid.target = iTarget;
   For();
 }
@@ -305,14 +317,16 @@ void BASE_DRIVE::aFor()
   thread async_pid = vex::thread(For);
 }
 
-void BASE_DRIVE::aTo(double iTarget) 
+void BASE_DRIVE::aTo(double iTarget, double iThetaTarget) 
 {
+  pidTheta.target = iThetaTarget;
   pid.target = iTarget;
   aTo();
 }
 
-void BASE_DRIVE::aFor(double iTarget) 
+void BASE_DRIVE::aFor(double iTarget, double iThetaTarget) 
 {
+  pidTheta.target = iThetaTarget;
   pid.target = iTarget;
   aFor();
 }
