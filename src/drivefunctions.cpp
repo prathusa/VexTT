@@ -1,4 +1,4 @@
-#include "vex.h"
+#include "main.h"
 using namespace std;
 
 PID::PID(){};
@@ -7,7 +7,7 @@ BASE_DRIVE::BASE_DRIVE(){};
 MECH_DRIVE::MECH_DRIVE(){};
 LIFTER::LIFTER(){};
 TILTER::TILTER(){};
-bot::ROBOT::ROBOT(){};
+ROBOT::ROBOT(){};
 
 PID::PID(double iKP, double iKI, double iKD)
 {
@@ -42,15 +42,15 @@ void IMU::setFast()
 
 void BASE_DRIVE::setPrecise()
 {
-  pid.kP = 10;
+  pid.kP = 13;
   pid.kI = 1.5;
-  pid.kD = .05;
+  pid.kD = .04;
 }
 
 void BASE_DRIVE::setIntake()
 {
-  pid.kP = 10;
-  pid.kI = 1.5;
+  pid.kP = 3;
+  pid.kI = .5;
   pid.kD = .05;
 }
 
@@ -247,16 +247,17 @@ void IMU::aFor(double iTarget)
 void BASE_DRIVE::To() 
 {
   double thetaVolts = 0;
-  pidTheta.setPID(0.3, 0.05, 0.011); // This needs to be updated when PID turn constants are changed
+  // pidTheta.setPID(.35, 0.0065, 0.03); // This needs to be updated when PID turn constants are changed
   double volts;
   int time = 0;
   int timeout = 60;
   while (1) 
   {
-    volts = pid.calc(pid.target, d.position(rev));
+    pid.position = robot.fps.coordinates[1];
+    volts = pid.calc(pid.target, pid.position);
     thetaVolts = pidTheta.calc(pidTheta.target, Inertial.rotation(deg));
-    double tolerance = .01;
-    if(std::abs(pid.error) < tolerance * abs(pid.derivative))
+    double tolerance = .005;
+    if(std::abs(pid.error) < 7 * abs(pid.derivative) * tolerance)
       pid.integral = 0;
     // if((target != 0 && position/target < 0) || (position != 0 && target/position < 0))
     // {
@@ -288,7 +289,7 @@ void BASE_DRIVE::To()
 
 void BASE_DRIVE::For() 
 {
-  double position = d.position(rev);
+  double position = robot.fps.coordinates[1];
   pid.target += position;
   To();
 }

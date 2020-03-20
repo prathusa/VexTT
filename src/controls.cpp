@@ -1,4 +1,4 @@
-#include "vex.h"
+#include "main.h"
 using namespace vex;
 using namespace std;
 bool isY = false;

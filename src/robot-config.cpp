@@ -1,4 +1,4 @@
-#include "vex.h"
+#include "main.h"
 
 vex::brain Brain;
 vex::motor Lift(vex::PORT5, vex::gearSetting::ratio36_1, true);
@@ -19,6 +19,8 @@ vex::inertial Inertial(vex::PORT18);
 // vex::gyro Gyro (Brain.ThreeWirePort.G);
 vex::pot tilt(Brain.ThreeWirePort.G);
 vex::pot lift(Brain.ThreeWirePort.F);
+vex::encoder le(Brain.ThreeWirePort.A);
+vex::encoder re(Brain.ThreeWirePort.C);
 vex::limit Test (Brain.ThreeWirePort.B);
 vex::limit Debug (Brain.ThreeWirePort.D);
 vex::smartdrive sdt(l, r, Inertial, 12.56, 9, 10, distanceUnits::in);
@@ -26,7 +28,7 @@ vex::drivetrain dt(l, r);
 vex::controller Controller1;
 // vex::competition Competition;
 ACCESS_OS os;
-bot::ROBOT robot;
+ROBOT robot;
 
 int liftMax = 41;
 int liftTowerMid = 37;

@@ -8,29 +8,21 @@
 #include <unistd.h>
 #include <iostream>
 #include <fstream>
-// #include <thread>
-#include <vector>
-#include <pthread.h>
-// #include <vex_triport.h>
 #include "v5_vcs.h"
 #include "robot-config.h"
 #include "manual.h"
 #include "drivefunctions.h"
 #include "ACCESS_OS.h"
+#include "fps.h"
+#include "maps.h"
+#include "tuner.h"
 using namespace vex;
 
 // guiC.cpp
 void pre_auton(void);
 
-// play.cpp
-void play(void);
-void splay(void);
-
 // usercontrol.cpp
 void usercontrol(void);
-
-// record.cpp
-void record(void);
 
 // controls.cpp
 void controls(void);
@@ -44,4 +36,4 @@ extern ACCESS_OS os;
 // extern PID pid;
 // extern BASE_DRIVE base;
 // extern MECH_DRIVE mech;
-extern bot::ROBOT robot;
+extern ROBOT robot;

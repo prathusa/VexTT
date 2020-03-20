@@ -1,4 +1,4 @@
-#include "vex.h"
+#include "main.h"
 
 void battery_check()
 {
@@ -37,6 +37,7 @@ void pre_auton(void)
     {
       vex::task::sleep(20);
     }
+    robot.fps.setUpdate(TWO_MOTOR_ENC);
     Controller1.Screen.clearScreen();
     Brain.Screen.drawImageFromFile("1.png", 0, 0);
 

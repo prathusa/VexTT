@@ -1,4 +1,6 @@
 #pragma once
+#include "fps.h"
+#include "maps.h"
 
 class PID
 {
@@ -124,19 +126,18 @@ class LIFTER //: public PID
   void aFor(double iTarget);
 };
 
-namespace bot
+class ROBOT
 {
-  class ROBOT
-  {
-    private:
-    public:
-    ROBOT();
-    IMU imu;
-    BASE_DRIVE base;
-    MECH_DRIVE mech;
-    TILTER tilter;
-    LIFTER lifter;
-  };
-}
+  private:
+  public:
+  ROBOT();
+  IMU imu;
+  BASE_DRIVE base;
+  MECH_DRIVE mech;
+  TILTER tilter;
+  LIFTER lifter;
+  FPS fps;
+  MAPS map;
+};
 
 int slew(int target, double iMotor);

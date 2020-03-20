@@ -36,11 +36,11 @@
 #define modeError			3
 
 //Define more robot info for easy coding
-#define BLUE						0
-#define RED							1
+#define RED							0
+#define BLUE						1
 #define FRONT						0
 #define BACK						1
-#define SKILLS		  				2
+#define SKILLS		  		2
 #define BRAIN						3
 #define ONE							0
 #define THREE						1
@@ -49,11 +49,11 @@
 #define SIX							4
 #define SEVEN						5
 #define EIGHT						6
-#define EIGHTTEEN					7
-#define FOURTY						8
+#define EIGHTTEEN				7
+#define FOURTY					8
 #define COLOR						0
-#define POSITION					1
-#define POINTS						2
+#define POSITION				1
+#define POINTS					2
 
 
 /*------------------------------------------------------------------------------------------------------
@@ -104,9 +104,9 @@ private:
 	//2D array for displaying the menu options
 	std::string menuOptions[maxMenus][maxOptions] =
 	{
-		{ "Blue",	"Red" }, //If "" doesn't work, try "NULL"
-		{ "Front",	"Back",		"Skills",		"Brain" },
-		{ "1", "3", "4",		"5",		"6", 	"7",	"8",  "18",    "40" }
+		{ "Red", "Blue" }, //If "" doesn't work, try "NULL"
+		{ "Front", "Back",	"Skills",	"Brain" },
+		{ "1", "3", "4", "5", "6", "7", "8",  "18", "40" }
 	};
 public:
 	ACCESS_OS();											//???
