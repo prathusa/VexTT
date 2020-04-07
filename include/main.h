@@ -1,4 +1,4 @@
-//VEX_H
+//MAIN_H
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,16 +9,26 @@
 #include <iostream>
 #include <fstream>
 #include "v5_vcs.h"
-#include "robot-config.h"
-#include "manual.h"
-#include "drivefunctions.h"
-#include "ACCESS_OS.h"
-#include "fps.h"
-#include "maps.h"
-#include "tuner.h"
+#include "..\src\auton\routines\manual.h"
+#include "..\src\auton\gui\ACCESS_OS\ACCESS_OS.h"
+#include "..\src\calc\calc.h"
+#include "..\src\config\config.h"
+#include "..\src\calc\PID\PID.h"
+#include "..\src\calc\FPS\FPS.h"
+#include "..\src\calc\MAPS\MAPS.h"
+#include "..\src\calc\ATUNE\ATUNE.h"
+#include "..\src\calc\TUNER\TUNER.h"
+#include "..\src\motor\DRIVE\IMU\IMU.h"
+#include "..\src\motor\DRIVE\BASE_DRIVE\BASE_DRIVE.h"
+#include "..\src\motor\DRIVE\MECH_DRIVE\MECH_DRIVE.h"
+#include "..\src\motor\DRIVE\X_DRIVE\X_DRIVE.h"
+#include "..\src\motor\LIFTER\LIFTER.h"
+#include "..\src\motor\TILTER\TILTER.h"
+#include "..\src\motor\ROBOT.h"
+using namespace std;
 using namespace vex;
 
-// guiC.cpp
+// gui.cpp
 void pre_auton(void);
 
 // usercontrol.cpp
@@ -32,8 +42,4 @@ void autonomous(void);
 
 //port 3&4&10&11 ded
 extern ACCESS_OS os;
-// extern IMU imu;
-// extern PID pid;
-// extern BASE_DRIVE base;
-// extern MECH_DRIVE mech;
 extern ROBOT robot;
