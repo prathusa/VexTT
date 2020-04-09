@@ -1,4 +1,4 @@
-//VEX_H
+//MAIN_H
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,16 +9,19 @@
 #include <iostream>
 #include <fstream>
 #include "v5_vcs.h"
-#include "robot-config.h"
-#include "manual.h"
-#include "drivefunctions.h"
+#include "auton\manual.h"
 #include "ACCESS_OS.h"
-#include "fps.h"
-#include "maps.h"
-#include "tuner.h"
+#include "calc\calc.h"
+#include "config.h"
+#include "calc\PID.h"
+#include "calc\FPS.h"
+#include "calc\MAPS.h"
+#include "calc\ATUNE.h"
+#include "motor.h"
+using namespace std;
 using namespace vex;
 
-// guiC.cpp
+// gui.cpp
 void pre_auton(void);
 
 // usercontrol.cpp
@@ -29,6 +32,9 @@ void controls(void);
 
 //autonomous.cpp
 void autonomous(void);
+
+//TUNER.cpp
+int tune(double tolerance);
 
 //port 3&4&10&11 ded
 extern ACCESS_OS os;

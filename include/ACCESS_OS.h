@@ -59,7 +59,8 @@
 /*------------------------------------------------------------------------------------------------------
 [CLASS] ACCESS_OS > Defines class functions
 ------------------------------------------------------------------------------------------------------*/
-class ACCESS_OS {
+class ACCESS_OS 
+{
 private:
 	int keyPressedRaw();		//Raw button inputs
 	bool isCursorOn = false;	//Flag for if cursor is showing or not

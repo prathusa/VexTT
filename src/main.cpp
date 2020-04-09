@@ -1,13 +1,12 @@
 #include "main.h"
 using namespace vex;
 using namespace std;
-FPS fps = FPS();
+// FPS fps = FPS();
 
 void read()
 {
   while(1)
   {
-    
     std::cout << "Time: 10 ";
     std::cout << Brain.Timer.time(timeUnits::msec) << std::endl;
     std::cout << "Calc: 11 ";
@@ -43,8 +42,8 @@ void read()
 int main() 
 {
   // // Run the pre-autonomous function.
-  Inertial.calibrate(2000);
-  vex::task::sleep(2000);
+  // Inertial.calibrate(2000);
+  // vex::task::sleep(2000);
   // pre_auton();
   // Brain.Screen.clearScreen();
   // Brain.Screen.setFont(fontType::mono60);
@@ -64,8 +63,8 @@ int main()
   // cout << "GO!" << endl;
   // Brain.Screen.print("GO!");
       thread reader = thread(read);
-      fps.setUpdate(TWO_MOTOR_ENC);
-      fps.print();
+      // fps.setUpdate(TWO_MOTOR_ENC);
+      // fps.print();
       // usercontrol();
   // tune(.03);
 //   robot.imu.setPrecise();
@@ -86,7 +85,7 @@ int main()
   // d.spin(fwd, 20, pct);
   // pre_auton();
   // // thread a = thread(read);
-  // usercontrol();
+  usercontrol();
   
   // // // Set up callbacks for autonomous and driver control periods.
   // Competition.autonomous(autonomous);
@@ -95,9 +94,13 @@ int main()
 
 
 
-  robot.base.setPrecise();
+  // robot.base.setPrecise();
   // robot.base.To(1, 0);
-  robot.map.To(-1, 1);
+  // robot.map.frontTo(0, 2);
+  // vex::task::sleep(1000);
+  // robot.map.frontTo(0, 0);
+  // vex::task::sleep(1000);
+  // robot.map.frontTo(0, 1);
 
 
 
