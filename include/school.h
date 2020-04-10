@@ -1,4 +1,5 @@
 #pragma once
+// It's called school because it holds a bunch of classes. Get it?
 #include "calc\PID.h"
 #include "calc\FPS.h"
 #include "calc\MAPS.h"
@@ -12,7 +13,7 @@ class PID_METHODS1
   void aFor();
 };
 
-class PID_METHODS2
+class PID_METHODS2 : public PID_METHODS1
 {
   public:
   void To(double target);
@@ -21,7 +22,33 @@ class PID_METHODS2
   void aFor(double target);
 };
 
-class IMU : public PID_METHODS1, public PID_METHODS2
+class PID_METHODS3 : public PID_METHODS2
+{
+  public:
+  void To(double magnitude);
+  void For(double magnitude);
+  void aTo(double magnitude);
+  void aFor(double magnitude);
+  void To(double x, double y);
+  void For(double x, double y);
+  void aTo(double x, double y);
+  void aFor(double x, double y);
+  void To(double target[]);
+  void For(double target[]);
+  void aTo(double target[]);
+  void aFor(double target[]);
+  void To(double x, double y, double targetTheta);
+  void For(double x, double y, double targetTheta);
+  void aTo(double x, double y, double targetTheta);
+  void aFor(double x, double y, double targetTheta);
+  void To(double target[], double targetTheta);
+  void For(double target[], double targetTheta);
+  void aTo(double target[], double targetTheta);
+  void aFor(double target[], double targetTheta);
+
+};
+
+class IMU : public PID_METHODS2
 {
   private:
   public:
@@ -30,20 +57,20 @@ class IMU : public PID_METHODS1, public PID_METHODS2
   void defaultPID();
 };
 
-class BASE : public PID_METHODS1
+class BASE : public PID_METHODS3
 {
   private:
   public:
   BASE();
   static PID pidTheta;
   static PID pid;
-  void defaultPID();
-  static void polarFor();
   void To(double target, double targetTheta);
   void For(double target, double targetTheta);
   void aTo(double target, double targetTheta);
   void aFor(double target, double targetTheta);
-  void driveFor(double positionRev, int driveSpeed);
+  static void polarFor();
+  void driveFor(double revolutions, int speed);
+  void driveTo(double revolutions, int speed);
 };
 
 // Not complete
@@ -65,7 +92,7 @@ class MECH : public BASE
   void aForX(double target);
 };
 
-class HOLO : public PID_METHODS1
+class HOLO : public PID_METHODS3
 {
   private:
   public:
@@ -73,14 +100,10 @@ class HOLO : public PID_METHODS1
   static PID pidTheta;
   static PID pid;
   void defaultPID();
-  void To(double target, double targetTheta);
-  void For(double target, double targetTheta);
-  void aTo(double target, double targetTheta);
-  void aFor(double target, double targetTheta);
   void driveFor(double positionRev, int driveSpeed);
 };
 
-class LIFTER : public PID_METHODS1, public PID_METHODS2
+class LIFTER : public PID_METHODS2
 {
   private:
   public:
@@ -89,7 +112,7 @@ class LIFTER : public PID_METHODS1, public PID_METHODS2
   void defaultPID();
 };
 
-class TILTER : public PID_METHODS1, public PID_METHODS2
+class TILTER : public PID_METHODS2
 {
   private:
   public:

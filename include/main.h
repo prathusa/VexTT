@@ -17,7 +17,7 @@
 #include "calc\FPS.h"
 #include "calc\MAPS.h"
 #include "calc\ATUNE.h"
-#include "motor.h"
+#include "school.h"
 using namespace std;
 using namespace vex;
 

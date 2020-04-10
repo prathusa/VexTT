@@ -3,7 +3,10 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/include/*",
+                "C:/Program Files (x86)/VEX Robotics/VEXcode V5 Text/sdk/vexv5/gcc/include/**",
+                "C:/Program Files (x86)/VEX Robotics/VEXcode V5 Text/sdk/vexv5/include/**"
             ],
             "defines": [
                 "_DEBUG",
