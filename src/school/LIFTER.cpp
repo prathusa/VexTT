@@ -20,7 +20,7 @@ void LIFTER::To()
     Lift.spin(fwd, volts, voltageUnits::volt);
     this_thread::sleep_for(20);
   }
-  pid.reset();
+  pid.resetPID();
 }
 
 void LIFTER::For()

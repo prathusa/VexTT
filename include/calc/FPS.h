@@ -10,6 +10,9 @@
 class FPS
 {
   private:
+  static double pos[2];
+  static double dPos[2];
+  static double prevPos[2];
   static void printData();
   static void twoMotorEnc();
   static void twoParaShaftEnc();
@@ -17,12 +20,9 @@ class FPS
   public:
   FPS();
   static double theta;
-  static double prevPos[2];
-  static double dPos[2];
-  static double pos[2];
+  static double magnitude;
   static double coordinates[2]; // 0 is X component
                                 // 1 is Y component
-  static double magnitude;
   void setUpdate(int SETUP_TYPE);
   void print();
   void reset();

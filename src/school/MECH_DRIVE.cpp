@@ -51,7 +51,6 @@ void MECH::ToX()
     rd.spin(fwd, voltsRD, volt);
     this_thread::sleep_for(20);
   }
-  pid.reset();
 }
 
 void MECH::ForX() 

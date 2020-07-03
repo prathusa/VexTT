@@ -12,6 +12,11 @@ extern vex::motor LeftRearMotor;
 extern vex::motor_group intake;
 extern vex::motor_group l;
 extern vex::motor_group r;
+namespace mg
+{
+  extern vex::motor_group x;
+  extern vex::motor_group y;
+}
 extern vex::motor_group ld;
 extern vex::motor_group rd;
 extern vex::motor_group d;

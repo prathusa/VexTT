@@ -10,6 +10,8 @@ double FPS::pos[2] = {0, 0};
 double FPS::coordinates[2] = {0, 0};
 double FPS::magnitude = 0;
 
+// Robot Base Drivers
+
 void FPS::twoMotorEnc() // 2 Parallel Motor Encoders
 {
   while(1)

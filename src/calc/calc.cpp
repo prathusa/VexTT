@@ -9,23 +9,33 @@ double magn(double i, double j)
 }
 
 //slew control
-int accel_step = 12;
-int deccel_step = 12; // Probabily needs to be reduced 
 
-int slew(int target, double iMotor)
+Slew::Slew()
 {
-  int step;
-  int returnSpeed;
+  accel_step = 0;
+  deccel_step = 0;
+}
 
-  if(std::abs(iMotor) < abs(target))
+Slew::Slew(double accel_step, double deccel_step)
+{
+  this->accel_step = accel_step;
+  this->deccel_step = deccel_step;
+}
+
+double Slew::slew(double target, double motorVelocity)
+{
+  double step;
+  double returnSpeed;
+
+  if(std::abs(motorVelocity) < abs(target))
     step = accel_step;
   else
     step = deccel_step;
 
-  if(target > iMotor + step)
-    returnSpeed = iMotor + step;
-  else if(target < iMotor - step)
-    returnSpeed = iMotor - step;
+  if(target > motorVelocity + step)
+    returnSpeed = motorVelocity + step;
+  else if(target < motorVelocity - step)
+    returnSpeed = motorVelocity - step;
   else
     returnSpeed = target;
 

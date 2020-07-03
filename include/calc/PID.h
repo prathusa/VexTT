@@ -38,7 +38,7 @@ class PID
   double Iout = 0;
   double Dout = 0;
   double output = 0;
-  void reset();
+  void clear();
   void resetPID();
   void setPID(double kPID[]);
   void setPID(double kP, double kI, double kD);

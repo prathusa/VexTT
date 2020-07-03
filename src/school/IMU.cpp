@@ -29,7 +29,7 @@ void IMU::To()
     r.spin(fwd, -volts, voltageUnits::volt);
     this_thread::sleep_for(30);
   }
-  pid.reset();
+  pid.resetPID();
 }
 
 void IMU::For() 

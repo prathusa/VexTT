@@ -44,7 +44,7 @@ void BASE::To()
     r.spin(fwd, volts - thetaVolts, voltageUnits::volt);
     this_thread::sleep_for(20);
   }
-  pid.reset();
+  pid.resetPID();
 }
 
 void BASE::polarFor() 
@@ -90,10 +90,8 @@ void BASE::polarFor()
     r.spin(fwd, volts - thetaVolts, voltageUnits::volt);
     this_thread::sleep_for(20);
   }
-  pid.reset();
+  pid.resetPID();
 }
-
-
 
 void BASE::For() 
 {

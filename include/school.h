@@ -4,66 +4,33 @@
 #include "calc\FPS.h"
 #include "calc\MAPS.h"
 
-class PID_METHODS1
+class IMU
 {
+  private:
   public:
+  IMU();
+  static PID pid;
   static void To();
   static void For();
   void aTo();
   void aFor();
-};
-
-class PID_METHODS2 : public PID_METHODS1
-{
-  public:
   void To(double target);
   void For(double target);
   void aTo(double target);
   void aFor(double target);
 };
 
-class PID_METHODS3 : public PID_METHODS2
-{
-  public:
-  void To(double magnitude);
-  void For(double magnitude);
-  void aTo(double magnitude);
-  void aFor(double magnitude);
-  void To(double x, double y);
-  void For(double x, double y);
-  void aTo(double x, double y);
-  void aFor(double x, double y);
-  void To(double target[]);
-  void For(double target[]);
-  void aTo(double target[]);
-  void aFor(double target[]);
-  void To(double x, double y, double targetTheta);
-  void For(double x, double y, double targetTheta);
-  void aTo(double x, double y, double targetTheta);
-  void aFor(double x, double y, double targetTheta);
-  void To(double target[], double targetTheta);
-  void For(double target[], double targetTheta);
-  void aTo(double target[], double targetTheta);
-  void aFor(double target[], double targetTheta);
-
-};
-
-class IMU : public PID_METHODS2
-{
-  private:
-  public:
-  IMU();
-  static PID pid;
-  void defaultPID();
-};
-
-class BASE : public PID_METHODS3
+class BASE
 {
   private:
   public:
   BASE();
   static PID pidTheta;
   static PID pid;
+  static void To();
+  static void For();
+  void aTo();
+  void aFor();
   void To(double target, double targetTheta);
   void For(double target, double targetTheta);
   void aTo(double target, double targetTheta);
@@ -74,14 +41,13 @@ class BASE : public PID_METHODS3
 };
 
 // Not complete
-class MECH : public BASE 
+class MECH
 {
   private:
   public:
   MECH();
   static PID pidLD;
   static PID pidRD;
-  void defaultPID();
   static void ToX();
   static void ForX();
   void ToX(double target);
@@ -92,35 +58,70 @@ class MECH : public BASE
   void aForX(double target);
 };
 
-class HOLO : public PID_METHODS3
+class HOLO
+{
+  private:
+  static void spinX(double x, vex::voltageUnits units);
+  static void spinY(double y, vex::voltageUnits units);
+  public:
+  HOLO();
+  static PID pidX;
+  static PID pidY;
+  static void To();
+  static void For();
+  void aTo();
+  void aFor();
+  void To(double x, double y);
+  void For(double x, double y);
+  void aTo(double x, double y);
+  void aFor(double x, double y);
+  void To(double target[]);
+  void For(double target[]);
+  void aTo(double target[]);
+  void aFor(double target[]);
+  void driveFor(double x, double y, int speed);
+  void driveFor(double target[], int speed);
+};
+
+class HDRIVE 
 {
   private:
   public:
-  HOLO();
-  static PID pidTheta;
-  static PID pid;
-  void defaultPID();
-  void driveFor(double positionRev, int driveSpeed);
+  HDRIVE();
+  static PID pidX;
+  static PID pidY;
+  static void To();
+  static void For();
+  void aTo();
+  void aFor();
+  void To(double magnitude);
+  void For(double magnitude);
+  void aTo(double magnitude);
+  void aFor(double magnitude);
+  void To(double x, double y);
+  void For(double x, double y);
+  void aTo(double x, double y);
+  void aFor(double x, double y);
+  void To(double position[]);
+  void For(double distance[]);
+  void aTo(double position[]);
+  void aFor(double distance[]);
 };
 
-class LIFTER : public PID_METHODS2
+class LIFTER
 {
   private:
   public:
   LIFTER();
   static PID pid;
-  void defaultPID();
-};
-
-class TILTER : public PID_METHODS2
-{
-  private:
-  public:
-  TILTER();
-  static PID pid;
-  void defaultPID();
-  void Stack();
-  void aStack();
+  static void To();
+  static void For();
+  void aTo();
+  void aFor();
+  void To(double target);
+  void For(double target);
+  void aTo(double target);
+  void aFor(double target);
 };
 
 class ROBOT
@@ -132,7 +133,6 @@ class ROBOT
   BASE base;
   MECH mech;
   HOLO holo;
-  TILTER tilter;
   LIFTER lifter;
   FPS fps;
   MAPS map;

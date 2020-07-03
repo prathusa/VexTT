@@ -3,10 +3,7 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/include/*",
-                "C:/Program Files (x86)/VEX Robotics/VEXcode V5 Text/sdk/vexv5/gcc/include/**",
-                "C:/Program Files (x86)/VEX Robotics/VEXcode V5 Text/sdk/vexv5/include/**"
+                "${workspaceFolder}/**"
             ],
             "defines": [
                 "_DEBUG",
@@ -18,6 +15,26 @@
             "cStandard": "c11",
             "cppStandard": "c++17",
             "intelliSenseMode": "msvc-x64",
+            "compileCommands": "${workspaceFolder}/compile_commands.json"
+        },
+        {
+            "name": "vexv5",
+            "includePath": [
+                "${workspaceFolder}\\**",
+                "C:\\Program Files (x86)\\VEX Robotics\\VEXcode V5 Text\\**",
+                "C:\\Program Files\\Python38\\**",
+                "C:\\Users\\prath\\AppData\\Roaming\\Python\\Python38\\**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "windowsSdkVersion": "10.0.17763.0",
+            "compilerPath": "C:\\Program Files (x86)\\VEX Robotics\\VEXcode V5 Text\\toolchain\\vexv5\\win32\\clang\\bin\\clang.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++11",
+            "intelliSenseMode": "gcc-x64",
             "compileCommands": "${workspaceFolder}/compile_commands.json"
         }
     ],

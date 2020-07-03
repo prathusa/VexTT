@@ -8,24 +8,23 @@
 /*----------------------------------------------------------------------------*/
 #include "main.h"
 
-PID::PID(){};
+PID::PID()
+{
+  this->kP = stock_kPID[0] = 0;
+  this->kI = stock_kPID[1] = 0;
+  this->kD = stock_kPID[2] = 0;
+};
 PID::PID(double kP, double kI, double kD)
 {
-  this->kP = kP;
-  stock_kPID[0] = kP;
-  this->kI = kI;
-  stock_kPID[1] = kI;
-  this->kD = kD;
-  stock_kPID[2] = kD;
+  this->kP = stock_kPID[0] = kP;
+  this->kI = stock_kPID[1] = kI;
+  this->kD = stock_kPID[2] = kD;
 };
 PID::PID(double kPID[])
 {
-  this->kP = kPID[0];
-  stock_kPID[0] = kP;
-  this->kI = kPID[1];
-  stock_kPID[1] = kI;
-  this->kD = kPID[2];
-  stock_kPID[2] = kD;
+  this->kP = stock_kPID[0] = kPID[0];
+  this->kI = stock_kPID[1] = kPID[1];
+  this->kD = stock_kPID[2] = kPID[2];
 };
 
 void PID::setTarget(double iTarget) { target = iTarget; }
@@ -100,7 +99,7 @@ void PID::resetPID()
   kD = stock_kPID[2];
 }
 
-void PID::reset()
+void PID::clear()
 {
   dT = .02;
   max = 12;
