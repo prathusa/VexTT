@@ -50,15 +50,19 @@ void HOLO::To() // Possibly can add another parameter that asks for turning degr
     voltsLFRR = pidLFRR.calc(pidLFRR.target, pidLFRR.position);
     voltsLRRF = pidLRRF.calc(pidLRRF.target, pidLRRF.position);
     // double tolerance = .01;
-    // if(std::abs(pidLFRR.error) < 7 * abs(pidLFRR.derivative) * tolerance)
-    //   pidLFRR.integral = 0;
-    // if(std::abs(pidLRRF.error) < 7 * abs(pidLRRF.derivative) * tolerance)
-    //   pidLRRF.integral = 0;
+    // if(std::abs(pidLF.error) < 7 * abs(pidLF.derivative) * tolerance)
+    //   pidLF.integral = 0;
+    // if(std::abs(pidLR.error) < 7 * abs(pidLR.derivative) * tolerance)
+    //   pidLR.integral = 0;
+    // if(std::abs(pidRF.error) < 7 * abs(pidRF.derivative) * tolerance)
+    //   pidRF.integral = 0;
+    // if(std::abs(pidRR.error) < 7 * abs(pidRR.derivative) * tolerance)
+    //   pidRR.integral = 0;
     // if((target != 0 && position/target < 0) || (position != 0 && target/position < 0))
     // {
     //   integral = 1.5;
     // }
-    // if(std::abs(pidLFRR.error) < tolerance && abs(pidLFRR.derivative) < 1 && std::abs(pidLRRF.error) < tolerance && abs(pidLRRF.derivative) < 1)
+    // if(std::abs(pidLF.error) < tolerance && abs(pidLF.derivative) < 1 && std::abs(pidLR.error) < tolerance && abs(pidLR.derivative) < 1 && std::abs(pidRF.error) < tolerance && abs(pidRF.derivative) < 1 && std::abs(pidRR.error) < tolerance && abs(pidRR.derivative) < 1)
     // {
     //   goto kill;
     // }
