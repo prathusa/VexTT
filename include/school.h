@@ -65,8 +65,10 @@ class HOLO
   static void spinY(double y, vex::voltageUnits units);
   public:
   HOLO();
-  static PID pidLFRR;
-  static PID pidLRRF;
+  static PID pidLF;
+  static PID pidLR;
+  static PID pidRF;
+  static PID pidRR;
   static double toLFRR(double x, double y);
   static double toLRRF(double x, double y);
   static void setTarget(double x, double y);
