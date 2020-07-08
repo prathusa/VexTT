@@ -1,10 +1,8 @@
 #include "main.h" // The To function and subsequently all of the functions that call it has been experimentally changed, may need to be fix, reworked, or reverted if it does not work
 
 HOLO::HOLO(){};
-PID HOLO::pidLF = PID(28, 0.0, .009); // Random numbers right now, need to be tuned 20 P is good
-PID HOLO::pidLR = PID(28, 0.0, .009); // Random numbers right now, need to be tuned
-PID HOLO::pidRF = PID(28, 0.0, .009); // Random numbers right now, need to be tuned
-PID HOLO::pidRR = PID(28, 0.0, .009); // Random numbers right now, need to be tuned
+PID HOLO::pidLFRR = PID(28, 0.0, .009); // Random numbers right now, need to be tuned 20 P is good
+PID HOLO::pidLRRF = PID(28, 0.0, .009); // Random numbers right now, need to be tuned
 
 void HOLO::spinX(double x, voltageUnits units)
 {
@@ -29,20 +27,16 @@ double HOLO::toLRRF(double x, double y) // Calculates the cartesian position of 
 
 void HOLO::setTarget(double x, double y) // Calculates the (x, y) coordinate parameters into individual wheel positions and sets it equal to its corresponding wheel pid position.
 {
-  pidLF.target = toLFRR(x, y);
-  pidLR.target = toLRRF(x, y);
-  pidRF.target = toLRRF(x, y);
-  pidRR.target = toLFRR(x, y);
+  pidLFRR.target = toLFRR(x, y);
+  pidLRRF.target = toLRRF(x, y);
 }
 
 void HOLO::To() // Possibly can add another parameter that asks for turning degree more implementation details below
 {
   double dX = 0;
   double dY = 0;
-  double voltsLF = 0;
-  double voltsLR = 0;
-  double voltsRF = 0;
-  double voltsRR = 0;
+  double voltsLFRR = 0;
+  double voltsLRRF = 0;
   int time = 0;
   int timeout = 80;
   // fps.reset();
@@ -51,14 +45,10 @@ void HOLO::To() // Possibly can add another parameter that asks for turning degr
   {
     dX = robot.fps.coordinates[0] - center[0];
     dY = robot.fps.coordinates[1] - center[1];
-    pidLF.position = toLFRR(dX, dY);
-    pidLR.position = toLRRF(dX, dY);
-    pidRF.position = toLRRF(dX, dY);
-    pidRR.position = toLFRR(dX, dY);
-    voltsLF = pidLF.calc(pidLF.target, pidLF.position);
-    voltsLR = pidLR.calc(pidLR.target, pidLR.position);
-    voltsRF = pidRF.calc(pidLR.target, pidLR.position);
-    voltsRR = pidRF.calc(pidLR.target, pidLR.position);
+    pidLFRR.position = toLFRR(dX, dY);
+    pidLRRF.position = toLRRF(dX, dY);
+    voltsLFRR = pidLFRR.calc(pidLFRR.target, pidLFRR.position);
+    voltsLRRF = pidLRRF.calc(pidLRRF.target, pidLRRF.position);
     // double tolerance = .01;
     // if(std::abs(pidLF.error) < 7 * abs(pidLF.derivative) * tolerance)
     //   pidLF.integral = 0;
@@ -76,7 +66,7 @@ void HOLO::To() // Possibly can add another parameter that asks for turning degr
     // {
     //   goto kill;
     // }
-    if(abs(pidLF.derivative) < 0.001 && abs(pidLR.derivative) < 0.001 && abs(pidRF.derivative) < 0.001 && abs(pidRR.derivative) < 0.001)
+    if(abs(pidLFRR.derivative) < 0.001 && abs(pidLRRF.derivative) < 0.001)
     {
       if(time >= timeout)
         goto kill;
@@ -91,26 +81,20 @@ void HOLO::To() // Possibly can add another parameter that asks for turning degr
       this_thread::yield();
       break;
     }
-    LeftFrontMotor.spin(fwd, voltsLF, voltageUnits::volt); // After turning calculations, the motor turning volts calculated can be added/subtracted in the parameter of these spin functions.
-    LeftRearMotor.spin(fwd, voltsLR, voltageUnits::volt);
-    RightFrontMotor.spin(fwd, voltsRF, voltageUnits::volt);
-    RightRearMotor.spin(fwd, voltsRR, voltageUnits::volt);
+    LeftFrontMotor.spin(fwd, voltsLFRR, voltageUnits::volt); // After turning calculations, the motor turning volts calculated can be added/subtracted in the parameter of these spin functions.
+    LeftRearMotor.spin(fwd, voltsLRRF, voltageUnits::volt);
     this_thread::sleep_for(20);
   }
-  pidLF.resetPID();
-  pidLR.resetPID();
-  pidRF.resetPID();
-  pidRR.resetPID();
+  pidLFRR.resetPID();
+  pidLRRF.resetPID();
 }
 
 void HOLO::For() 
 {
   double x = robot.fps.coordinates[0];
   double y = robot.fps.coordinates[1];
-  pidLF.target += toLFRR(x, y);
-  pidLR.target += toLRRF(x, y);
-  pidRF.target += toLRRF(x, y);
-  pidRR.target += toLFRR(x, y);
+  pidLFRR.target += toLFRR(x, y);
+  pidLRRF.target += toLRRF(x, y);
   To();
 }
 
