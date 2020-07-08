@@ -1,7 +1,6 @@
 #include "main.h"
 using namespace vex;
 using namespace std;
-double mov = .5;
 
 void read_base()
 {
@@ -47,14 +46,14 @@ void read_holo()
     std::cout 
     << "Time: "
     << Brain.Timer.time(timeUnits::msec) << std::endl
-    << "Calc LFRR: "
-    << robot.holo.pidLFRR.output << std::endl
-    << "Calc LRRF: "
-    << robot.holo.pidLRRF.output << std::endl
-    << "PIDPos LFRR: "
-    << robot.holo.pidLFRR.position << std::endl
-    << "PIDPos LRRF: "
-    << robot.holo.pidLRRF.position << std::endl
+    << "Calc X: "
+    << robot.holo.pidX.output << std::endl
+    << "Calc Y: "
+    << robot.holo.pidY.output << std::endl
+    << "PIDPos X: "
+    << robot.holo.pidX.position << std::endl
+    << "PIDPos Y: "
+    << robot.holo.pidY.position << std::endl
     << "DPos: "
     << d.position(rev) << std::endl
     << "LFMPos: "
@@ -69,30 +68,30 @@ void read_holo()
     << d.velocity(percentUnits::pct) << std::endl
     << "ImuPos: "
     << Inertial.rotation() << std::endl
-    // << "Error X: "
-    // << robot.holo.pidX.error << std::endl
-    // << "Error Y: "
-    // << robot.holo.pidY.error << std::endl
-    // << "Integral X: "
-    // << robot.holo.pidX.integral << std::endl
-    // << "Integral Y: "
-    // << robot.holo.pidY.integral << std::endl
-    // << "Derivative X: "
-    // << robot.holo.pidX.derivative << std::endl
-    // << "Derivative Y: "
-    // << robot.holo.pidY.derivative << std::endl
-    // << "Pout X: "
-    // << robot.holo.pidX.Pout << std::endl
-    // << "Pout Y: "
-    // << robot.holo.pidY.Pout << std::endl
-    // << "Iout X: "
-    // << robot.holo.pidX.Iout << std::endl
-    // << "Iout Y: "
-    // << robot.holo.pidY.Iout << std::endl
-    // << "Dout X: "
-    // << robot.holo.pidX.Dout << std::endl
-    // << "Dout Y: "
-    // << robot.holo.pidY.Dout << std::endl
+    << "Error X: "
+    << robot.holo.pidX.error << std::endl
+    << "Error Y: "
+    << robot.holo.pidY.error << std::endl
+    << "Integral X: "
+    << robot.holo.pidX.integral << std::endl
+    << "Integral Y: "
+    << robot.holo.pidY.integral << std::endl
+    << "Derivative X: "
+    << robot.holo.pidX.derivative << std::endl
+    << "Derivative Y: "
+    << robot.holo.pidY.derivative << std::endl
+    << "Pout X: "
+    << robot.holo.pidX.Pout << std::endl
+    << "Pout Y: "
+    << robot.holo.pidY.Pout << std::endl
+    << "Iout X: "
+    << robot.holo.pidX.Iout << std::endl
+    << "Iout Y: "
+    << robot.holo.pidY.Iout << std::endl
+    << "Dout X: "
+    << robot.holo.pidX.Dout << std::endl
+    << "Dout Y: "
+    << robot.holo.pidY.Dout << std::endl
     << "FPS Pos X: "
     << robot.fps.coordinates[0] << std::endl
     << "FPS Pos Y: "
@@ -152,6 +151,8 @@ void read_d()
   ;
 
 }
+
+double mov = 3;
 
 // class arr
 // {
