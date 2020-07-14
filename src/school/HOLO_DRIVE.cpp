@@ -1,10 +1,10 @@
 #include "main.h" // The To function and subsequently all of the functions that call it has been experimentally changed, may need to be fix, reworked, or reverted if it does not work
 
 HOLO::HOLO(){};
-PID HOLO::pidLF = PID(28, 0.0, .009); // Random numbers right now, need to be tuned 20 P is good
-PID HOLO::pidLR = PID(28, 0.0, .009); // Random numbers right now, need to be tuned
-PID HOLO::pidRF = PID(28, 0.0, .009); // Random numbers right now, need to be tuned
-PID HOLO::pidRR = PID(28, 0.0, .009); // Random numbers right now, need to be tuned
+PID HOLO::pidLF = PID(25, 0.03, .009); // Random numbers right now, need to be tuned 20 P is good
+PID HOLO::pidLR = PID(25, 0.03, .009); // Random numbers right now, need to be tuned
+PID HOLO::pidRF = PID(25, 0.03, .009); // Random numbers right now, need to be tuned
+PID HOLO::pidRR = PID(25, 0.03, .009); // Random numbers right now, need to be tuned
 
 void HOLO::spinX(double x, voltageUnits units)
 {

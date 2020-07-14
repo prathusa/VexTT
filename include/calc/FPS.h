@@ -6,6 +6,7 @@
 #define ONE_MOTOR_ENC 3
 #define ONE_SHAFT_ENC 4
 #define THREE_SHAFT_ENC 5
+#define TWO_PERP_ROT_SEN 6
 
 class FPS
 {
@@ -17,6 +18,7 @@ class FPS
   static void twoMotorEnc();
   static void twoParaShaftEnc();
   static void twoPerpShaftEnc();
+  static void twoPerpRotSen();
   public:
   FPS();
   static double theta;

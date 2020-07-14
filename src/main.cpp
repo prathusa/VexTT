@@ -47,14 +47,22 @@ void read_holo()
     std::cout 
     << "Time: "
     << Brain.Timer.time(timeUnits::msec) << std::endl
-    << "Calc LFRR: "
-    << robot.holo.pidLFRR.output << std::endl
-    << "Calc LRRF: "
-    << robot.holo.pidLRRF.output << std::endl
-    << "PIDPos LFRR: "
-    << robot.holo.pidLFRR.position << std::endl
-    << "PIDPos LRRF: "
-    << robot.holo.pidLRRF.position << std::endl
+    // << "Calc LF: "
+    // << robot.holo.pidLF.output << std::endl
+    // << "Calc LR: "
+    // << robot.holo.pidLR.output << std::endl
+    // << "Calc RF: "
+    // << robot.holo.pidRF.output << std::endl
+    // << "Calc RR: "
+    // << robot.holo.pidRR.output << std::endl
+    // << "PIDPos LF: "
+    // << robot.holo.pidLF.position << std::endl
+    // << "PIDPos LR: "
+    // << robot.holo.pidLR.position << std::endl
+    // << "PIDPos RF: "
+    // << robot.holo.pidRF.position << std::endl
+    // << "PIDPos RR: "
+    // << robot.holo.pidRR.position << std::endl
     << "DPos: "
     << d.position(rev) << std::endl
     << "LFMPos: "
@@ -104,6 +112,14 @@ void read_holo()
     << std::endl;
     this_thread::sleep_for(100);
   }
+}
+
+void print_pos()
+{
+  cout << ".";
+  cout << "-";
+  cout << "|";
+  cout << "0";
 }
 
 void read_d()
@@ -260,8 +276,6 @@ int main()
   // double inv_target[] = {0, -mov};
   // robot.holo.To(inv_target);
   // cout << "done" << endl;
-  // string d = "b0eb0eb0.00444444eb0.00444444eb0.0311111eb0.0311111eb0.0694444eb0.0694444eb0.0861111eb0.0861111eb0.135556eb0.135556eb0.168889eb0.168889eb0.204444eb0.204444eb0.241111eb0.241111eb0.278889eb0.278889eb0.317778eb0.317778eb0.357778eb0.357778eb0.377778eb0.377778eb0.432222eb0.432222eb0.466667eb0.466667eb0.499444eb0.499444eb0.532222eb0.532222eb0.561111eb0.561111eb0.588333eb0.588333eb0.613333eb0.613333eb0.636667eb0.636667eb0.659444eb0.659444eb0.680556eb0.680556eb0.701111eb0.701111eb0.720556eb0.720556eb0.738889eb0.738889eb0.756111eb0.756111eb0.772222eb0.772222eb0.780556eb0.780556eb0.780556eb0.802778eb0.802778eb0.81eb0.81eb0.830556eb0.830556eb0.836667eb0.836667eb0.854444eb0.858889eb0.858889eb0.858889eb0.873889eb0.873889eb0.881667eb0.881667eb0.89eb0.896667eb0.896667eb0.902222eb0.902222eb0.908333eb0.908333eb0.910556eb0.910556eb0.917222eb0.917222eb0.922222eb0.922222eb0.924444eb0.924444eb0.924444eb0.931111eb0.933333eb0.933333eb0.933889eb0.933889eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.932778eb0.9";
-  // data_to_array(d);
 
   // // // Set up callbacks for autonomous and driver control periods.
   // Competition.autonomous(autonomous);

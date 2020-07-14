@@ -66,6 +66,24 @@ void FPS::twoPerpShaftEnc() // 2 Perpendicular (Normal) Shaft Encoders
   }
 }
 
+void FPS::twoPerpRotSen() // 2 Perpendicular (Normal) Rotation Sensor
+{
+  while(1)
+  {
+    theta = 2*M_PI*Inertial.rotation(rotationUnits::rev);
+    pos[0] = xr.position(rotationUnits::rev);
+    pos[1] = yr.position(rotationUnits::rev);
+    dPos[0] = pos[0] - prevPos[0];
+    dPos[1] = pos[1] - prevPos[1];
+    coordinates[0] += dPos[0] * cos(theta);
+    coordinates[1] += dPos[1] * sin(theta);
+    magnitude = magn(coordinates[0], coordinates[1]);
+    prevPos[0] = xr.position(rotationUnits::rev);
+    prevPos[1] = xr.position(rotationUnits::rev);
+    this_thread::sleep_for(20);
+  }
+}
+
 void FPS::setUpdate(int MODE)
 {
   if(MODE == 0)
@@ -74,6 +92,8 @@ void FPS::setUpdate(int MODE)
     thread updatePosition = thread(twoParaShaftEnc);
   else if(MODE == 2)
     thread updatePosition = thread(twoPerpShaftEnc);
+  else if(MODE == 6)
+    thread updatePosition = thread(twoPerpRotSen);
 }
 
 void FPS::reset()

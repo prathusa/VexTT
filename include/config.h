@@ -28,6 +28,8 @@ extern vex::encoder le;
 extern vex::encoder re;
 extern vex::encoder xe;
 extern vex::encoder ye;
+extern vex::rotation xr;
+extern vex::rotation yr;
 extern vex::limit Test;
 extern vex::limit Debug;
 extern vex::smartdrive sdt;

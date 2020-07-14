@@ -23,6 +23,8 @@ vex::pot lift(Brain.ThreeWirePort.F);
 // vex::encoder re(Brain.ThreeWirePort.C); // Right Encoder
 vex::encoder xe(Brain.ThreeWirePort.A); // X-axis Encoder
 vex::encoder ye(Brain.ThreeWirePort.C); // Y-axis Encoder
+vex::rotation xr(vex::PORT1); // X-axis Rotation Sensor
+vex::rotation yr(vex::PORT2); // X-axis Rotation Sensor
 vex::limit Test (Brain.ThreeWirePort.B); // Test Button
 vex::limit Debug (Brain.ThreeWirePort.D); // Debug Button
 vex::smartdrive sdt(l, r, Inertial, 12.56, 9, 10, distanceUnits::in);

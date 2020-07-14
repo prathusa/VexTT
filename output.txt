@@ -1,0 +1,5 @@
+ERROR - __main__:main - could not open port 'COM7': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+  File "C:\hostedtoolcache\windows\Python\3.6.4\x64\lib\site-packages\serial\serialutil.py", line 240, in __init__
+  File "C:\hostedtoolcache\windows\Python\3.6.4\x64\lib\site-packages\serial\serialwin32.py", line 62, in open
+serial.serialutil.SerialException: could not open port 'COM7': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+We detected something went wrong! Do you want to send a report? [y/N]: 

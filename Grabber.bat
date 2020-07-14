@@ -1,0 +1,1 @@
+prosv5 terminal COM7 > C:\Users\prath\Documents\GitHub\Pratham\output.txt
