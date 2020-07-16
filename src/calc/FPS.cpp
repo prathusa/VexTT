@@ -92,7 +92,7 @@ void FPS::setUpdate(int MODE)
     thread updatePosition = thread(twoParaShaftEnc);
   else if(MODE == 2)
     thread updatePosition = thread(twoPerpShaftEnc);
-  else if(MODE == 6)
+  else if(MODE == 3)
     thread updatePosition = thread(twoPerpRotSen);
 }
 
