@@ -2,7 +2,7 @@
 Code for 8995E- Ellegal made by Pratham
 
 
-This code contains some incomplete files since the work on it was canceled so abruptly due to COVID but the holonomic drive and regular base drive should be mostly complete.
+This code contains some incomplete files and some garbage files since the work on it was canceled so abruptly due to COVID but the holonomic drive and regular base drive should be mostly complete.
 
 - It contains a really smart and elegant (at least I think so) way of implementing PID control through the use of a PID class.
 - At the bottom of PID.cpp there is a comprehensive explanation and an example use case of the PID class.
