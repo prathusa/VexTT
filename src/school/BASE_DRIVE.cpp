@@ -171,5 +171,4 @@ void BASE::driveFor(double positionRev, int driveSpeed)
       vex::task::sleep(20);
     }
   }
-  intake.stop();
 }
