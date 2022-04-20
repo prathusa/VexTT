@@ -4,7 +4,7 @@ using namespace std;
 
 int main() 
 {
-  // // Run the pre-autonomous function.
+  // Run the pre-autonomous function.
   // Inertial.calibrate(2000);
   // vex::task::sleep(2000);
   pre_auton();

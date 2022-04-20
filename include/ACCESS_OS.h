@@ -2,6 +2,8 @@
 /*------------------------------------------------------------------------------------------------------
 [GLOBAL] Variables for ACCESS_OS > Constant vars that won't change during program run
 ------------------------------------------------------------------------------------------------------*/
+#include <string>
+
 //Define buttons for easy coding
 #define btnNONE				0
 #define btnUP				  1

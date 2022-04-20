@@ -106,7 +106,6 @@ void u4()
 
 void u5()
 {
-  
   // robot.base.setIntake();
   robot.base.For(3.2, 0);
   // robot.base.setPrecise();
@@ -122,7 +121,6 @@ void u5()
 
 void u6()
 {
-  
   // robot.base.setIntake();
   robot.base.For(4, 0);
   // robot.base.setPrecise();

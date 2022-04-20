@@ -37,15 +37,6 @@ extern vex::drivetrain dt;
 extern vex::controller Controller1;
 extern vex::competition Competition;
 
-extern int liftMax;
-extern int liftTowerMid;
-extern int liftTowerLow;
-extern int liftTilter;
-extern int liftMin;
-extern int tiltMax;
-extern int tiltStack;
-extern int tiltMin;
-extern bool isStacking;
 extern double driveSpeedFactor;
 extern double turnSpeedFactor;
 extern double tileInch;

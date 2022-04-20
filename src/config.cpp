@@ -34,14 +34,6 @@ vex::competition Competition;
 ACCESS_OS os;
 ROBOT robot;
 
-int liftMax = 41;
-int liftTowerMid = 37;
-int liftTowerLow = 30;
-int liftMin = 11;
-int tiltMax = 80;
-int tiltStack = 70;
-int tiltMin = 32; 
-bool isStacking = false;
 double driveSpeedFactor = 1;
 double turnSpeedFactor = 1;
 double tileInch = 23.6;

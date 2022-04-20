@@ -133,8 +133,8 @@ class ROBOT
 {
   private:
   public:
-  ROBOT();
-  IMU imu = IMU();
+  // Default constructor is being used no constructor needed
+  IMU imu;
   BASE base;
   MECH mech;
   HOLO holo;
