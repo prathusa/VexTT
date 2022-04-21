@@ -19,12 +19,12 @@ void HOLO::spinY(double y, voltageUnits units)
 
 double HOLO::toLFRR(double x, double y) // Calculates the cartesian position of wheels that are rotated 45 degrees from the Y-axis (Left Front wheel and Right Rear wheels are parallel and are positioned in a 45 degree again from the usual vertical orientation)
 {
-  return sin(atan2(y, x) + M_PI_4)*magn(x, y);
+  return sin(atan2(y, x) + M_PI_4)*hypot(x, y);
 }
 
 double HOLO::toLRRF(double x, double y) // Calculates the cartesian position of wheels that are rotated -45 degrees from the Y-axis (Left Rear wheel and Right Front wheels are parallel and are positioned in a -45 degree again from the usual vertical orientation)
 {
-  return sin(atan2(y, x) - M_PI_4)*magn(x, y);
+  return sin(atan2(y, x) - M_PI_4)*hypot(x, y);
 }
 
 void HOLO::setTarget(double x, double y) // Calculates the (x, y) coordinate parameters into individual wheel positions and sets it equal to its corresponding wheel pid position.
@@ -46,11 +46,11 @@ void HOLO::To() // Possibly can add another parameter that asks for turning degr
   int time = 0;
   int timeout = 80;
   // fps.reset();
-  double center[] = {robot.fps.coordinates[0], robot.fps.coordinates[1]};
+  double center[] = {robot.fps.coordinates.x(), robot.fps.coordinates.y()};
   while (1) 
   {
-    dX = robot.fps.coordinates[0] - center[0];
-    dY = robot.fps.coordinates[1] - center[1];
+    dX = robot.fps.coordinates.x() - center[0];
+    dY = robot.fps.coordinates.y() - center[1];
     pidLF.position = toLFRR(dX, dY);
     pidLR.position = toLRRF(dX, dY);
     pidRF.position = toLRRF(dX, dY);
@@ -105,8 +105,8 @@ void HOLO::To() // Possibly can add another parameter that asks for turning degr
 
 void HOLO::For() 
 {
-  double x = robot.fps.coordinates[0];
-  double y = robot.fps.coordinates[1];
+  double x = robot.fps.coordinates.x();
+  double y = robot.fps.coordinates.y();
   pidLF.target += toLFRR(x, y);
   pidLR.target += toLRRF(x, y);
   pidRF.target += toLRRF(x, y);

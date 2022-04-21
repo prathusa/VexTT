@@ -55,10 +55,10 @@ void BASE::polarFor()
   int time = 0;
   int timeout = 40;
   // fps.reset();
-  double center[] = {robot.fps.coordinates[0], robot.fps.coordinates[1]};
+  double center[] = {robot.fps.coordinates.x(), robot.fps.coordinates.y()};
   while (1) 
   {
-    pid.position = magn((robot.fps.coordinates[0] - center[0]), (robot.fps.coordinates[1] - center[1]));
+    pid.position = hypot((robot.fps.coordinates.x() - center[0]), (robot.fps.coordinates.y() - center[1]));
     volts = pid.calc(pid.target, pid.position);
     thetaVolts = pidTheta.calc(pidTheta.target, Inertial.rotation(deg));
     double tolerance = .005;
@@ -95,7 +95,7 @@ void BASE::polarFor()
 
 void BASE::For() 
 {
-  double position = robot.fps.coordinates[1];
+  double position = robot.fps.coordinates.y();
   pid.target += position;
   To();
 }

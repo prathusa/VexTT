@@ -37,6 +37,21 @@ extern vex::drivetrain dt;
 extern vex::controller Controller1;
 extern vex::competition Competition;
 
+namespace config 
+{
+  enum SENSORS // each enum is a different base configuration
+  {
+    TWO_MOTOR_ENC, TWO_PARA_SHAFT_ENC, 
+    TWO_PERP_SHAFT_ENC, ONE_MOTOR_ENC, 
+    ONE_SHAFT_ENC, THREE_SHAFT_ENC, 
+    TWO_PERP_ROT_SEN
+  };
+  enum MOTORS
+  {
+    BASE, H, HOLO, MECH
+  };
+}
+
 extern int liftMax;
 extern int liftTowerMid;
 extern int liftTowerLow;

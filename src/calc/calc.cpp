@@ -3,26 +3,21 @@ using namespace std;
 
 //PID Presets
 
-double magn(double i, double j)
-{
-  return sqrt(pow(i, 2) + pow(j, 2));
-}
-
 //slew control
 
-Slew::Slew()
+calc::Slew::Slew()
 {
   accel_step = 0;
   deccel_step = 0;
 }
 
-Slew::Slew(double accel_step, double deccel_step)
+calc::Slew::Slew(double accel_step, double deccel_step)
 {
   this->accel_step = accel_step;
   this->deccel_step = deccel_step;
 }
 
-double Slew::slew(double target, double motorVelocity)
+double calc::Slew::slew(double target, double motorVelocity)
 {
   double step;
   double returnSpeed;

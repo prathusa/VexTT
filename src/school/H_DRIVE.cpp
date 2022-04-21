@@ -11,11 +11,11 @@ void HDRIVE::To()
   int time = 0;
   int timeout = 40;
   // fps.reset();
-  double center[] = {robot.fps.coordinates[0], robot.fps.coordinates[1]};
+  double center[] = {robot.fps.coordinates.x(), robot.fps.coordinates.y()};
   while (1) 
   {
-    pidX.position = robot.fps.coordinates[0] - center[0];
-    pidY.position = robot.fps.coordinates[1] - center[1];
+    pidX.position = robot.fps.coordinates.x() - center[0];
+    pidY.position = robot.fps.coordinates.y() - center[1];
     voltsX = pidX.calc(pidX.target, pidX.position);
     voltsY = pidY.calc(pidY.target, pidY.position);
     double tolerance = .005;

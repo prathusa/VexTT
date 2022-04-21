@@ -18,6 +18,9 @@
 #include "calc\MAPS.h"
 #include "calc\ATUNE.h"
 #include "school.h"
+#include "robot.h"
+#include "features.h"
+#include "threads\to.h"
 // Prath's computer 
 
 using namespace std;

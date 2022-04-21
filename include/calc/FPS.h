@@ -1,19 +1,17 @@
 #pragma once
-
-#define TWO_MOTOR_ENC 0
-#define TWO_PARA_SHAFT_ENC 1
-#define TWO_PERP_SHAFT_ENC 2
-#define ONE_MOTOR_ENC 3
-#define ONE_SHAFT_ENC 4
-#define THREE_SHAFT_ENC 5
-#define TWO_PERP_ROT_SEN 6
+#include "config.h"
+#include "features.h"
 
 class FPS
 {
   private:
-  static double pos[2];
-  static double dPos[2];
-  static double prevPos[2];
+  vex::thread main;
+  // static double pos[2];
+  // static double dPos[2];
+  // static double prevPos[2];
+  static feature::Coordinate curr;
+  static feature::Coordinate delta;
+  static feature::Coordinate prev;
   static void printData();
   static void twoMotorEnc();
   static void twoParaShaftEnc();
@@ -21,11 +19,13 @@ class FPS
   static void twoPerpRotSen();
   public:
   FPS();
-  static double theta;
-  static double magnitude;
-  static double coordinates[2]; // 0 is X component
-                                // 1 is Y component
-  void setUpdate(int SETUP_TYPE);
+  // static double theta;
+  // static double magnitude;
+  // static double coordinates[2]; // 0 is X component
+  //                               // 1 is Y component
+  static feature::Coordinate coordinates;
+  void setUpdate(config::SENSORS SETUP_TYPE);
+  void start();
   void print();
   void reset();
 };

@@ -37,7 +37,10 @@ void pre_auton(void)
     {
       vex::task::sleep(20);
     }
-    robot.fps.setUpdate(TWO_MOTOR_ENC);
+    ROBOT::motors = config::MOTORS::BASE;
+    // robot.fps.setUpdate(config::SENSORS::TWO_MOTOR_ENC);
+    ROBOT::sensors = config::SENSORS::TWO_MOTOR_ENC;
+    robot.fps.start();
     Controller1.Screen.clearScreen();
     Brain.Screen.drawImageFromFile("1.png", 0, 0);
 

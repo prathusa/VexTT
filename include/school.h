@@ -1,8 +1,6 @@
 #pragma once
 // It's called school because it holds a bunch of classes. Get it?
 #include "calc\PID.h"
-#include "calc\FPS.h"
-#include "calc\MAPS.h"
 
 class IMU
 {
@@ -127,18 +125,4 @@ class LIFTER
   void For(double target);
   void aTo(double target);
   void aFor(double target);
-};
-
-class ROBOT
-{
-  private:
-  public:
-  ROBOT();
-  IMU imu = IMU();
-  BASE base;
-  MECH mech;
-  HOLO holo;
-  LIFTER lifter;
-  FPS fps;
-  MAPS map;
 };

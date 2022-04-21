@@ -5,7 +5,7 @@ bool isY = false;
 bool isX = false;
 bool isLA = false;
 double liftHold = liftMin;
-Slew driveSlew(2, 24);
+calc::Slew driveSlew(2, 24);
 
 void controls() 
 {
