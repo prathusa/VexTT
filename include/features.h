@@ -57,6 +57,15 @@ namespace feature // features
       result.theta(this->theta() - other.theta(), rotationType::RAD);
       return result;
     }
+    Coordinate operator-()
+    {
+      Coordinate result;
+      result.x(-this->x());
+      result.y(-this->y());
+      result.z(-this->z());
+      result.theta(-this->theta(), rotationType::RAD);
+      return result;
+    }
     double magnitude() { return hypot(x(), y()); }
     friend std::ostream& operator<<(std::ostream& os, const Coordinate& coordinate)
     {

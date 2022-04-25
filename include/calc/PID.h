@@ -9,6 +9,7 @@
 // Near Vanilla PID class that can easily, efficiently, and cleanly be made 
 // into object in robot function classes (e.g. Drive class, Arm class, Claw class).
 #pragma once
+#include <iostream>
 
 class PID
 {
@@ -44,4 +45,15 @@ class PID
   void setPID(double kP, double kI, double kD);
   void setTarget(double iTarget);
   double calc(double target, double position);
+  // friend std::ostream& operator<<(std::ostream& os, const PID& coordinate)
+  // {
+  //     os 
+  //     << "kP: " << coordinate.x() 
+  //     << ", kI: " << coordinate.y() 
+  //     << ", dD: " << coordinate.z() 
+  //     << ", theta_rad: " << coordinate.theta() 
+  //     << ", theta_deg: " << coordinate.theta(feature::Coordinate::rotationType::DEG) 
+  //     << ", magn: " << hypot(coordinate.x(), coordinate.y());
+  //     return os;
+  // }
 };

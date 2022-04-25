@@ -15,9 +15,14 @@ class TO
   static void h();
   static void holo();
   static void mech();
+  double tune_eval(feature::Coordinate target);
+  bool tp(feature::Coordinate target); // tune kp
+  bool ti(feature::Coordinate target); // tune ki
+  bool td(feature::Coordinate target); // tune kd
   static double accuracy;
   public:
   static feature::Coordinate pos;
+  void tuner(feature::Coordinate target);
   void update(feature::Coordinate target);
   static void wait() { while (status != STATUS::COMPLETE) vex::task::sleep(20); }
   static void asap() { while (status == STATUS::RUNNING) vex::task::sleep(20); }

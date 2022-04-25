@@ -4,7 +4,6 @@ using namespace std;
 bool isY = false;
 bool isX = false;
 bool isLA = false;
-double liftHold = liftMin;
 calc::Slew driveSlew(2, 24);
 
 void controls() 
