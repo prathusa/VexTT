@@ -22,14 +22,30 @@ def quad(t, p0, p1, p2):
 def bezier(t, p0, p1, p2, p3):
     return parameterize(t, quad(t, p0, p1, p2), quad(t, p1, p2, p3))
 
+def ninterpolation(t, points):
+    # print('points len', len(points))
+    n = len(points)
+    if n == 2:
+        # print('n == 2')
+        return parameterize(t, points[0], points[1])
+    else:
+        # print(f'n == {n}')
+        # print('splitting: ', points[::n], points[1::])
+        return parameterize(t, ninterpolation(t, points[:n-1]), ninterpolation(t, points[1:n]))
+    
+
 def bez():
     
-    x = [0, 0, 2.4, 3.6]
-    y = [1, 3, .3, .2]
-    p = list(zip(x, y))
-    t = np.linspace(0, 1, 100)
+    # x = np.array([0, 0, 2.4, 3.6])
+    # y = np.array([1, 3, .3, .2])
+    
+    # p = list(zip(x, y))
+    p = np.column_stack((x, y)).tolist()[:21]
+    # print(p)
+    t = x #np.linspace(0, 1, 100)
     fig = plt.figure()
-    cubic = bezier(t, p[0], p[1], p[2], p[3])
+    cubic = ninterpolation(t, p)
+    # cubic = bezier(t, p[0], p[1], p[2], p[3])
     plt.plot(cubic[0], cubic[1], 'b')
     plt.plot(x, y, 'ro')
     plt.title('Bezier Curve Interpolation')

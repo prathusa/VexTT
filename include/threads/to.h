@@ -1,14 +1,11 @@
 #pragma once
 
 #include "features.h"
-#include "school.h"
+#include "calc/PID.h"
 
 class TO
 {
   // static feature::Coordinate pos;
-  static PID pid;
-  static PID pid_theta;
-  static PID pid_etc;
   static vex::thread main;
   static vex::thread alt;
   static void base();
@@ -21,6 +18,9 @@ class TO
   bool td(feature::Coordinate target); // tune kd
   static double accuracy;
   public:
+  static PID pid;
+  static PID pid_theta;
+  static PID pid_etc;
   static feature::Coordinate pos;
   void tuner(feature::Coordinate target);
   void update(feature::Coordinate target);

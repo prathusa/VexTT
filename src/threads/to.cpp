@@ -16,7 +16,7 @@ void TO::update(feature::Coordinate target)
   {
     if ( config::MOTORS::BASE == ROBOT::motors )
     {
-      main = move(thread(base));
+      // main = move(thread(base));
     }
     // switch (ROBOT::motors)
     // {
@@ -39,6 +39,7 @@ void TO::update(feature::Coordinate target)
     // main.interrupt();
   status = STATUS::RUNNING;
   this->pos = target;
+  base();
   
   // main = move(thread());
 }
@@ -71,11 +72,12 @@ void TO::base()
     //   integral = 1.5;
     // }
     cout << "err : " << pid.error << endl;
-    if(std::abs(pid.error) < tolerance && abs(pid.derivative) < 1)
+    if(std::abs(pid.error) < tolerance)// && abs(pid.derivative) < 1)
     {
       status = STATUS::COMPLETE;
       wait:
       d.stop();
+      break;
       this_thread::sleep_for(20);
       // this_thread::yield();
       // break;
@@ -96,10 +98,12 @@ void TO::base()
     // else
     //   volts = volts + thetaVolts;
     cout << "volts: " << volts << endl;
-    l.spin(fwd, volts + thetaVolts, voltageUnits::volt);
-    r.spin(fwd, volts - thetaVolts, voltageUnits::volt);
+    d.spin(directionType::fwd, 50, percentUnits::pct);
+    // l.spin(volts + thetaVolts); 
+    // r.spin(fwd, volts - thetaVolts, voltageUnits::volt);
     status = STATUS::RUNNING;
-    this_thread::sleep_for(20);
+    // this_thread::sleep_for(20);
+    task::sleep(20);
   }
   pid.resetPID();
 }
