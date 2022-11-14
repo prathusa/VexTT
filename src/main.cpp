@@ -9,11 +9,15 @@ int main()
   // Inertial.calibrate(2000);
   // vex::task::sleep(2000);
   pre_auton();
-  robot.to.update(feature::Coordinate(0, 1, 0, 0, feature::Coordinate::rotationType::DEG));
-  robot.to.wait();
-  // robot.to.update(feature::Coordinate(0, 0, 0, 0, feature::Coordinate::rotationType::DEG));
-  robot.to.tuner(feature::Coordinate(0, 1, 0, 0, feature::Coordinate::rotationType::DEG));
+
+  // d.rotateFor(directionType::fwd, 1, rotationUnits::rev);
+
+  // robot.to.update(feature::Coordinate(0, 1, 0, 0, feature::Coordinate::rotationType::DEG));
+  // robot.to.wait();
+  // robot.to.update(feature::Coordinate(0, -1, 0, 0, feature::Coordinate::rotationType::DEG));
+  // robot.to.tuner(feature::Coordinate(0, 1, 0, 0, feature::Coordinate::rotationType::DEG));
   // // robot.to.update(feature::Coordinate(1, 1, 0, 45, feature::Coordinate::rotationType::DEG));
+  dt.driveFor(fwd, 12, distanceUnits::in);
   while (robot.to.status == TO::STATUS::RUNNING)
   {
     cout << robot.to.pos << '\n';

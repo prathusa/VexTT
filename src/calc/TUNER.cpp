@@ -14,14 +14,14 @@ double k2[3] = {0, 0, 0};
 
 int tune(double tolerance)
 {
-  robot.base.pid.setPID(k[0], k[1], k[2]);
-  // robot.base.pidTheta.setPID(k2[0], k2[1], k2[2]);
+  robot.to.pid.setPID(k[0], k[1], k[2]);
+  // robot.to.pidTheta.setPID(k2[0], k2[1], k2[2]);
   // thread save_data_thread = thread(saveData);
-  robot.base.For(dist, angle);
+  robot.to.update(feature::Coordinate(0, 1, 0, 0, feature::Coordinate::rotationType::DEG));
   // outFile.close();
-  if(abs(robot.base.pid.error) > tolerance) //robot.base.pid.error is a place holder for 
+  if(abs(robot.to.pid.error) > tolerance) //robot.to.pid.error is a place holder for 
   {
-    double errRatio = robot.base.pid.position/robot.base.pid.target;
+    double errRatio = robot.to.pid.position/robot.to.pid.target;
     if(abs(errRatio) > 1) //checks if the bot overshoot the target
     {
       if(abs(errRatio) > 1.10)
@@ -70,19 +70,19 @@ int tune(double tolerance)
           tperfect = false;
       }
     }
-    if(robot.base.pid.position + abs(dist) < 3)
+    if(robot.to.pid.position + abs(dist) < 3)
       dist = abs(dist);
-    else if(robot.base.pid.position - abs(dist) > 0)
+    else if(robot.to.pid.position - abs(dist) > 0)
       dist = -abs(dist);
     else
     {
-      robot.base.To(0, 0);
+      robot.to.update(feature::Coordinate());
       vex::task::sleep(500);
       dist = abs(dist);
     }
-    cout << "k[0]: " << k[0] << " on dist: " << dist << " with error " << robot.base.pid.error << " at pos " << robot.base.pid.position << " [ Failed X ]" << endl;
-    cout << "k[1]: " << k[1] << " on dist: " << dist << " with error " << robot.base.pid.error << " at pos " << robot.base.pid.position << " [ Failed X ]" << endl;
-    cout << "k[2]: " << k[2] << " on dist: " << dist << " with error " << robot.base.pid.error << " at pos " << robot.base.pid.position << " [ Failed X ]" << endl << endl;
+    cout << "k[0]: " << k[0] << " on dist: " << dist << " with error " << robot.to.pid.error << " at pos " << robot.to.pid.position << " [ Failed X ]" << endl;
+    cout << "k[1]: " << k[1] << " on dist: " << dist << " with error " << robot.to.pid.error << " at pos " << robot.to.pid.position << " [ Failed X ]" << endl;
+    cout << "k[2]: " << k[2] << " on dist: " << dist << " with error " << robot.to.pid.error << " at pos " << robot.to.pid.position << " [ Failed X ]" << endl << endl;
     // cout << "k2[0]: " << k2[0] << " [Failed]" << endl;
     // cout << "k2[1]: " << k2[1] << " [Failed]" << endl;
     // cout << "k2[2]: " << k2[2] << " [Failed]" << endl;
@@ -144,13 +144,13 @@ int tune(double tolerance)
       cout << "k[2]: " << k[2] << " [ Check 3 ] [ OK ! ]" << endl << endl;
       t3 = true;
     }
-    if(robot.base.pid.position + abs(dist) < 3)
+    if(robot.to.pid.position + abs(dist) < 3)
       dist = abs(dist);
-    else if(robot.base.pid.position - abs(dist) > 0)
+    else if(robot.to.pid.position - abs(dist) > 0)
       dist = -abs(dist);
     else
     {
-      robot.base.To(0, 0);
+      robot.to.update(feature::Coordinate());
       dist = abs(dist);
     }
   }
@@ -167,9 +167,9 @@ int tune(double tolerance)
 //     outFile << "Time: 10 ";
 //     outFile << Brain.Timer.time(timeUnits::msec) << std::endl;
 //     outFile << "Calc: 11 ";
-//     outFile << robot.base.pid.output << std::endl;
+//     outFile << robot.to.pid.output << std::endl;
 //     outFile << "PIDPos: 12 ";
-//     outFile << robot.base.pid.position << std::endl;
+//     outFile << robot.to.pid.position << std::endl;
 //     outFile << "DPos: 13 ";
 //     outFile << d.position(rev) << std::endl;
 //     outFile << "Velocity: 14 ";
@@ -177,17 +177,17 @@ int tune(double tolerance)
 //     outFile << "ImuPos: 15 ";
 //     outFile << Inertial.rotation() << std::endl;
 //     outFile << "Error: 16 ";
-//     outFile << robot.base.pid.error << std::endl;
+//     outFile << robot.to.pid.error << std::endl;
 //     outFile << "Integral: 17 ";
-//     outFile << robot.base.pid.integral << std::endl;
+//     outFile << robot.to.pid.integral << std::endl;
 //     outFile << "Derivative: 18 ";
-//     outFile << robot.base.pid.derivative << std::endl;
+//     outFile << robot.to.pid.derivative << std::endl;
 //     outFile << "Pout: 19 ";
-//     outFile << robot.base.pid.Pout << std::endl;
+//     outFile << robot.to.pid.Pout << std::endl;
 //     outFile << "Iout: 20 ";
-//     outFile << robot.base.pid.Iout << std::endl;
+//     outFile << robot.to.pid.Iout << std::endl;
 //     outFile << "Dout: 21 ";
-//     outFile << robot.base.pid.Dout << std::endl;
+//     outFile << robot.to.pid.Dout << std::endl;
 //     outFile << std::endl;
 //     this_thread::sleep_for(20);
 //   }
